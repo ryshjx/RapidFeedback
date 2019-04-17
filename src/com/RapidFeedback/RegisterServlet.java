@@ -64,16 +64,12 @@ public class RegisterServlet extends HttpServlet {
 	    boolean register_ACK;
 		try {
 			 	register_ACK = function.Register(email, password, firstName, middleName, lastName);
-			 	String token = request.getSession().getId();
+		
 			 	JSONObject jsonSend = new JSONObject();
 			 	jsonSend.put("register_ACK", register_ACK);
-			 	jsonSend.put("token", token);
 			 	PrintWriter output = response.getWriter();
 			 	output.print(jsonSend.toJSONString());
 			 	
-			 	ServletContext servletContext = this.getServletContext();
-			 	servletContext.setAttribute(token, email);
-			 	System.out.println("token:"+token);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

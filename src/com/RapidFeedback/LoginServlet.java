@@ -58,14 +58,20 @@ public class LoginServlet extends HttpServlet {
 		String password = jsonReceive.getString("password");
 		String token = jsonReceive.getString("token");
 		
-		ServletContext app = this.getServletContext();
-		System.out.println("get token content: "+app.getAttribute(token));
 		
+	 	
+	 	
 	    int login_ACK;
 		try {
 			 	login_ACK = function.Login(username, password);
+			 	
+			 	String token2 = request.getSession().getId();
+			 	ServletContext servletContext = this.getServletContext();
+			 	servletContext.setAttribute(token2, username);
+			 	
 			 	JSONObject jsonSend = new JSONObject();
 			 	jsonSend.put("login_ACK", login_ACK);
+			 	jsonSend.put("token", token2);
 			 	PrintWriter output = response.getWriter();
 			 	output.print(jsonSend.toJSONString());
 		} catch (SQLException e) {
