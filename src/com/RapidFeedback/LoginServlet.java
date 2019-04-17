@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -55,6 +56,11 @@ public class LoginServlet extends HttpServlet {
 	    jsonReceive = JSON.parseObject(wholeString);
 		String username = jsonReceive.getString("username");
 		String password = jsonReceive.getString("password");
+		String token = jsonReceive.getString("token");
+		
+		ServletContext app = this.getServletContext();
+		System.out.println("get token content: "+app.getAttribute(token));
+		
 	    int login_ACK;
 		try {
 			 	login_ACK = function.Login(username, password);
