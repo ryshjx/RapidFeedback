@@ -60,18 +60,17 @@ public class RegisterServlet extends HttpServlet {
 		String firstName = jsonReceive.getString("firstName");
 		String middleName = jsonReceive.getString("middleName");
 		String lastName = jsonReceive.getString("lastName");
-	    ; //µ÷ÓÃ·½·¨
 	    boolean register_ACK;
 		try {
-			register_ACK = function.Register(email, password, firstName, middleName, lastName);
-			 JSONObject jsonSend = new JSONObject();
-			    jsonSend.put("register_ACK", register_ACK);
-			    PrintWriter output = response.getWriter();
-			    output.print(jsonSend.toJSONString());
+			 	register_ACK = function.Register(email, password, firstName, middleName, lastName);
+			 	JSONObject jsonSend = new JSONObject();
+			 	jsonSend.put("register_ACK", register_ACK);
+			 	PrintWriter output = response.getWriter();
+			 	output.print(jsonSend.toJSONString());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} //¼ÙÉè·µ»ØµÄÊÇtrue
+		} 
 	   
 	}
 
