@@ -74,7 +74,7 @@ public class RegisterServlet extends HttpServlet {
 			 	ServletContext servletContext = this.getServletContext();
 			 	servletContext.setAttribute(token, email);
 			 	System.out.println("token:"+token);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
