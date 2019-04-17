@@ -1,9 +1,11 @@
 package com.RapidFeedback;
 
+
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,53 +13,66 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.*;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * Servlet implementation class RegisterServlet
  */
-@WebServlet("/Register")
+@WebServlet("/RegisterServlet")
 public class RegisterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public RegisterServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("application/json;charset=utf-8");
-        request.setCharacterEncoding("utf-8");
-        response.setCharacterEncoding("utf-8");
-        PrintWriter output = response.getWriter();
-        Map<String, String> outputMap = new HashMap<String, String>();
-        Gson gson = new Gson();
-        
-        String uEmail = request.getParameter("Email");
-        if(isNewEmail(uEmail))
-        {
-        	User user = new User();
-        	user.setUserEmail(uEmail);
-        	user.setFName(request.getParameter("firstName")); 
-        	user.setMName(request.getParameter("middleName"));
-        	user.setLName(request.getParameter("lastName"));
-        	user.setPassword(request.getParameter("Password"));
-        	//revoke database to add new user
-        	outputMap.put("registerResult", "true");
-        	//之后安卓程序跳转到login页面，用户自行login。安卓再请求LoginServlet        	
-        }
-        else 
-        {
-        	outputMap.put("registerResult", "false");
-        	outputMap.put("exception", "This Email has already been registered.");
-        }
-		
-        output.write(gson.toJson(outputMap));
-		
-	}
-	
-	private boolean isNewEmail(String email)
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
-		//revoke the search email function in DB
-		return true;
+		InsideFunction function = new InsideFunction();
+
+		JSONObject jsonReceive;
+		BufferedReader reader = request.getReader();
+		String str, wholeString = "";
+	    while((str = reader.readLine()) != null)
+	    {
+	        wholeString += str;  
+	    }
+	    System.out.println("Receive: " + wholeString);
+	    jsonReceive = JSON.parseObject(wholeString);
+		String email = jsonReceive.getString("email");
+		String password = jsonReceive.getString("password");
+		String firstName = jsonReceive.getString("firstName");
+		String middleName = jsonReceive.getString("middleName");
+		String lastName = jsonReceive.getString("lastName");
+	    ; //µ÷ÓÃ·½·¨
+	    boolean register_ACK;
+		try {
+			register_ACK = function.Register(email, password, firstName, middleName, lastName);
+			 JSONObject jsonSend = new JSONObject();
+			    jsonSend.put("register_ACK", register_ACK);
+			    PrintWriter output = response.getWriter();
+			    output.print(jsonSend.toJSONString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} //¼ÙÉè·µ»ØµÄÊÇtrue
+	   
 	}
 
 }
