@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -42,8 +43,8 @@ public class LoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		InsideFunction function = new InsideFunction();
+		
+		MysqlFunction dbFunction = new MysqlFunction();
 
 		JSONObject jsonReceive;
 		BufferedReader reader = request.getReader();
@@ -56,22 +57,27 @@ public class LoginServlet extends HttpServlet {
 	    jsonReceive = JSON.parseObject(wholeString);
 		String username = jsonReceive.getString("username");
 		String password = jsonReceive.getString("password");
-		String token = jsonReceive.getString("token");
 		
+		ServletContext servletContext = this.getServletContext();
+		JSONObject jsonSend = new JSONObject();
 		
-	 	
-	 	
 	    int login_ACK;
 		try {
-			 	login_ACK = function.Login(username, password);
-			 	
-			 	String token2 = request.getSession().getId();
-			 	ServletContext servletContext = this.getServletContext();
-			 	servletContext.setAttribute(token2, username);
-			 	
-			 	JSONObject jsonSend = new JSONObject();
-			 	jsonSend.put("login_ACK", login_ACK);
-			 	jsonSend.put("token", token2);
+			 	login_ACK = dbFunction.logIn(username, password);
+			
+			 	if(login_ACK > 0) {
+			 		delOldToken(servletContext, username);
+			 		//save new token-username pair to the server.
+			 		String token = newToken(request, username);
+			 		servletContext.setAttribute(token, username);
+			 		
+			 		jsonSend.put("login_ACK", login_ACK);
+			 		jsonSend.put("token", token);
+			 	}
+			 	else{
+			 		jsonSend.put("login_ACK", login_ACK);
+			 	}
+			 				 	
 			 	PrintWriter output = response.getWriter();
 			 	output.print(jsonSend.toJSONString());
 		} catch (SQLException e) {
@@ -79,6 +85,23 @@ public class LoginServlet extends HttpServlet {
 			e.printStackTrace();
 		} 
 	   
+	}
+	
+	private void delOldToken(ServletContext servletContext, String userName) {
+		Enumeration<String> e = servletContext.getAttributeNames();
+		while(e.hasMoreElements()) 
+		{
+			String token = (String)e.nextElement();
+			if(servletContext.getAttribute(token)==userName)
+			{
+				servletContext.removeAttribute(token);
+			}
+		}
+	}
+	
+	private String newToken(HttpServletRequest request, String userName) {
+		String token = request.getSession().getId();
+		return token;
 	}
 
 }

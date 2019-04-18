@@ -45,7 +45,7 @@ public class RegisterServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
-		InsideFunction function = new InsideFunction();
+		MysqlFunction dbFunction = new MysqlFunction();
 
 		JSONObject jsonReceive;
 		BufferedReader reader = request.getReader();
@@ -63,7 +63,7 @@ public class RegisterServlet extends HttpServlet {
 		String lastName = jsonReceive.getString("lastName");
 	    boolean register_ACK;
 		try {
-			 	register_ACK = function.Register(email, password, firstName, middleName, lastName);
+			 	register_ACK = register(dbFunction, email, password, firstName, middleName, lastName);
 		
 			 	JSONObject jsonSend = new JSONObject();
 			 	jsonSend.put("register_ACK", register_ACK);
@@ -75,6 +75,17 @@ public class RegisterServlet extends HttpServlet {
 			e.printStackTrace();
 		} 
 	   
+	}
+	
+	private boolean register(MysqlFunction db, String email, String password, String firstName, String middleName, String lastName) throws SQLException {
+		int checkResult = db.checkLecturerExists(email);
+		if(checkResult == 1) {
+			db.addToLecturers(email, password, firstName, middleName, lastName);
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 }
