@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -71,8 +72,9 @@ public class LoginServlet extends HttpServlet {
 			 		//save new token-username pair to the server.
 			 		String token = newToken(request, username);
 			 		servletContext.setAttribute(token, username);
-			 		ProjectInfo[] ProjectList = getProjectList(dbFunction, username);
-			 		//!!!!need to add projectlist to the reply.
+			 		ProjectInfo[] projectList = getProjectList(dbFunction, username);
+			 		JSONArray jsonArray= JSONArray.parseArray(JSON.toJSONString(projectList));
+			 		jsonSend.put("projectList", jsonArray.toJSONString());
 			 		jsonSend.put("login_ACK", login_ACK);
 			 		jsonSend.put("token", token);
 			 	}
