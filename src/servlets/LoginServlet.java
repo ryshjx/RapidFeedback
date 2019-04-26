@@ -75,8 +75,8 @@ public class LoginServlet extends HttpServlet {
 			 		String token = newToken(request, username);
 			 		servletContext.setAttribute(token, username);
 			 		ProjectInfo[] projectList = getProjectList(dbFunction, username);
-			 		JSONArray jsonArray= JSONArray.parseArray(JSON.toJSONString(projectList));
-			 		jsonSend.put("projectList", jsonArray.toJSONString());
+			 		String projectListString = JSON.toJSONString(projectList);
+			 		jsonSend.put("projectList", projectListString);
 			 		jsonSend.put("login_ACK", login_ACK);
 			 		jsonSend.put("token", token);
 			 	}
