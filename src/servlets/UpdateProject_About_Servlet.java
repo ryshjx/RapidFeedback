@@ -1,8 +1,9 @@
-package com.RapidFeedback;
+package servlets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -11,20 +12,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.RapidFeedback.MysqlFunction;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * Servlet implementation class UpdateProject_Time_Servlet
+ * Servlet implementation class UpdateProject_About_Servlet
  */
-@WebServlet("/UpdateProject_Time_Servlet")
-public class UpdateProject_Time_Servlet extends HttpServlet {
+@WebServlet("/UpdateProject_About_Servlet")
+public class UpdateProject_About_Servlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UpdateProject_Time_Servlet() {
+    public UpdateProject_About_Servlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -59,10 +62,10 @@ public class UpdateProject_Time_Servlet extends HttpServlet {
 	    //get values from received JSONObject
 		String token = jsonReceive.getString("token");
 		String projectName = jsonReceive.getString("projectName");
-		String durationMin = jsonReceive.getString("durationMin");
-		String durationSec = jsonReceive.getString("durationSec");
-		String warningMin = jsonReceive.getString("warningMin");
-		String warningSec = jsonReceive.getString("warningSec");
+		String subjectName = jsonReceive.getString("subjectName");
+		String subjectCode = jsonReceive.getString("subjectCode");
+		String description = jsonReceive.getString("description");
+		
 		
 		ServletContext servletContext = this.getServletContext();
 				
@@ -79,6 +82,7 @@ public class UpdateProject_Time_Servlet extends HttpServlet {
 		//send
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
+		
 	}
 
 }

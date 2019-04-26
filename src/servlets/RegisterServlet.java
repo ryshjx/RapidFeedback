@@ -1,4 +1,6 @@
-package com.RapidFeedback;
+package servlets;
+
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,21 +14,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.RapidFeedback.MysqlFunction;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * Servlet implementation class UpdateProject_About_Servlet
+ * Servlet implementation class RegisterServlet
  */
-@WebServlet("/UpdateProject_About_Servlet")
-public class UpdateProject_About_Servlet extends HttpServlet {
+@WebServlet("/RegisterServlet")
+public class RegisterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UpdateProject_About_Servlet() {
+    public RegisterServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -42,12 +44,10 @@ public class UpdateProject_About_Servlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		//		
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	{
 		MysqlFunction dbFunction = new MysqlFunction();
-		
-		//get JSONObject from request
+
 		JSONObject jsonReceive;
 		BufferedReader reader = request.getReader();
 		String str, wholeString = "";
@@ -57,31 +57,36 @@ public class UpdateProject_About_Servlet extends HttpServlet {
 	    }
 	    System.out.println("Receive: " + wholeString);
 	    jsonReceive = JSON.parseObject(wholeString);
-	    
-	    //get values from received JSONObject
-		String token = jsonReceive.getString("token");
-		String projectName = jsonReceive.getString("projectName");
-		String subjectName = jsonReceive.getString("subjectName");
-		String subjectCode = jsonReceive.getString("subjectCode");
-		String description = jsonReceive.getString("description");
+		String email = jsonReceive.getString("email");
+		String password = jsonReceive.getString("password");
+		String firstName = jsonReceive.getString("firstName");
+		String middleName = jsonReceive.getString("middleName");
+		String lastName = jsonReceive.getString("lastName");
+	    boolean register_ACK;
+		try {
+			 	register_ACK = register(dbFunction, email, password, firstName, middleName, lastName);
 		
-		
-		ServletContext servletContext = this.getServletContext();
-				
-		boolean update_ACK;
-	    //Mention:
-		//call the SQL method to save the 'About' page
-		//return the 'true' or 'false' value to update_ACK
-		update_ACK = false;
-		
-		//construct the JSONObject to send
-		JSONObject jsonSend = new JSONObject();
-		jsonSend.put("update_ACK", update_ACK);
-		
-		//send
-		PrintWriter output = response.getWriter();
-	 	output.print(jsonSend.toJSONString());
-		
+			 	JSONObject jsonSend = new JSONObject();
+			 	jsonSend.put("register_ACK", register_ACK);
+			 	PrintWriter output = response.getWriter();
+			 	output.print(jsonSend.toJSONString());
+			 	
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	   
+	}
+	
+	private boolean register(MysqlFunction db, String email, String password, String firstName, String middleName, String lastName) throws SQLException {
+		int checkResult = db.checkLecturerExists(email);
+		if(checkResult == 1) {
+			db.addToLecturers(email, password, firstName, middleName, lastName);
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 }
