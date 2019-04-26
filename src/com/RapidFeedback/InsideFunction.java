@@ -3,7 +3,7 @@ package com.RapidFeedback;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import sun.jvm.hotspot.runtime.StaticBaseConstructor;
+//import sun.jvm.hotspot.runtime.StaticBaseConstructor;
 
 public class InsideFunction {
 	

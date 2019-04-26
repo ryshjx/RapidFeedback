@@ -49,6 +49,7 @@ public class LoginServlet extends HttpServlet {
 		JSONObject jsonReceive;
 		BufferedReader reader = request.getReader();
 		String str, wholeString = "";
+		
 	    while((str = reader.readLine()) != null)
 	    {
 	        wholeString += str;  
@@ -70,7 +71,8 @@ public class LoginServlet extends HttpServlet {
 			 		//save new token-username pair to the server.
 			 		String token = newToken(request, username);
 			 		servletContext.setAttribute(token, username);
-			 		
+			 		ProjectInfo[] ProjectList = getProjectList(dbFunction, username);
+			 		//!!!!need to add projectlist to the reply.
 			 		jsonSend.put("login_ACK", login_ACK);
 			 		jsonSend.put("token", token);
 			 	}
@@ -104,11 +106,11 @@ public class LoginServlet extends HttpServlet {
 		return token;
 	}
 	
-	private ProjectInfo[] getProjectList(MysqlFunction db, int uid){
-		int[] pIDs = db.projectIDs(uid);
-		ProjectInfo[] projectList = new ProjectInfo[pIDs.length];
-		for(int i = 0; i<pIDs.length; i++) {
-			projectList[i]=db.getProject(pIDs[i]);
+	private ProjectInfo[] getProjectList(MysqlFunction db, String userName) throws SQLException{
+		List<Integer> pIDs = db.queryProjects(userName);
+		ProjectInfo[] projectList = new ProjectInfo[pIDs.size()];
+		for(int i = 0; i<pIDs.size(); i++) {
+			projectList[i]=db.returnProjectInfo(pIDs.get(i));
 		}
 		return projectList;
 	}
