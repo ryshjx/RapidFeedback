@@ -26,13 +26,15 @@ public class InsideFunction {
 		return db.logIn(email, password);
 	}*/
 	
-	public Project[] getProjectList(int uid){
+/*	public Project[] getProjectList(int uid){
 		int[] pIDs = db.projectIDs(uid);
 		Project[] projectList = new Project[pIDs.length];
 		for(int i = 0; i<pIDs.length; i++) {
-			projectList.add(db.getProject(i));
+			projectList[i]=db.getProject(pIDs[i]);
 		}
 		return projectList;
-	}
+	}*/
+	
+	
 	
 }

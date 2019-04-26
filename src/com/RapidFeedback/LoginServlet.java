@@ -103,5 +103,14 @@ public class LoginServlet extends HttpServlet {
 		String token = request.getSession().getId();
 		return token;
 	}
+	
+	private ProjectInfo[] getProjectList(MysqlFunction db, int uid){
+		int[] pIDs = db.projectIDs(uid);
+		ProjectInfo[] projectList = new ProjectInfo[pIDs.length];
+		for(int i = 0; i<pIDs.length; i++) {
+			projectList[i]=db.getProject(pIDs[i]);
+		}
+		return projectList;
+	}
 
 }
