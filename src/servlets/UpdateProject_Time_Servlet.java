@@ -67,15 +67,15 @@ public class UpdateProject_Time_Servlet extends HttpServlet {
 		
 		ServletContext servletContext = this.getServletContext();
 				
-		boolean update_ACK;
+		boolean updateProject_ACK;
 	    //Mention:
 		//call the SQL method to save the 'About' page
 		//return the 'true' or 'false' value to update_ACK
-		update_ACK = false;
+		updateProject_ACK = false;
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
-		jsonSend.put("update_ACK", update_ACK);
+		jsonSend.put("update_ACK", updateProject_ACK);
 		
 		//send
 		PrintWriter output = response.getWriter();
