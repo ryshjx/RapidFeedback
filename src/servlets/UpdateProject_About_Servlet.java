@@ -77,7 +77,7 @@ public class UpdateProject_About_Servlet extends HttpServlet {
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
-		jsonSend.put("update_ACK", updateProject_ACK);
+		jsonSend.put("updateProject_ACK", updateProject_ACK);
 		
 		//send
 		PrintWriter output = response.getWriter();
