@@ -34,9 +34,9 @@ public class InsideFunction {
 		return null;
 	}
 	
-	public boolean addStudent(String token, ) {
+/*	public boolean addStudent(String token, ) {
 		
-	}
+	}*/
 	
 /*	public int projectP1(ServletContext servletContext, String projectName, String token, String subjectName, String subjectCode, String description) {
 		String username = token2user(servletContext, token);

@@ -171,7 +171,7 @@ public class MysqlFunction {
 			stmt = conn.createStatement();
 			pjId = getProjectId(username,projectName);
 			sql = "UPDATE Project SET primaryMail = '"+ username+ "', name = '"
-			+ projectName+"', subjectCode = '"+username+ "', subecjtName = '"
+			+ projectName+"', subjectCode = '"+username+ "', subjectName = '"
 					+ subjectName +"' "+"WHERE idProject = "+"'"+pjId+"' ";
 			stmt.executeUpdate(sql);
 			System.out.println(sql);

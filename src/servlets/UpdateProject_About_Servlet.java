@@ -75,9 +75,7 @@ public class UpdateProject_About_Servlet extends HttpServlet {
 		//call the SQL method to save the 'About' page
 		//return the '0' or <projectID>
 		try {
-			if(projectP1(dbFunction, servletContext, token, projectName, subjectCode, subjectName, description)>0) {
-				updateProject_ACK = true;
-			}
+			updateProject_ACK = projectP1(dbFunction, servletContext, token, projectName, subjectCode, subjectName, description);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
