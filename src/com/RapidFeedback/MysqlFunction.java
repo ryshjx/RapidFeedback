@@ -11,14 +11,14 @@ public class MysqlFunction {
 
 	static final String USER = "root";
 	static final String PASS = "88213882ydh";
-	
+
 	public Connection connectToDB(String url, String userName, String password) {
 		Connection conn = null;
 		try{
 			// Register JDBC driver
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			// Connect the DB 
-			System.out.println("Connecting the Database...");
+			//System.out.println("Connecting the Database...");
 			conn = DriverManager.getConnection(url,userName,password);
 
 		}catch(SQLException se){
@@ -29,7 +29,7 @@ public class MysqlFunction {
 			e.printStackTrace();
 		}  
 
-		System.out.println("Successfully Connected to DB...");
+		// System.out.println("Successfully Connected to DB...");
 		return conn;   
 	}
 
@@ -47,6 +47,7 @@ public class MysqlFunction {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			stmt.executeUpdate(sql);
+			System.out.println(sql);
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
@@ -67,7 +68,7 @@ public class MysqlFunction {
 			String sql;
 			sql = "SELECT email FROM Lecturers";
 			rs = stmt.executeQuery(sql);
-
+			System.out.println(sql);
 			while(rs.next()){
 				if (rs.getString("email").equals(mail)) {
 					tag = 0;
@@ -97,6 +98,7 @@ public class MysqlFunction {
 			String sql;
 			sql = "SELECT * FROM Lecturers";
 			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
 			while(rs.next()){
 				if (rs.getString("email").equals(mail)) {
 					if(rs.getString("password").equals(password)) {
@@ -117,57 +119,37 @@ public class MysqlFunction {
 		return num;
 	}
 
-	public int createProject(ProjectInfo pj) throws SQLException {
+	public int createProject(String username, String projectName, String subjectCode, String subjectName, String description) throws SQLException {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sql;
-		String mail= pj.getUsername();
 		int lecturerId = 0;
 		int pjId = 0;
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
-			lecturerId = getLecturerId(mail);
-			sql = "INSERT INTO Project(primaryMail,name, subjectCode, subjectName) "
-					+ "values( '" + pj.getUsername() 
-					+"','"+ pj.getProjectName() 
-					+"','"+pj.getSubjectCode()
-					+"','"+pj.getSubjectName()+"' )";
+			lecturerId = getLecturerId(username);
+			sql = "INSERT INTO Project(primaryMail, name, subjectCode, subjectName) "
+					+ "values( '" + username 
+					+"','"+ projectName
+					+"','"+ subjectCode
+					+"','"+subjectName+"' )";
 			stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
+			System.out.println(sql);
 			rs = stmt.getGeneratedKeys();
 			if (rs.next()) {  
 				pjId = rs.getInt(1);  
 				sql = "INSERT INTO Lecturers_has_Project(idLecturers, idProject,If_Primary) "
 						+ "values( '" + lecturerId +"','"+pjId+"','"+ 1 +"' )";
 				stmt.executeUpdate(sql);
+				System.out.println(sql);
 			}  
-			if(pj.getDescription() != null) {
-				sql = "INSERT INTO Project(description) "
-						+ "values( '" + pj.getDescription()+"' )";
+			if(description != null) {
+				sql = "UPDATE Project SET Description = '"+ description +"' "+"WHERE idProject = "+"'"+pjId+"' ";
 				stmt.executeUpdate(sql);
+				System.out.println(sql);
 			}
-			if(pj.getDurationMin() != 0) {
-				sql = "INSERT INTO Project(durationMin) "
-						+ "values( '" + pj.getDurationMin()+"' )";
-				stmt.executeUpdate(sql);
-			}
-			if(pj.getDurationSec() != 0) {
-				sql = "INSERT INTO Project(durationSec) "
-						+ "values( '" + pj.getDurationSec()+"' )";
-				stmt.executeUpdate(sql);
-			}
-			if(pj.getWarningMin() != 0) {
-				sql = "INSERT INTO Project(warningMin) "
-						+ "values( '" + pj.getWarningMin()+"' )";
-				stmt.executeUpdate(sql);
-			}
-			if(pj.getWarningSec() != 0) {
-				sql = "INSERT INTO Project(warningSec) "
-						+ "values( '" + pj.getWarningSec()+"' )";
-				stmt.executeUpdate(sql);
-			}
-
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
@@ -177,7 +159,55 @@ public class MysqlFunction {
 		return pjId;
 	}
 	
+	public void updateProjectInfo(String username, String projectName, String subjectCode, String subjectName, String description) throws SQLException {
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql;
+		int pjId = 0;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			pjId = getProjectId(username,projectName);
+			sql = "UPDATE Project SET primaryMail = '"+ username+ "', name = '"
+			+ projectName+"', subjectCode = '"+username+ "', subecjtName = '"
+					+ subjectName +"' "+"WHERE idProject = "+"'"+pjId+"' ";
+			stmt.executeUpdate(sql);
+			System.out.println(sql);
+			if(description != null) {
+				sql = "UPDATE Project SET Description = '"+ description +"' "+"WHERE idProject = "+"'"+pjId+"' ";
+				stmt.executeUpdate(sql);
+				System.out.println(sql);
+			}
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+	}
+	
+	public void updateTimeInformation(int pjId, int durationMin, int durationSec, int warningMin, int warningSec ) throws SQLException {
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+				sql = "UPDATE Project SET durationMin = '"+ durationMin +"',  "+"durationSec = '"+ durationSec +"' "+"WHERE idProject = "+"'"+pjId+"' ";
+				stmt.executeUpdate(sql);
+				System.out.println(sql);
+				
+				sql = "UPDATE Project SET warningMin = '"+ warningMin +"',  "+"warningSec = '"+ warningSec +"' "+"WHERE idProject = "+"'"+pjId+"' ";
+				stmt.executeUpdate(sql);
+				System.out.println(sql);
 
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+	}
 
 	public int addCriteria(int pjId, Criteria c) throws SQLException {
 		int critId = 0;
@@ -188,15 +218,21 @@ public class MysqlFunction {
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
-			sql = "INSERT INTO Project(name, idProject, "
-					+ "weighting, maxMark, markIncrement) "
+			sql = "INSERT INTO Criteria(name, idProject, weighting, maxMark, markIncrement) "
 					+ "values( '" + c.getName() +"','"+pjId
 					+"','"+c.getWeighting()
 					+"','"+c.getMaximunMark()
 					+"','"+c.getMarkIncrement()+"' )";
 			stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
+			System.out.println(sql);
 			rs = stmt.getGeneratedKeys();
-			critId = rs.getInt(1);  
+			if (rs.next()) {  
+				critId = rs.getInt(1);  
+			}
+			for(int i=0;i<c.getSubsectionList().size();i++)    {  
+				addSubSection(critId,c.getSubsectionList().get(i));
+			}
+			
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
@@ -218,8 +254,14 @@ public class MysqlFunction {
 			sql = "INSERT INTO SubSection(name, idCriteria) "
 					+ "values( '" + ss.getName() +"','"+critId+"' )";
 			stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
+			System.out.println(sql);
 			rs = stmt.getGeneratedKeys();
-			ssId = rs.getInt(1);  
+			if (rs.next()) {  
+				ssId = rs.getInt(1);  
+			}  
+			for(int i=0;i<ss.getShortTextList().size();i++)    {  
+				addShortText(ssId,ss.getShortTextList().get(i));
+			}
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
@@ -234,22 +276,23 @@ public class MysqlFunction {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sql1, sql2;
+		String sql;
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
-			sql1 = "INSERT INTO ShortText(name, grade, idSubSection) "
+			sql = "INSERT INTO ShortText(name, grade, idSubSection) "
 					+ "values( '" + st.getName() 
 					+"','"+st.getGrade()
 					+"','"+subsId+"' )";
-			stmt.executeUpdate(sql1,Statement.RETURN_GENERATED_KEYS);
+			stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
+			System.out.println(sql);
 			rs = stmt.getGeneratedKeys();
-			stId = rs.getInt(1);  
-			sql2 = "INSERT INTO LongText(name, grade, idSubSection) "
-					+ "values( '" + st.getName() 
-					+"','"+st.getGrade()
-					+"','"+subsId+"' )";
-			stmt.executeUpdate(sql2);
+			if (rs.next()) {  
+				stId = rs.getInt(1);  
+			} 
+			for(int i=0;i<st.getLongtext().size();i++)    {  
+				addLongText(stId,st.getLongtext().get(i));
+			}
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
@@ -258,8 +301,8 @@ public class MysqlFunction {
 		}
 		return stId;
 	}
-
-	public void addStudent(int projectId, StudentInfo student) throws SQLException {
+	
+	public void addLongText(int stId, String context) throws SQLException {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -267,16 +310,68 @@ public class MysqlFunction {
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
-			sql = "INSERT INTO Students(studentNumber, e-mailAddress, idProject, firstName, surName, middleName, groupNumber, mark) "
-					+ "values( '" + student.getNumber() 
+			sql = "INSERT INTO `LongText`(context, idShortText) values( '" +context+"','"+stId+"' )";
+			stmt.executeUpdate(sql);
+			System.out.println(sql);
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+	}
+	
+	
+
+	public int ifStudentExists(int idProject, String studentNumber) throws SQLException{
+		int result = 0;
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement stmt = null;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT * FROM Students";
+			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
+			while(rs.next()){
+				if (rs.getInt("idProject")==idProject && rs.getString("studentNumber").equals(studentNumber)) {
+					result= rs.getInt("idStudents");
+				}
+			}
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+		return result;
+	}
+
+	public void addStudent(int projectId, StudentInfo student) throws SQLException {
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			if (student.getMark() == null) {
+				student.setMark(00.00);
+			}
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			sql ="INSERT INTO Students(studentNumber, emailAddress, idProject, firstName, "
+					+ "surName, middleName, groupNumber, mark) values( '" 
+					+ student.getNumber() 
 					+"','"+student.getEmail()
 					+"','"+projectId
 					+"','"+student.getFirstName()
 					+"','"+student.getSurname()
 					+"','"+student.getMiddleName()
 					+"','"+student.getGroup()
-					+"','"+student.getMark()+"' )";
-			stmt.executeUpdate(sql);
+					+"','"+student.getMark()+"' );";
+			stmt.execute(sql);
+			System.out.println(sql);
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
@@ -285,7 +380,35 @@ public class MysqlFunction {
 		}
 	}
 
+	public void updateStudent(int projectId, StudentInfo student) throws SQLException {
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			if (student.getMark() == null) {
+				student.setMark(00.00);
+			}
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			sql =	"UPDATE Students SET "
+					+"emailAddress = '"+ student.getEmail() + "',  "
+					+"firstName = '" +student.getFirstName()+ "', " 
+					+"surName = '" +student.getSurname()+ "', " 
+					+"middleName = '" +student.getMiddleName()+ "', " 
+					+"groupNumber = '" +student.getGroup()+ "', " 
+					+"mark = '" +student.getMark()+ "' " 
+					+"WHERE idProject= " + "'"+ projectId+ "' AND studentNumber= "+ "'"+ student.getNumber()+  "';  ";
+			stmt.execute(sql);
+			System.out.println(sql);
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
 
+	}
 
 	public void addOtherAssessor(int lecturerId,int projectId) throws SQLException{
 		Connection conn = null;
@@ -305,21 +428,21 @@ public class MysqlFunction {
 		}	
 	}
 
-	public int getProjectId(ProjectInfo pj) throws SQLException {
+	public int getProjectId(String username, String projectName) throws SQLException {
 		int id = 0;
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sql;
 		try {
-			int idLecturer = getLecturerId(pj.getUsername());
+			int idLecturer = getLecturerId(username);
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
-			sql = "SELECT * FROM Projects";
+			sql = "SELECT * FROM Project";
 			rs = stmt.executeQuery(sql);
 			while(rs.next()){
-				if (rs.getString("primaryMail").equals(pj.getUsername())
-						&& rs.getString("name").equals(pj.getProjectName())) {
+				if (rs.getString("primaryMail").equals(username)
+						&& rs.getString("name").equals(projectName)) {
 					id = rs.getInt("idProject");
 				}else {
 					continue;
@@ -333,7 +456,6 @@ public class MysqlFunction {
 		}
 		return id;	
 	}
-
 
 	public int getLecturerId(String mail) throws SQLException {
 		Connection conn = null;
@@ -365,7 +487,7 @@ public class MysqlFunction {
 	}
 
 
-	public List<Integer> queryProjects(String mail) throws SQLException {
+	public List queryProjects(String mail) throws SQLException {
 		List<Integer> numList = new ArrayList<Integer>();
 		int id = 0;
 		Connection conn = null;
@@ -501,7 +623,7 @@ public class MysqlFunction {
 		}finally {
 			close2(conn,stmt,rs);
 		}
-		
+
 		return subsectionList;
 	}
 
@@ -535,8 +657,8 @@ public class MysqlFunction {
 		}
 		return shortTextList;
 	}
-	
-	
+
+
 
 	private ArrayList<String> returnLongText(int idShortText) throws SQLException {
 		ArrayList<String> longtext = new ArrayList<String>();
@@ -547,7 +669,7 @@ public class MysqlFunction {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			String sql;
-			sql = "SELECT * FROM LongText";
+			sql = "SELECT * FROM `LongText`";
 			rs = stmt.executeQuery(sql);
 			while(rs.next()){
 				if (rs.getInt("idShortText") == idShortText) {
@@ -579,7 +701,7 @@ public class MysqlFunction {
 			while(rs.next()){
 				if (rs.getInt("idProject") == projectId) {
 					StudentInfo studentInfo =new StudentInfo(rs.getString("studentNumber"),rs.getString("firstName"),rs.getString("middleName"),
-							rs.getString("surName"), rs.getString("e-mailAddress"));
+							rs.getString("surName"), rs.getString("emailAddress"));
 					studentInfo.setMark(rs.getDouble("mark"));
 					studentInfo.setGroup(rs.getInt("groupNumber"));
 					studentInfoList.add(studentInfo);
@@ -587,20 +709,18 @@ public class MysqlFunction {
 					continue;
 				}
 			}
-			
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
 		}finally {
 			close2(conn,stmt,rs);
 		}
-	
 		return studentInfoList;
 	}
-	
-	
-	
-	
+
+
+
+
 
 	public ArrayList<String> returnAssessors(int projectId) throws SQLException{
 		ArrayList<String> assessorList = new ArrayList<String>();
@@ -616,7 +736,6 @@ public class MysqlFunction {
 			while(rs.next()){
 				if (rs.getInt("idProject") == projectId) {
 					assessorList.add(getLecturerMail(rs.getInt("idLecturers")));
-
 				}else {
 					continue;
 				}
@@ -644,7 +763,7 @@ public class MysqlFunction {
 			rs = stmt.executeQuery(sql);
 			while(rs.next()){
 				if (rs.getInt("idLecturers") == id) {
-					mail = rs.getString("e-mail");
+					mail = rs.getString("email");
 				}else {
 					continue;
 				}
@@ -657,7 +776,7 @@ public class MysqlFunction {
 		}
 		return mail;
 	}
-	
+
 
 	public void close1(Connection conn, Statement stmt) throws SQLException {
 		try{

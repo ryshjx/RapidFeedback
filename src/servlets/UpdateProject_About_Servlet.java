@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.RapidFeedback.InsideFunction;
 import com.RapidFeedback.MysqlFunction;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -69,11 +70,11 @@ public class UpdateProject_About_Servlet extends HttpServlet {
 		
 		ServletContext servletContext = this.getServletContext();
 				
-		boolean updateProject_ACK;
+		int updateProject_ACK;
 	    //Mention:
 		//call the SQL method to save the 'About' page
-		//return the 'true' or 'false' value to update_ACK
-		updateProject_ACK = false;
+		//return the '0' or <projectID> to update_ACK
+		updateProject_ACK = projectP1(dbFunction, servletContext, token, projectName, subjectCode, subjectName, description);
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
@@ -83,6 +84,13 @@ public class UpdateProject_About_Servlet extends HttpServlet {
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
 		
+	}
+	
+	//if success, return projectID, otherwise return 0.
+	public int projectP1(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, String subjectCode, String subjectName, String description) {
+		InsideFunction in = new InsideFunction();
+		String username = in.token2user(servletContext, token);
+		return dbFunction.createProject(username, projectName, subjectCode, subjectName, description);
 	}
 
 }

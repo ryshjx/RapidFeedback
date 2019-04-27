@@ -69,7 +69,7 @@ public class UpdateProject_Time_Servlet extends HttpServlet {
 				
 		boolean updateProject_ACK;
 	    //Mention:
-		//call the SQL method to save the 'About' page
+		//call the SQL method to save the 'Time' page
 		//return the 'true' or 'false' value to update_ACK
 		updateProject_ACK = false;
 		
