@@ -159,7 +159,8 @@ public class MysqlFunction {
 		return pjId;
 	}
 	
-	public void updateProjectInfo(String username, String projectName, String subjectCode, String subjectName, String description) throws SQLException {
+	public boolean updateProjectInfo(String username, String projectName, String subjectCode, String subjectName, String description) throws SQLException {
+                boolean result = false;
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -179,12 +180,14 @@ public class MysqlFunction {
 				stmt.executeUpdate(sql);
 				System.out.println(sql);
 			}
+			result = true;
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
 		}finally {
 			close2(conn,stmt,rs);
 		}
+		return result;
 	}
 	
 	public boolean updateTimeInformation(int pjId, int durationMin, int durationSec, int warningMin, int warningSec ) throws SQLException {

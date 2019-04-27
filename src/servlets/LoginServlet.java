@@ -86,6 +86,7 @@ public class LoginServlet extends HttpServlet {
 			 				 	
 			 	PrintWriter output = response.getWriter();
 			 	output.print(jsonSend.toJSONString());
+			 	System.out.println("Send: "+jsonSend.toJSONString());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

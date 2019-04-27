@@ -89,6 +89,7 @@ public class UpdateProject_Time_Servlet extends HttpServlet {
 		//send
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
+	 	System.out.println("Send: "+jsonSend.toJSONString());
 	}
 	
 	private boolean projectP2(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, int durationMin, int durationSec, int warningMin, int warningSec) throws SQLException{
