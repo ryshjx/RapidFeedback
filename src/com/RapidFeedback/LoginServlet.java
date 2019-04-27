@@ -71,7 +71,7 @@ public class LoginServlet extends HttpServlet {
 			 		//save new token-username pair to the server.
 			 		String token = newToken(request, username);
 			 		servletContext.setAttribute(token, username);
-			 		ProjectInfo[] ProjectList = getProjectList(dbFunction, username);
+			 		ProjectInfo[] projectList = getProjectList(dbFunction, username);
 			 		//!!!!need to add projectlist to the reply.
 			 		jsonSend.put("login_ACK", login_ACK);
 			 		jsonSend.put("token", token);
@@ -94,7 +94,7 @@ public class LoginServlet extends HttpServlet {
 		while(e.hasMoreElements()) 
 		{
 			String token = (String)e.nextElement();
-			if(servletContext.getAttribute(token)==userName)
+			if(servletContext.getAttribute(token).equals(userName))
 			{
 				servletContext.removeAttribute(token);
 			}

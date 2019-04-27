@@ -40,7 +40,7 @@ public class MysqlFunction {
 		Connection conn = null;
 		Statement stmt = null;
 		String sql;
-		sql = "INSERT INTO Lecturers( email, pass, FirstName, MiddleName, FamilyName) "
+		sql = "INSERT INTO Lecturers( email, password, FirstName, MiddleName, FamilyName) "
 				+ "values( '" + mail +"','"+password + "','"+firstName +"','"+middleName+"','"+familyName +"' )";
 
 		try {	
@@ -99,7 +99,7 @@ public class MysqlFunction {
 			rs = stmt.executeQuery(sql);
 			while(rs.next()){
 				if (rs.getString("email").equals(mail)) {
-					if(rs.getString("pass").equals(password)) {
+					if(rs.getString("password").equals(password)) {
 						num = rs.getInt("idLecturers");
 					}
 					else {
