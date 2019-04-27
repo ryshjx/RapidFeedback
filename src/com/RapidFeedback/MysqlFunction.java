@@ -187,7 +187,8 @@ public class MysqlFunction {
 		}
 	}
 	
-	public void updateTimeInformation(int pjId, int durationMin, int durationSec, int warningMin, int warningSec ) throws SQLException {
+	public boolean updateTimeInformation(int pjId, int durationMin, int durationSec, int warningMin, int warningSec ) throws SQLException {
+        boolean result = false;
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -200,13 +201,14 @@ public class MysqlFunction {
 				sql = "UPDATE Project SET warningMin = '"+ warningMin +"',  "+"warningSec = '"+ warningSec +"' "+"WHERE idProject = "+"'"+pjId+"' ";
 				stmt.executeUpdate(sql);
 				System.out.println(sql);
-
+				result = true;
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
 		}finally {
 			close2(conn,stmt,rs);
 		}
+		return result;
 	}
 
 	public int addCriteria(int pjId, Criteria c) throws SQLException {
@@ -349,27 +351,25 @@ public class MysqlFunction {
 		return result;
 	}
 
-	public void addStudent(int projectId, StudentInfo student) throws SQLException {
+		public void addStudentInfo(int projectId, String studentNumber, String mail, String firstName, String surName, String middleName, int group ) throws SQLException {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sql;
 		try {
-			if (student.getMark() == null) {
-				student.setMark(00.00);
-			}
+			double mark = 00.00;
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			sql ="INSERT INTO Students(studentNumber, emailAddress, idProject, firstName, "
 					+ "surName, middleName, groupNumber, mark) values( '" 
-					+ student.getNumber() 
-					+"','"+student.getEmail()
+					+ studentNumber 
+					+"','"+mail
 					+"','"+projectId
-					+"','"+student.getFirstName()
-					+"','"+student.getSurname()
-					+"','"+student.getMiddleName()
-					+"','"+student.getGroup()
-					+"','"+student.getMark()+"' );";
+					+"','"+firstName
+					+"','"+surName
+					+"','"+middleName
+					+"','"+group
+					+"','"+mark+"' );";
 			stmt.execute(sql);
 			System.out.println(sql);
 		}catch(SQLException se){
@@ -380,25 +380,23 @@ public class MysqlFunction {
 		}
 	}
 
-	public void updateStudent(int projectId, StudentInfo student) throws SQLException {
+	public void editStudentInfo(int projectId, String studentNumber, String mail, String firstName, String surName, String middleName, int group ) throws SQLException {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sql;
 		try {
-			if (student.getMark() == null) {
-				student.setMark(00.00);
-			}
+			double mark = 00.00;
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			sql =	"UPDATE Students SET "
-					+"emailAddress = '"+ student.getEmail() + "',  "
-					+"firstName = '" +student.getFirstName()+ "', " 
-					+"surName = '" +student.getSurname()+ "', " 
-					+"middleName = '" +student.getMiddleName()+ "', " 
-					+"groupNumber = '" +student.getGroup()+ "', " 
-					+"mark = '" +student.getMark()+ "' " 
-					+"WHERE idProject= " + "'"+ projectId+ "' AND studentNumber= "+ "'"+ student.getNumber()+  "';  ";
+					+"emailAddress = '"+ mail + "',  "
+					+"firstName = '" +firstName+ "', " 
+					+"surName = '" +surName+ "', " 
+					+"middleName = '" +middleName+ "', " 
+					+"groupNumber = '" +group+ "', " 
+					+"mark = '" +mark+ "' " 
+					+"WHERE idProject= " + "'"+ projectId+ "' AND studentNumber= "+ "'"+ studentNumber+  "';  ";
 			stmt.execute(sql);
 			System.out.println(sql);
 		}catch(SQLException se){
@@ -407,7 +405,27 @@ public class MysqlFunction {
 		}finally {
 			close2(conn,stmt,rs);
 		}
-
+	}
+	
+	public void deleteStudent(int projectId, String studentNumber) throws SQLException {
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			double mark = 00.00;
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			sql =	"DELETE FROM Students "
+					+"WHERE idProject= " + "'"+ projectId+ "' AND studentNumber= "+ "'"+ studentNumber+  "';  ";
+			stmt.execute(sql);
+			System.out.println(sql);
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
 	}
 
 	public void addOtherAssessor(int lecturerId,int projectId) throws SQLException{
