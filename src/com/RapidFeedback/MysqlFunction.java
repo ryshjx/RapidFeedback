@@ -191,7 +191,7 @@ public class MysqlFunction {
 	}
 	
 	public boolean updateTimeInformation(int pjId, int durationMin, int durationSec, int warningMin, int warningSec ) throws SQLException {
-                boolean result = false;
+        boolean result = false;
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -205,7 +205,6 @@ public class MysqlFunction {
 				stmt.executeUpdate(sql);
 				System.out.println(sql);
 				result = true;
-
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
@@ -355,8 +354,7 @@ public class MysqlFunction {
 		return result;
 	}
 
-		public boolean addStudentInfo(int projectId, String studentNumber, String mail, String firstName, String surName, String middleName, int group ) throws SQLException {
-		boolean result = false;
+		public void addStudentInfo(int projectId, String studentNumber, String mail, String firstName, String surName, String middleName, int group ) throws SQLException {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -377,19 +375,15 @@ public class MysqlFunction {
 					+"','"+mark+"' );";
 			stmt.execute(sql);
 			System.out.println(sql);
-			result = true;
-
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
 		}finally {
 			close2(conn,stmt,rs);
 		}
-		return result;
 	}
 
-	public boolean editStudentInfo(int projectId, String studentNumber, String mail, String firstName, String surName, String middleName, int group ) throws SQLException {
-		boolean result = false;
+	public void editStudentInfo(int projectId, String studentNumber, String mail, String firstName, String surName, String middleName, int group ) throws SQLException {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -408,18 +402,15 @@ public class MysqlFunction {
 					+"WHERE idProject= " + "'"+ projectId+ "' AND studentNumber= "+ "'"+ studentNumber+  "';  ";
 			stmt.execute(sql);
 			System.out.println(sql);
-			result = true;
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
 		}finally {
 			close2(conn,stmt,rs);
 		}
-		return result;
 	}
 	
-	public boolean deleteStudent(int projectId, String studentNumber) throws SQLException {
-		boolean result = false;
+	public void deleteStudent(int projectId, String studentNumber) throws SQLException {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -432,18 +423,15 @@ public class MysqlFunction {
 					+"WHERE idProject= " + "'"+ projectId+ "' AND studentNumber= "+ "'"+ studentNumber+  "';  ";
 			stmt.execute(sql);
 			System.out.println(sql);
-			result = true;
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
 		}finally {
 			close2(conn,stmt,rs);
 		}
-		return result;
 	}
 
-	public boolean addOtherAssessor(int lecturerId,int projectId) throws SQLException{
-		boolean result = false;
+	public void addOtherAssessor(int lecturerId,int projectId) throws SQLException{
 		Connection conn = null;
 		Statement stmt = null;
 		String sql;
@@ -453,14 +441,12 @@ public class MysqlFunction {
 			sql = "INSERT INTO Lecturers_has_Project(idLecturers, idProject,If_Primary) "
 					+ "values( '" + lecturerId +"','"+projectId+"','"+ 0 +"' )";
 			stmt.executeUpdate(sql);
-			result = true;
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
 		}finally {
 			close1(conn,stmt);
 		}	
-		return result;
 	}
 
 	public int getProjectId(String username, String projectName) throws SQLException {

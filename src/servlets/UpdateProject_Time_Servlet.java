@@ -2,7 +2,9 @@ package servlets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PipedInputStream;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.RapidFeedback.InsideFunction;
 import com.RapidFeedback.MysqlFunction;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -60,10 +63,10 @@ public class UpdateProject_Time_Servlet extends HttpServlet {
 	    //get values from received JSONObject
 		String token = jsonReceive.getString("token");
 		String projectName = jsonReceive.getString("projectName");
-		String durationMin = jsonReceive.getString("durationMin");
-		String durationSec = jsonReceive.getString("durationSec");
-		String warningMin = jsonReceive.getString("warningMin");
-		String warningSec = jsonReceive.getString("warningSec");
+		int durationMin = jsonReceive.getIntValue("durationMin");
+		int durationSec = jsonReceive.getIntValue("durationSec");
+		int warningMin = jsonReceive.getIntValue("warningMin");
+		int warningSec = jsonReceive.getIntValue("warningSec");		
 		
 		ServletContext servletContext = this.getServletContext();
 				
@@ -72,6 +75,12 @@ public class UpdateProject_Time_Servlet extends HttpServlet {
 		//call the SQL method to save the 'Time' page
 		//return the 'true' or 'false' value to update_ACK
 		updateProject_ACK = false;
+		try {
+			updateProject_ACK = projectP2(dbFunction, servletContext, token, projectName, durationMin, durationSec, warningMin, warningSec);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
@@ -80,6 +89,14 @@ public class UpdateProject_Time_Servlet extends HttpServlet {
 		//send
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
+	 	System.out.println("Send: "+jsonSend.toJSONString());
+	}
+	
+	private boolean projectP2(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, int durationMin, int durationSec, int warningMin, int warningSec) throws SQLException{
+		InsideFunction in = new InsideFunction();
+		String username = in.token2user(servletContext, token);
+		int pid = dbFunction.getProjectId(username, projectName);
+		return dbFunction.updateTimeInformation(pid, durationMin, durationSec, warningMin, warningSec);
 	}
 
 }

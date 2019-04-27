@@ -70,6 +70,7 @@ public class RegisterServlet extends HttpServlet {
 			 	jsonSend.put("register_ACK", register_ACK);
 			 	PrintWriter output = response.getWriter();
 			 	output.print(jsonSend.toJSONString());
+			 	System.out.println("Send: "+jsonSend.toJSONString());
 			 	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

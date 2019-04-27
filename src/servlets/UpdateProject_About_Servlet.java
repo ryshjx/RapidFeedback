@@ -70,11 +70,19 @@ public class UpdateProject_About_Servlet extends HttpServlet {
 		
 		ServletContext servletContext = this.getServletContext();
 				
-		int updateProject_ACK;
+		boolean updateProject_ACK = false;
 	    //Mention:
 		//call the SQL method to save the 'About' page
-		//return the '0' or <projectID> to update_ACK
-		updateProject_ACK = projectP1(dbFunction, servletContext, token, projectName, subjectCode, subjectName, description);
+		//return the '0' or <projectID>
+		try {
+			if(projectP1(dbFunction, servletContext, token, projectName, subjectCode, subjectName, description)>0) {
+				updateProject_ACK = true;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
@@ -83,11 +91,12 @@ public class UpdateProject_About_Servlet extends HttpServlet {
 		//send
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
+	 	System.out.println("Send: "+jsonSend.toJSONString());
 		
 	}
 	
 	//if success, return projectID, otherwise return 0.
-	public int projectP1(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, String subjectCode, String subjectName, String description) {
+	public int projectP1(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, String subjectCode, String subjectName, String description) throws SQLException{
 		InsideFunction in = new InsideFunction();
 		String username = in.token2user(servletContext, token);
 		return dbFunction.createProject(username, projectName, subjectCode, subjectName, description);
