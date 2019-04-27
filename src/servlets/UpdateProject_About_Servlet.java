@@ -83,6 +83,7 @@ public class UpdateProject_About_Servlet extends HttpServlet {
 		//send
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
+	 	System.out.println("Send: "+jsonSend.toJSONString());
 		
 	}
 	
