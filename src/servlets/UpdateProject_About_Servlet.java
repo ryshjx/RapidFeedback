@@ -44,7 +44,7 @@ public class UpdateProject_About_Servlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		//		
 		MysqlFunction dbFunction = new MysqlFunction();
@@ -70,12 +70,14 @@ public class UpdateProject_About_Servlet extends HttpServlet {
 		
 		ServletContext servletContext = this.getServletContext();
 				
-		int updateProject_ACK = 0;
+		boolean updateProject_ACK = false;
 	    //Mention:
 		//call the SQL method to save the 'About' page
-		//return the '0' or <projectID> to update_ACK
+		//return the '0' or <projectID>
 		try {
-			updateProject_ACK = projectP1(dbFunction, servletContext, token, projectName, subjectCode, subjectName, description);
+			if(projectP1(dbFunction, servletContext, token, projectName, subjectCode, subjectName, description)>0) {
+				updateProject_ACK = true;
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

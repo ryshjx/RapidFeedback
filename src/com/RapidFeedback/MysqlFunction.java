@@ -187,7 +187,8 @@ public class MysqlFunction {
 		}
 	}
 	
-	public void updateTimeInformation(int pjId, int durationMin, int durationSec, int warningMin, int warningSec ) throws SQLException {
+	public boolean updateTimeInformation(int pjId, int durationMin, int durationSec, int warningMin, int warningSec ) throws SQLException {
+		boolean result = false;
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -200,13 +201,14 @@ public class MysqlFunction {
 				sql = "UPDATE Project SET warningMin = '"+ warningMin +"',  "+"warningSec = '"+ warningSec +"' "+"WHERE idProject = "+"'"+pjId+"' ";
 				stmt.executeUpdate(sql);
 				System.out.println(sql);
-
+				result = true;
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
 		}finally {
 			close2(conn,stmt,rs);
 		}
+		return result;
 	}
 
 	public int addCriteria(int pjId, Criteria c) throws SQLException {
