@@ -69,11 +69,11 @@ public class ImportStudentsServlet extends HttpServlet {
 		ArrayList<StudentInfo> arrayList ;
 		if (studentList instanceof ArrayList)
 		{
-			arrayList = (ArrayList)studentList;
+			arrayList = (ArrayList<StudentInfo>)studentList;
 		}
 		else
 		{
-			arrayList = new ArrayList();
+			arrayList = new ArrayList<StudentInfo>();
 			arrayList.addAll(studentList);
 		}
 		
@@ -84,6 +84,7 @@ public class ImportStudentsServlet extends HttpServlet {
 		//call the SQL method to import the student list
 		//return the 'true' or 'false' value to update_ACK
 		updateStudent_ACK = false;
+		
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();

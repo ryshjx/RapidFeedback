@@ -95,10 +95,20 @@ public class UpdateProject_About_Servlet extends HttpServlet {
 	}
 	
 	//if success, return projectID, otherwise return 0.
-	public int projectP1(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, String subjectCode, String subjectName, String description) throws SQLException{
+	public boolean projectP1(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, String subjectCode, String subjectName, String description) throws SQLException{
 		InsideFunction in = new InsideFunction();
 		String username = in.token2user(servletContext, token);
-		return dbFunction.createProject(username, projectName, subjectCode, subjectName, description);
+		int check = dbFunction.getProjectId(username, projectName);
+		boolean result = false;
+		if(check == 0) {
+			if(dbFunction.createProject(username, projectName, subjectCode, subjectName, description)>0) {
+				result = true;
+			}
+		}else if(check > 0 && dbFunction.updateProjectInfo(username, projectName, subjectCode, subjectName, description)) {
+			result = true;
+		}
+		
+		return result;
 	}
 
 }

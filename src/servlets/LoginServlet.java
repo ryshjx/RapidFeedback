@@ -112,6 +112,9 @@ public class LoginServlet extends HttpServlet {
 	
 	private ProjectInfo[] getProjectList(MysqlFunction db, String userName) throws SQLException{
 		List<Integer> pIDs = db.queryProjects(userName);
+		/*if(pIDs.size() == 0 || pIDs == null) {
+			return null;
+		}*/
 		ProjectInfo[] projectList = new ProjectInfo[pIDs.size()];
 		for(int i = 0; i<pIDs.size(); i++) {
 			projectList[i]=db.returnProjectInfo(pIDs.get(i));
