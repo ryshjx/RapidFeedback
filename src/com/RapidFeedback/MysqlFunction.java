@@ -441,6 +441,7 @@ public class MysqlFunction {
 			sql = "INSERT INTO Lecturers_has_Project(idLecturers, idProject,If_Primary) "
 					+ "values( '" + lecturerId +"','"+projectId+"','"+ 0 +"' )";
 			stmt.executeUpdate(sql);
+			System.out.println(sql);
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
@@ -461,6 +462,7 @@ public class MysqlFunction {
 			stmt = conn.createStatement();
 			sql = "SELECT * FROM Project";
 			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
 			while(rs.next()){
 				if (rs.getString("primaryMail").equals(username)
 						&& rs.getString("name").equals(projectName)) {
@@ -489,6 +491,7 @@ public class MysqlFunction {
 			stmt = conn.createStatement();
 			sql = "SELECT * FROM Lecturers";
 			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
 			while(rs.next()){
 				//				id = rs.getInt("idLecturers");
 				//				System.out.println("kkkkk"+id); 
@@ -520,6 +523,7 @@ public class MysqlFunction {
 			String sql;
 			sql = "SELECT * FROM Lecturers";
 			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
 			while(rs.next()){
 				//				id = rs.getInt("idLecturers");
 				//				System.out.println("kkkkk"+id); 
@@ -557,6 +561,7 @@ public class MysqlFunction {
 			String sql;
 			sql = "SELECT * FROM Project";
 			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
 			while(rs.next()){
 				if (rs.getInt("idProject") == projectId) {
 
@@ -595,6 +600,7 @@ public class MysqlFunction {
 			String sql;
 			sql = "SELECT * FROM Criteria";
 			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
 			while(rs.next()){
 				if (rs.getInt("idProject") == projectId) {
 					Criteria cr = new Criteria();
@@ -628,6 +634,7 @@ public class MysqlFunction {
 			String sql;
 			sql = "SELECT * FROM SubSection";
 			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
 			while(rs.next()){
 				if (rs.getInt("idCriteria") == idCriteria) {
 					SubSection ss = new SubSection();
@@ -659,6 +666,7 @@ public class MysqlFunction {
 			String sql;
 			sql = "SELECT * FROM ShortText";
 			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
 			while(rs.next()){
 				if (rs.getInt("idSubSection") == idSubSection) {
 					ShortText st = new ShortText();
@@ -692,6 +700,7 @@ public class MysqlFunction {
 			String sql;
 			sql = "SELECT * FROM `LongText`";
 			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
 			while(rs.next()){
 				if (rs.getInt("idShortText") == idShortText) {
 					longtext.add(rs.getString("context"));
@@ -719,6 +728,7 @@ public class MysqlFunction {
 			String sql;
 			sql = "SELECT * FROM Students";
 			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
 			while(rs.next()){
 				if (rs.getInt("idProject") == projectId) {
 					StudentInfo studentInfo =new StudentInfo(rs.getString("studentNumber"),rs.getString("firstName"),rs.getString("middleName"),
@@ -754,6 +764,7 @@ public class MysqlFunction {
 			String sql;
 			sql = "SELECT * FROM Lecturers_has_Project";
 			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
 			while(rs.next()){
 				if (rs.getInt("idProject") == projectId) {
 					assessorList.add(getLecturerMail(rs.getInt("idLecturers")));
@@ -782,6 +793,7 @@ public class MysqlFunction {
 			String sql;
 			sql = "SELECT * FROM Lecturers";
 			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
 			while(rs.next()){
 				if (rs.getInt("idLecturers") == id) {
 					mail = rs.getString("email");
