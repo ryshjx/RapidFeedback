@@ -650,7 +650,7 @@ public class MysqlFunction {
 					pj.setTimer(rs.getInt("durationMin"),rs.getInt("durationSec"),
 							rs.getInt("warningMin"),rs.getInt("warningSec"));
 					pj.setCriteria(returnCriteria(projectId));
-					pj.setStudentList(returnStudents(projectId));
+					pj.setStudentInfo(returnStudents(projectId));
 					pj.setAssistant(returnAssessors(projectId));
 
 				}else {
