@@ -300,7 +300,7 @@ public class MysqlFunction {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			sql = "INSERT INTO SubSection(name, idCriteria) "
-					+ "values( '" + ss.getName() +"','"+critId+"' )";
+					+ "values( '" + SqlFilter(ss.getName()) +"','"+critId+"' )";
 			stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
 			System.out.println(sql);
 			rs = stmt.getGeneratedKeys();
@@ -329,7 +329,7 @@ public class MysqlFunction {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			sql = "INSERT INTO ShortText(name, grade, idSubSection) "
-					+ "values( '" + st.getName() 
+					+ "values( '" + SqlFilter(st.getName()) 
 					+"','"+st.getGrade()
 					+"','"+subsId+"' )";
 			stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
@@ -358,6 +358,7 @@ public class MysqlFunction {
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
+			SqlFilter(context);
 			sql = "INSERT INTO `LongText`(context, idShortText) values( '" +context+"','"+stId+"' )";
 			stmt.executeUpdate(sql);
 			System.out.println(sql);
@@ -367,6 +368,26 @@ public class MysqlFunction {
 		}finally {
 			close2(conn,stmt,rs);
 		}
+	}
+
+	public String SqlFilter(String source) {
+		source = source.replace(";", "；");
+		source = source.replace("(", "（");
+		source = source.replace(")", "）");
+		source = source.replace("Exec", "");
+		source = source.replace("Execute", "");
+		source = source.replace("xp_", "x p_");
+		source = source.replace("sp_", "s p_");
+		source = source.replace("0x", "0 x");
+		source = source.replace("'", "");
+		source= source.replace("\"", "");
+		source = source.replace("&", "&amp");
+		source = source.replace("<", "&lt");
+		source = source.replace(">", "&gt");
+		source = source.replace("delete", "");
+		source = source.replace("update", "");
+		source = source.replace("insert", "");
+		return source;
 	}
 	
 	
