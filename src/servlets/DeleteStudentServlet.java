@@ -90,8 +90,14 @@ public class DeleteStudentServlet extends HttpServlet {
 		boolean result = false;
 		InsideFunction inside = new InsideFunction(dbFunction);
 		String username=inside.token2user(servletContext, token);
-		int pid = dbFunction.getProjectId(username, projectName);
-		result = dbFunction.deleteStudent(pid, studentID);
+		try {
+			int pid = dbFunction.getProjectId(username, projectName);
+			result = dbFunction.deleteStudent(pid, studentID);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 }
