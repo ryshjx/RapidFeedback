@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.RapidFeedback.InsideFunction;
 import com.RapidFeedback.MysqlFunction;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -74,6 +75,7 @@ public class DeleteStudentServlet extends HttpServlet {
 		//call the SQL method to edit the student information whose studentID is studentID.
 		//return the 'true' or 'false' value to update_ACK
 		updateStudent_ACK = false;
+		updateStudent_ACK = deleteStudent(dbFunction, servletContext, token, projectName, studentID);
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
@@ -82,6 +84,14 @@ public class DeleteStudentServlet extends HttpServlet {
 		//send
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
+	}
+	
+	private boolean deleteStudent(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, String studentID) {
+		boolean result = false;
+		InsideFunction inside = new InsideFunction(dbFunction);
+		String username=inside.token2user(servletContext, token);
+		int pid = dbFunction.getProjectId(username, projectName);
+		result = dbFunction.deleteStudent(pid, studentID);
 	}
 
 }
