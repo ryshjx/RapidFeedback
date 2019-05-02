@@ -214,6 +214,27 @@ public class MysqlFunction {
 		return result;
 	}
 
+	public boolean deleteCriterias(int pjId) throws SQLException {
+		boolean result = false;
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			sql = "DELETE * FROM Criteria WHERE idProject =" + pjId; 
+			stmt.executeUpdate(sql);
+			result =true;
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+		return result;
+	}
+
 	public int addCriteria(int pjId, Criteria c) throws SQLException {
 		int critId = 0;
 		Connection conn = null;
