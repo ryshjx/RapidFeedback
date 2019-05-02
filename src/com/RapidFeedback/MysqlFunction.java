@@ -198,6 +198,8 @@ public class MysqlFunction {
 		String sql;
 		try {
 				sql = "UPDATE Project SET durationMin = '"+ durationMin +"',  "+"durationSec = '"+ durationSec +"' "+"WHERE idProject = "+"'"+pjId+"' ";
+				conn=connectToDB(DB_URL,USER,PASS);
+				stmt = conn.createStatement();
 				stmt.executeUpdate(sql);
 				System.out.println(sql);
 				
