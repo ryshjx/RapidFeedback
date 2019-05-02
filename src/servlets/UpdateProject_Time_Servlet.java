@@ -102,6 +102,11 @@ public class UpdateProject_Time_Servlet extends HttpServlet {
 		if(pid<=0) {
 			return false;
 		}
+		System.out.println(pid);
+		System.out.println(durationMin);
+		System.out.println(durationSec);
+		System.out.println(warningMin);
+		System.out.println(warningSec);
 		return dbFunction.updateTimeInformation(pid, durationMin, durationSec, warningMin, warningSec);
 	}
 
