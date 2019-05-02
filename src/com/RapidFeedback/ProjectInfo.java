@@ -18,6 +18,7 @@ public class ProjectInfo {
 
     private ArrayList<String> assistantList = new ArrayList<String>();
     private ArrayList<Criteria> criteriaList= new ArrayList<Criteria>();
+    //private ArrayList<Criteria> commentList= new ArrayList<Criteria>();
     private ArrayList<StudentInfo> studentInfoList = new ArrayList<StudentInfo>();
 
 
@@ -62,10 +63,32 @@ public class ProjectInfo {
 
     }
 
-    public void setStudentList(ArrayList<StudentInfo> studentInfoList){
+//    public void setComment(ArrayList<Criteria> commentList){
+//
+//        this.commentList = commentList;
+//
+//    }
 
-        this.studentInfoList = studentInfoList;
+    public void addStudentList(ArrayList<StudentInfo> studentInfoList){
+
+        this.studentInfoList.addAll(studentInfoList);
     }
+
+    public void addSingleStudent(StudentInfo studentInfo){
+
+        this.studentInfoList.add(studentInfo);
+
+    }
+
+    public void addSingleCriteria(Criteria criteria){
+
+        this.criteriaList.add(criteria);
+    }
+
+//    public void addSingleComment(Criteria criteria){
+//
+//        commentList.add(criteria);
+//    }
 
     public void setTimer(int durationMin, int durationSec, int warningMin, int warningSec){
 
@@ -74,6 +97,14 @@ public class ProjectInfo {
         this.warningMin = warningMin;
         this.warningSec = warningSec;
 
+    }
+
+    public void setDurationMin(int durationMin) {
+        this.durationMin = durationMin;
+    }
+
+    public void setDurationSec(int durationSec) {
+        this.durationSec = durationSec;
     }
 
     public String getProjectName(){
