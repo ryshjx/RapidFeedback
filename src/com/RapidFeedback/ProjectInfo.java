@@ -62,6 +62,12 @@ public class ProjectInfo {
         this.criteriaList = criteriaList;
 
     }
+    
+    public void setStudentInfo(ArrayList<StudentInfo> studentList){
+
+        this.studentInfoList = studentList;
+
+    }
 
 //    public void setComment(ArrayList<Criteria> commentList){
 //
