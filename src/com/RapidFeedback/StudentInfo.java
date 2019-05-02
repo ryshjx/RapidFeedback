@@ -11,6 +11,7 @@ public class StudentInfo {
     private int group;
 
 
+    public StudentInfo(){}
     public StudentInfo(String number, String firstName, String middleName,
                            String surname, String email){
 
@@ -19,6 +20,41 @@ public class StudentInfo {
         this.middleName = middleName;
         this.surname = surname;
         this.email = email;
+
+    }
+
+    public void setStudentInfo(String number, String firstName, String middleName,
+                            String surname, String email){
+
+        this.number = number;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.surname = surname;
+        this.email = email;
+
+    }
+
+    public void setFirstName(String firstName){
+
+        this.firstName = firstName;
+
+    }
+
+    public void setMiddleName(String middleName){
+
+        this.middleName = middleName;
+
+    }
+
+    public void setEmail(String email){
+
+        this.email = email;
+
+    }
+
+    public void setSurname(String surname){
+
+        this.surname = surname;
 
     }
 
@@ -33,6 +69,11 @@ public class StudentInfo {
 
         this.group = group;
 
+    }
+
+    public void setNumber(String number)
+    {
+        this.number = number;
     }
 
     public String getNumber(){
