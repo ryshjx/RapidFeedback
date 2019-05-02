@@ -39,6 +39,7 @@ public class InsideFunction {
 		boolean result=false;
 		try {
 			int pid = dbFunction.getProjectId(username, projectName);
+			//System.out.println("hello!!!!");
 			if(username!=null && projectName!=null) {
 				if(dbFunction.ifStudentExists(pid, student.getNumber())>0) {
 					//result=dbFunction.editStudentInfo(pid, student.getNumber(), student.getEmail(), student.getFirstName(), student.getSurname(), student.getMiddleName(), student.getGroup());

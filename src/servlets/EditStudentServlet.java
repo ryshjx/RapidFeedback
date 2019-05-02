@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.jasper.tagplugins.jstl.core.Out;
+
 import com.RapidFeedback.InsideFunction;
 import com.RapidFeedback.MysqlFunction;
 import com.RapidFeedback.StudentInfo;
@@ -99,9 +101,13 @@ public class EditStudentServlet extends HttpServlet {
 		String username=inside.token2user(servletContext, token);
 		try {
 			int pid = dbFunction.getProjectId(username, projectName);
+			//System.out.println(username);
+			//System.out.println(projectName);
 			if(username!=null && projectName!=null) {
 				if(dbFunction.ifStudentExists(pid, student.getNumber())>0) {
+					//System.out.println("before result");
 					result=dbFunction.editStudentInfo(pid, student.getNumber(), student.getEmail(), student.getFirstName(), student.getSurname(), student.getMiddleName(), student.getGroup());
+					//System.out.println("after result");
 					return result; 
 				}else {
 					//result=dbFunction.addStudentInfo(pid, student.getNumber(), student.getEmail(), student.getFirstName(), student.getSurname(), student.getMiddleName(), student.getGroup());
