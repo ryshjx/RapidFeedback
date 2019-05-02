@@ -97,8 +97,13 @@ public class UpdateProject_About_Servlet extends HttpServlet {
 	public boolean projectP1(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, String subjectCode, String subjectName, String description) throws SQLException{
 		InsideFunction in = new InsideFunction();
 		String username = in.token2user(servletContext, token);
-		int check = dbFunction.getProjectId(username, projectName);
 		boolean result = false;
+		int check = dbFunction.getProjectId(username, projectName);
+		
+		if(username == null || username.isEmpty()) {
+			return result;
+		}
+		
 		if(check == 0) {
 			if(dbFunction.createProject(username, projectName, subjectCode, subjectName, description)>0) {
 				result = true;

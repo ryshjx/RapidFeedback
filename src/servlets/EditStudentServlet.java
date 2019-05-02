@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.RapidFeedback.InsideFunction;
 import com.RapidFeedback.MysqlFunction;
+import com.RapidFeedback.StudentInfo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
@@ -66,6 +68,7 @@ public class EditStudentServlet extends HttpServlet {
 		String email = jsonReceive.getString("email");
 		
 		ServletContext servletContext = this.getServletContext();
+		StudentInfo student = new StudentInfo(studentID, firstName, middleName, lastName, email);
 				
 		/*
 		 * Attention:
@@ -78,6 +81,8 @@ public class EditStudentServlet extends HttpServlet {
 		//call the SQL method to edit the student information whose studentID is studentID.
 		//return the 'true' or 'false' value to update_ACK
 		updateStudent_ACK = false;
+		updateStudent_ACK = editStudent(dbFunction, servletContext, token, projectName, student);
+
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
@@ -86,6 +91,29 @@ public class EditStudentServlet extends HttpServlet {
 		//send
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
+	}
+	
+	private boolean editStudent(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, StudentInfo student) {
+		boolean result = false;
+		InsideFunction inside = new InsideFunction(dbFunction);
+		String username=inside.token2user(servletContext, token);
+		try {
+			int pid = dbFunction.getProjectId(username, projectName);
+			if(username!=null && projectName!=null) {
+				if(dbFunction.ifStudentExists(pid, student.getNumber())>0) {
+					result=dbFunction.editStudentInfo(pid, student.getNumber(), student.getEmail(), student.getFirstName(), student.getSurname(), student.getMiddleName(), student.getGroup());
+					return result; 
+				}else {
+					//result=dbFunction.addStudentInfo(pid, student.getNumber(), student.getEmail(), student.getFirstName(), student.getSurname(), student.getMiddleName(), student.getGroup());
+					return result;
+				}
+			}else {
+				return result;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			return result;
+		}
 	}
 
 }

@@ -13,10 +13,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.graalvm.compiler.hotspot.aarch64.AArch64HotSpotBackend;
+
+import com.RapidFeedback.InsideFunction;
 import com.RapidFeedback.MysqlFunction;
 import com.RapidFeedback.StudentInfo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.mysql.cj.xdevapi.AddResult;
+import com.mysql.cj.xdevapi.Result;
 
 /**
  * Servlet implementation class ImportStudentsServlet
@@ -83,8 +88,9 @@ public class ImportStudentsServlet extends HttpServlet {
 	    //Mention:
 		//call the SQL method to import the student list
 		//return the 'true' or 'false' value to update_ACK
-		updateStudent_ACK = false;
 		
+		updateStudent_ACK = false;
+		updateStudent_ACK=addStudentList(dbFunction, servletContext, token, arrayList, projectName);
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
@@ -95,5 +101,20 @@ public class ImportStudentsServlet extends HttpServlet {
 	 	output.print(jsonSend.toJSONString());
 		
 	}
-
+	
+	private boolean addStudentList(MysqlFunction dbFunction, ServletContext servletContext, String token, ArrayList<StudentInfo> list, String projectName) {
+		boolean result = false;
+		if(list.size()==0 || list==null) {
+			result = true;
+			return result;
+		}
+		InsideFunction inside = new InsideFunction(dbFunction);
+		for(StudentInfo student : list) {
+			result = inside.addStudent(servletContext, token, projectName, student);
+			if(result == false) {
+				break;
+			}
+		}
+		return result;
+	}
 }

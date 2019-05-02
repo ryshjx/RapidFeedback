@@ -34,6 +34,29 @@ public class InsideFunction {
 		return null;
 	}
 	
+	public boolean addStudent(ServletContext servletContext, String token, String projectName, StudentInfo student) {
+		String username=this.token2user(servletContext, token);
+		boolean result=false;
+		try {
+			int pid = dbFunction.getProjectId(username, projectName);
+			if(username!=null && projectName!=null) {
+				if(dbFunction.ifStudentExists(pid, student.getNumber())>0) {
+					//result=dbFunction.editStudentInfo(pid, student.getNumber(), student.getEmail(), student.getFirstName(), student.getSurname(), student.getMiddleName(), student.getGroup());
+					return result; 
+				}else {
+					result=dbFunction.addStudentInfo(pid, student.getNumber(), student.getEmail(), student.getFirstName(), student.getSurname(), student.getMiddleName(), student.getGroup());
+					return result;
+				}
+			}else {
+				return result;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			return result;
+		}
+		
+	}
+	
 /*	public boolean addStudent(String token, ) {
 		
 	}*/
@@ -47,8 +70,8 @@ public class InsideFunction {
 		String username = token2user(servletContext, token);
 		return dbFunction.createProject();
 	}
-	
-	public int projectP3(ServletContext servletContext, String projectName, String username, ArrayList<String> criteriaNames) {
+	*/
+	public int projectP3(ServletContext servletContext, String token, String projectName, String username, ArrayList<String> criteriaNames) {
 		String username = token2user(servletContext, token);
 		if(criteriaNames!=null && criteriaNames.size()!=0) {
 			for(String c:criteriaNames) {
@@ -87,6 +110,6 @@ public class InsideFunction {
 			}
 		}
 		return 1;
-	}*/
+	}
 }
 

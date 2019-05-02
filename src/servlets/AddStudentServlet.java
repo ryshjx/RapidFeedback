@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.RapidFeedback.InsideFunction;
 import com.RapidFeedback.MysqlFunction;
+import com.RapidFeedback.StudentInfo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
@@ -45,6 +47,7 @@ public class AddStudentServlet extends HttpServlet {
 
 		//		
 		MysqlFunction dbFunction = new MysqlFunction();
+		InsideFunction inside = new InsideFunction(dbFunction);
 		
 		//get JSONObject from request
 		JSONObject jsonReceive;
@@ -67,12 +70,17 @@ public class AddStudentServlet extends HttpServlet {
 		String email = jsonReceive.getString("email");
 		
 		ServletContext servletContext = this.getServletContext();
+		
+		StudentInfo student = new StudentInfo(studentID, firstName, middleName, lastName, email);
 				
 		boolean updateStudent_ACK;
+		updateStudent_ACK = false;
 	    //Mention:
 		//call the SQL method to add a student
 		//return the 'true' or 'false' value to update_ACK
-		updateStudent_ACK = false;
+		updateStudent_ACK = inside.addStudent(servletContext, token, projectName, student);
+		
+		
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
