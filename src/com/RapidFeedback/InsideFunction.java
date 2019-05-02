@@ -71,7 +71,7 @@ public class InsideFunction {
 		return dbFunction.createProject();
 	}
 	*/
-	public int projectP3(ServletContext servletContext, String token, String projectName, String username, ArrayList<String> criteriaNames) {
+/*	public int projectP3(ServletContext servletContext, String token, String projectName, String username, ArrayList<String> criteriaNames) {
 		String username = token2user(servletContext, token);
 		if(criteriaNames!=null && criteriaNames.size()!=0) {
 			for(String c:criteriaNames) {
@@ -110,6 +110,5 @@ public class InsideFunction {
 			}
 		}
 		return 1;
-	}
+	}*/
 }
-

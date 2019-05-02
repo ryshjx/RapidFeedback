@@ -7,7 +7,7 @@ import java.util.jar.Attributes.Name;
 public class MysqlFunction {
 
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";  
-	static final String DB_URL = "jdbc:mysql://10.12.10.1:3306/mydb?serverTimezone=UTC&useSSL=false";
+	static final String DB_URL = "jdbc:mysql://10.12.13.86:3306/mydb?serverTimezone=UTC&useSSL=false";
 
 	static final String USER = "root";
 	static final String PASS = "88213882ydh";
@@ -198,6 +198,8 @@ public class MysqlFunction {
 		String sql;
 		try {
 				sql = "UPDATE Project SET durationMin = '"+ durationMin +"',  "+"durationSec = '"+ durationSec +"' "+"WHERE idProject = "+"'"+pjId+"' ";
+				conn=connectToDB(DB_URL,USER,PASS);
+				stmt = conn.createStatement();
 				stmt.executeUpdate(sql);
 				System.out.println(sql);
 				
@@ -223,7 +225,7 @@ public class MysqlFunction {
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
-			sql = "DELETE * FROM Criteria WHERE idProject =" + pjId; 
+			sql = "DELETE FROM Criteria WHERE idProject = " + pjId+";"; 
 			stmt.executeUpdate(sql);
 			result =true;
 		}catch(SQLException se){

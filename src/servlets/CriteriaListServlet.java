@@ -79,7 +79,7 @@ public class CriteriaListServlet extends HttpServlet {
 		//call the SQL method to import the student list
 		//return the 'true' or 'false' value to update_ACK
 		update_ACK = false;
-		update_ACK = 
+		update_ACK = addCriteriaList(dbFunction, servletContext, token, projectName, arrayList);
 		
 		
 		//construct the JSONObject to send
