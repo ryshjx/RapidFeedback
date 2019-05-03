@@ -7,10 +7,11 @@ import java.util.jar.Attributes.Name;
 public class MysqlFunction {
 
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";  
-	static final String DB_URL = "jdbc:mysql://10.12.13.86:3306/mydb?serverTimezone=UTC&useSSL=false";
+	static final String DB_URL = "jdbc:mysql://localhost:3306/mydb?serverTimezone=UTC&useSSL=false";
 
 	static final String USER = "root";
-	static final String PASS = "88213882ydh";
+	//static final String PASS = "88213882ydh";
+	static final String PASS = "Feedback123456";
 
 	public Connection connectToDB(String url, String userName, String password) {
 		Connection conn = null;
