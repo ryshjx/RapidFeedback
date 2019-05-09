@@ -810,7 +810,7 @@ public class MysqlFunction {
 				if (rs.getInt("idProject") == projectId) {
 					StudentInfo studentInfo =new StudentInfo(rs.getString("studentNumber"),rs.getString("firstName"),rs.getString("middleName"),
 							rs.getString("surName"), rs.getString("emailAddress"));
-					studentInfo.setMark(rs.getDouble("mark"));
+					studentInfo.setTotalMark(rs.getDouble("mark"));
 					studentInfo.setGroup(rs.getInt("groupNumber"));
 					studentInfoList.add(studentInfo);
 				}else {

@@ -35,6 +35,18 @@ public class StudentInfo {
 
     }
 
+    
+    public Mark getMark() {
+
+        return mark;
+
+    }
+
+    public void setMark(Mark mark) {
+
+        this.mark = mark;
+    
+    }
     public void setFirstName(String firstName){
 
         this.firstName = firstName;
@@ -59,9 +71,9 @@ public class StudentInfo {
 
     }
 
-    public void setMark(Double totalmark){
+    public void setTotalMark(Double totalMark){
 
-        this.totalMark = totalmark;
+        this.totalMark = totalMark;
 
     }
 
@@ -107,7 +119,7 @@ public class StudentInfo {
 
     }
 
-    public Double getMark(){
+    public Double getTotalMark(){
 
         return totalMark;
 
