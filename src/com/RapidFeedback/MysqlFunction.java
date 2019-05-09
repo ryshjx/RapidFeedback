@@ -393,7 +393,6 @@ public class MysqlFunction {
 		return source;
 	}
 	
-	
 
 	public int ifStudentExists(int idProject, String studentNumber) throws SQLException{
 		int result = 0;
