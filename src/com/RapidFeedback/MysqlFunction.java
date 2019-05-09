@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes.Name;
+
 public class MysqlFunction {
 
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";  
@@ -302,7 +303,7 @@ public class MysqlFunction {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			sql = "INSERT INTO SubSection(name, idCriteria) "
-					+ "values( '" + SqlFilter(ss.getName()) +"','"+critId+"' )";
+					+ "values( '" + ss.getName() +"','"+critId+"' )";
 			stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
 			System.out.println(sql);
 			rs = stmt.getGeneratedKeys();
@@ -324,19 +325,20 @@ public class MysqlFunction {
 	public int addShortText(int subsId, ShortText st) throws SQLException {
 		int stId = 0;
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
-			stmt = conn.createStatement();
 			sql = "INSERT INTO ShortText(name, grade, idSubSection) "
-					+ "values( '" + SqlFilter(st.getName()) 
-					+"','"+st.getGrade()
-					+"','"+subsId+"' )";
-			stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
+					+ "values(?,?,?)";
+			pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+			pstmt.setString(1,st.getName());  
+            pstmt.setInt(2, st.getGrade());  
+            pstmt.setInt(3, subsId);
+			pstmt.executeUpdate();
 			System.out.println(sql);
-			rs = stmt.getGeneratedKeys();
+			rs = pstmt.getGeneratedKeys();
 			if (rs.next()) {  
 				stId = rs.getInt(1);  
 			} 
@@ -347,49 +349,31 @@ public class MysqlFunction {
 			// JDBC faults
 			se.printStackTrace();
 		}finally {
-			close2(conn,stmt,rs);
+			close3(conn,pstmt,rs);
 		}
 		return stId;
 	}
-	
+
 	public void addLongText(int stId, String context) throws SQLException {
 		Connection conn = null;
-		Statement stmt = null;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
-			stmt = conn.createStatement();
-			SqlFilter(context);
-			sql = "INSERT INTO `LongText`(context, idShortText) values( '" +context+"','"+stId+"' )";
-			stmt.executeUpdate(sql);
+			sql = "INSERT INTO `LongText`(context, idShortText) values(?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, context);  
+            pstmt.setInt(2, stId);  
+			pstmt.executeUpdate();
 			System.out.println(sql);
+			pstmt.close();
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
 		}finally {
-			close2(conn,stmt,rs);
+			close3(conn,pstmt,rs);
 		}
-	}
-
-	public String SqlFilter(String source) {
-		source = source.replace(";", "；");
-		source = source.replace("(", "（");
-		source = source.replace(")", "）");
-		source = source.replace("Exec", "");
-		source = source.replace("Execute", "");
-		source = source.replace("xp_", "x p_");
-		source = source.replace("sp_", "s p_");
-		source = source.replace("0x", "0 x");
-		source = source.replace("'", "");
-		source= source.replace("\"", "");
-		source = source.replace("&", "&amp");
-		source = source.replace("<", "&lt");
-		source = source.replace(">", "&gt");
-		source = source.replace("delete", "");
-		source = source.replace("update", "");
-		source = source.replace("insert", "");
-		return source;
 	}
 	
 	
@@ -904,6 +888,27 @@ public class MysqlFunction {
 
 
 	public void close2(Connection conn, Statement stmt,
+			ResultSet rs) throws SQLException {
+		try {
+			if(rs != null){
+				rs.close();
+				rs = null;
+			}
+		} finally{
+			try{
+				if(stmt != null){
+					stmt.close();
+					stmt = null;
+				}
+			}finally{
+				if(conn != null){
+					conn.close();
+					conn = null;
+				}
+			}
+		}
+	}
+	public void close3(Connection conn, PreparedStatement stmt,
 			ResultSet rs) throws SQLException {
 		try {
 			if(rs != null){
