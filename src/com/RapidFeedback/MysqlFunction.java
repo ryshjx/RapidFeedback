@@ -481,7 +481,7 @@ public class MysqlFunction {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			sql =	"UPDATE Students SET "
-					+"groupNumber = '" +group+ "', " 
+					+"groupNumber = '" +group+ "' " 
 					+"WHERE idProject= " + "'"+ projectId+ "' AND studentNumber= "+ "'"+ studentNumber+  "';  ";
 			stmt.execute(sql);
 			System.out.println(sql);
