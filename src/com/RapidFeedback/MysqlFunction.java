@@ -883,7 +883,7 @@ public class MysqlFunction {
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
 			String sql;
-			sql = "INSERT INTO Lecturers_comment_Students(idlecturers, idStudents, CriteriaName, mark) values(?,?,?,?)";
+			sql = "INSERT INTO Mark(idlecturers, idStudents, CriteriaName, mark) values(?,?,?,?)";
 			pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 			pstmt.setInt(1, idlecturer);  
             pstmt.setInt(2, idStudent);
@@ -925,6 +925,7 @@ public class MysqlFunction {
             pstmt.setString(3, comment);
 			pstmt.executeUpdate();
 			System.out.println(sql);
+			result = true;
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
