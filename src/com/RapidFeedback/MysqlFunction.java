@@ -470,6 +470,31 @@ public class MysqlFunction {
 		return result;
 	}
 	
+	public boolean editGroupNumber(int projectId, String studentNumber, int group) throws SQLException {
+		boolean result = false;
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			double mark = 00.00;
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			sql =	"UPDATE Students SET "
+					+"groupNumber = '" +group+ "', " 
+					+"WHERE idProject= " + "'"+ projectId+ "' AND studentNumber= "+ "'"+ studentNumber+  "';  ";
+			stmt.execute(sql);
+			System.out.println(sql);
+			result = true;
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+		return result;
+	}
+	
 	public boolean deleteStudent(int projectId, String studentNumber) throws SQLException {
 		boolean result = false;
 		Connection conn = null;
