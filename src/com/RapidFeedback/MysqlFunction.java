@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes.Name;
 
+
 public class MysqlFunction {
 
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";  
@@ -869,6 +870,62 @@ public class MysqlFunction {
 			close2(conn,stmt,rs);
 		}
 		return mail;
+	}
+	
+	public int writeIntoMark(int idlecturer, int idStudent, Criteria cr, double mark) throws SQLException {
+		int primaryKey = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			String sql;
+			sql = "INSERT INTO Lecturers_comment_Students(idlecturers, idStudents, CriteriaName, mark) values(?,?,?,?)";
+			pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+			pstmt.setInt(1, idlecturer);  
+            pstmt.setInt(2, idStudent);
+            pstmt.setString(3, cr.getName());
+            pstmt.setDouble(4, mark);
+			pstmt.executeUpdate();
+			System.out.println(sql);
+			rs = pstmt.getGeneratedKeys();
+			if (rs.next()) {  
+				primaryKey = rs.getInt(1);  
+			}
+			
+			
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close3(conn,pstmt,rs);
+		}
+		return primaryKey;
+	}
+	
+	//write lines into table comment
+	public boolean writeIntoComment(int idlecturer, int idStudent, String comment) throws SQLException {
+		boolean result = false;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			sql = "INSERT INTO Lecturers_comment_Students(idlecturers, idStudents, comment) values(?,?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idlecturer);  
+            pstmt.setInt(2, idStudent);
+            pstmt.setString(3, comment);
+			pstmt.executeUpdate();
+			System.out.println(sql);
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close3(conn,pstmt,rs);
+		}
+		return result;
 	}
 
 
