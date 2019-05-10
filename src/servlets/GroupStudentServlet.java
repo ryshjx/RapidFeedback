@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -63,20 +64,18 @@ public class GroupStudentServlet extends HttpServlet {
 		String studentID = jsonReceive.getString("studentID");
 		int email = jsonReceive.getInteger("group");
 		
-		ServletContext servletContext = this.getServletContext();
-		StudentInfo student = new StudentInfo(studentID, firstName, middleName, lastName, email);
-				
+		ServletContext servletContext = this.getServletContext();				
 		
-		boolean updateStudent_ACK;
+		boolean updateGroupNumber_ACK;
 	    //Mention:
 		//call the SQL method to edit the student groupID whose studentID is studentID.
 		//return the 'true' or 'false' value to update_ACK
 		
-	//	updateStudent_ACK = 
+		//updateGroupNumber_ACK=
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
-		jsonSend.put("updateStudent_ACK", updateStudent_ACK);
+		jsonSend.put("updateStudent_ACK", updateGroupNumber_ACK);
 		
 		//send
 		PrintWriter output = response.getWriter();
