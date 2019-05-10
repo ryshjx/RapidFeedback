@@ -4,30 +4,28 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.RapidFeedback.InsideFunction;
-import com.RapidFeedback.Mark;
 import com.RapidFeedback.MysqlFunction;
+import com.RapidFeedback.StudentInfo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * Servlet implementation class MarkServlet
+ * Servlet implementation class GroupStudentServlet
  */
-@WebServlet("/MarkServlet")
-public class MarkServlet extends HttpServlet {
+@WebServlet("/GroupStudentServlet")
+public class GroupStudentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MarkServlet() {
+    public GroupStudentServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -47,7 +45,6 @@ public class MarkServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 //		
 		MysqlFunction dbFunction = new MysqlFunction();
-		InsideFunction inside = new InsideFunction(dbFunction);
 		
 		//get JSONObject from request
 		JSONObject jsonReceive;
@@ -64,21 +61,22 @@ public class MarkServlet extends HttpServlet {
 		String token = jsonReceive.getString("token");
 		String projectName = jsonReceive.getString("projectName");
 		String studentID = jsonReceive.getString("studentID");
-		String markString = jsonReceive.getString("mark");
-		Mark mark = JSON.parseObject(markString, Mark.class);
+		int email = jsonReceive.getInteger("group");
 		
 		ServletContext servletContext = this.getServletContext();
+		StudentInfo student = new StudentInfo(studentID, firstName, middleName, lastName, email);
+				
 		
-		boolean mark_ACK;
+		boolean updateStudent_ACK;
 	    //Mention:
-		//call the SQL method to save mark and comments of this student.
-		//return the 'true' or 'false' value to mark_ACK
+		//call the SQL method to edit the student groupID whose studentID is studentID.
+		//return the 'true' or 'false' value to update_ACK
 		
-		mark_ACK = inside.addResult(servletContext, token, projectName, studentID, mark);
+	//	updateStudent_ACK = 
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
-		jsonSend.put("mark_ACK", mark_ACK);
+		jsonSend.put("updateStudent_ACK", updateStudent_ACK);
 		
 		//send
 		PrintWriter output = response.getWriter();

@@ -59,37 +59,42 @@ public class InsideFunction {
 		
 	}
 	
-	public boolean storeResult(ServletContext servletContext, String token, String projectName, String studentNumber, Mark result) {
+	public boolean addResult(ServletContext servletContext, String token, String projectName, String studentNumber, Mark grade) {
+		boolean result=false;
+		
 		try {
 			String username=this.token2user(servletContext, token);
 			int uid = dbFunction.getLecturerId(username);
 			int pid = dbFunction.getProjectId(username, projectName);
 			int studentID = dbFunction.ifStudentExists(pid, studentNumber);
-			ArrayList<Criteria> criteriaList = result.getCriteriaList();
-		    ArrayList<Double> markList = result.getMarkList();
+			ArrayList<Criteria> criteriaList = grade.getCriteriaList();
+		    ArrayList<Double> markList = grade.getMarkList();
 			if(criteriaList.size() != markList.size()) {
 				System.out.println("Error: MarkList and criteriaList does not have the same size");
-				return false;
+				return result;
 			}
 			for(int i=0;i<markList.size();i++) {
-				int ack = dbFunction.writeIntoMark(uid, studentID, criteriaList.get(i), markList.get(i));
+				int ack = dbFunction.writeIntoMark(uid, studentID, criteriaList.get(i), markList.get(i).doubleValue());
 				if(ack<=0) {
 					System.out.println("Error: The "+i+"th mark result cannot be added to the database.");
-					return false;
+					return result;
 				}
 			}
-			
+			if(dbFunction.writeIntoComment(uid, studentID, grade.getComment())) {
+				result=true;
+			}
+			else {
+				System.out.println("Error: Cannot insert additional comment.");
+			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-			return false;
+			return result;
 		}
-		return true;
-		
-		
+		return result;
 	}
 	
-	public boolean getResult();
+	//public boolean getResult();
 	
 /*	public boolean addStudent(String token, ) {
 		
