@@ -1,5 +1,6 @@
 package com.RapidFeedback;
 
+import java.awt.print.Printable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -57,6 +58,38 @@ public class InsideFunction {
 		}
 		
 	}
+	
+	public boolean storeResult(ServletContext servletContext, String token, String projectName, String studentNumber, Mark result) {
+		try {
+			String username=this.token2user(servletContext, token);
+			int uid = dbFunction.getLecturerId(username);
+			int pid = dbFunction.getProjectId(username, projectName);
+			int studentID = dbFunction.ifStudentExists(pid, studentNumber);
+			ArrayList<Criteria> criteriaList = result.getCriteriaList();
+		    ArrayList<Double> markList = result.getMarkList();
+			if(criteriaList.size() != markList.size()) {
+				System.out.println("Error: MarkList and criteriaList does not have the same size");
+				return false;
+			}
+			for(int i=0;i<markList.size();i++) {
+				int ack = dbFunction.writeIntoMark(uid, studentID, criteriaList.get(i), markList.get(i));
+				if(ack<=0) {
+					System.out.println("Error: The "+i+"th mark result cannot be added to the database.");
+					return false;
+				}
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+		
+		
+	}
+	
+	public boolean getResult();
 	
 /*	public boolean addStudent(String token, ) {
 		
