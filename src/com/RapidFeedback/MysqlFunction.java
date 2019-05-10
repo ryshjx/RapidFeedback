@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes.Name;
 
+import feedback.SubSection;
+
 
 public class MysqlFunction {
 
@@ -892,8 +894,11 @@ public class MysqlFunction {
 			if (rs.next()) {  
 				primaryKey = rs.getInt(1);  
 			}
-			
-			
+			int i = cr.getSubsectionList().size();
+			for (int j=0;j<i;j++) {
+				addSpecificComments(primaryKey, cr.getSubsectionList().get(j));
+			}
+			System.out.println("add successfully ! Grader: "+ idlecturer+ " student: "+ idStudent) ;
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
@@ -926,6 +931,29 @@ public class MysqlFunction {
 			close3(conn,pstmt,rs);
 		}
 		return result;
+	}
+	
+	public void addSpecificComments(int primaryKey, SubSection ss) throws SQLException{
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			String sql;
+			sql = "INSERT INTO CriteriaComment(idMark, subsection, shortText, longText) values(?,?,?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, primaryKey);  
+            pstmt.setString(2, ss.getName());
+            pstmt.setString(3, ss.getShortTextList().get(0).getName());
+            pstmt.setString(4, ss.getShortTextList().get(0).getLongtext().get(0));
+			pstmt.executeUpdate();
+			System.out.println(sql);
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close3(conn,pstmt,rs);
+		}
 	}
 
 
