@@ -940,7 +940,7 @@ public class MysqlFunction {
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
 			String sql;
-			sql = "INSERT INTO CriteriaComment(idMark, subsection, shortText, longText) values(?,?,?,?)";
+			sql = "INSERT INTO CriteriaComment(idMark, subsection, shortText, comment) values(?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, primaryKey);  
             pstmt.setString(2, ss.getName());
