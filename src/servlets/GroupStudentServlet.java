@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.RapidFeedback.InsideFunction;
 import com.RapidFeedback.MysqlFunction;
 import com.RapidFeedback.StudentInfo;
 import com.alibaba.fastjson.JSON;
@@ -46,6 +47,7 @@ public class GroupStudentServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 //		
 		MysqlFunction dbFunction = new MysqlFunction();
+		InsideFunction inside = new InsideFunction(dbFunction);
 		
 		//get JSONObject from request
 		JSONObject jsonReceive;
@@ -62,7 +64,7 @@ public class GroupStudentServlet extends HttpServlet {
 		String token = jsonReceive.getString("token");
 		String projectName = jsonReceive.getString("projectName");
 		String studentID = jsonReceive.getString("studentID");
-		int email = jsonReceive.getInteger("group");
+		int group = jsonReceive.getInteger("group");
 		
 		ServletContext servletContext = this.getServletContext();				
 		
@@ -70,8 +72,16 @@ public class GroupStudentServlet extends HttpServlet {
 	    //Mention:
 		//call the SQL method to edit the student groupID whose studentID is studentID.
 		//return the 'true' or 'false' value to update_ACK
+		String username=inside.token2user(servletContext, token);
+		try {
+			int projectId = dbFunction.getProjectId(username, projectName);
+			updateGroupNumber_ACK=dbFunction.editGroupNumber(projectId, studentID, group);
+		} catch (Exception e) {
+			// TODO: handle exception
+			updateGroupNumber_ACK=false;
+			e.printStackTrace();
+		}
 		
-		//updateGroupNumber_ACK=
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
