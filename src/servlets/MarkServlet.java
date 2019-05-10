@@ -4,12 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.RapidFeedback.InsideFunction;
 import com.RapidFeedback.Mark;
 import com.RapidFeedback.MysqlFunction;
 import com.alibaba.fastjson.JSON;
@@ -45,6 +47,7 @@ public class MarkServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 //		
 		MysqlFunction dbFunction = new MysqlFunction();
+		InsideFunction inside = new InsideFunction(dbFunction);
 		
 		//get JSONObject from request
 		JSONObject jsonReceive;
@@ -65,19 +68,13 @@ public class MarkServlet extends HttpServlet {
 		Mark mark = JSON.parseObject(markString, Mark.class);
 		
 		ServletContext servletContext = this.getServletContext();
-				
-		/*
-		 * Attention:
-		 * This method is to delete the student whose studentID is 'studentID':
-		 * we assume the StudentID cannot change and is the primary key.
-		 */
 		
 		boolean mark_ACK;
 	    //Mention:
 		//call the SQL method to save mark and comments of this student.
 		//return the 'true' or 'false' value to mark_ACK
 		
-		//mark_ACK = 
+		mark_ACK = inside.addResult(servletContext, token, projectName, studentID, mark);
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
