@@ -925,6 +925,7 @@ public class MysqlFunction {
             pstmt.setString(3, comment);
 			pstmt.executeUpdate();
 			System.out.println(sql);
+			result = true;
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
