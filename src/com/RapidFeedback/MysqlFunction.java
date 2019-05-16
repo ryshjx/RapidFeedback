@@ -1,22 +1,17 @@
-package com.RapidFeedback;
-
+package feedback;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.Attributes.Name;
 
-//import feedback.SubSection;
-
 
 public class MysqlFunction {
 
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";  
-	static final String DB_URL = "jdbc:mysql://localhost:3306/mydb?serverTimezone=UTC&useSSL=false";
-	//static final String DB_URL = "jdbc:mysql://10.12.14.145:3306/mydb?serverTimezone=UTC&useSSL=false";
+	static final String DB_URL = "jdbc:mysql://localhost:3306/mydb?serverTimezone=UTC ";
 
 	static final String USER = "root";
-	//static final String PASS = "88213882ydh";
-	static final String PASS = "Feedback123456";
+	static final String PASS = "88213882ydh";
 
 	public Connection connectToDB(String url, String userName, String password) {
 		Connection conn = null;
@@ -33,11 +28,12 @@ public class MysqlFunction {
 		}catch(Exception e){
 			// Class.forname faults
 			e.printStackTrace();
-		}  
+		}
 
 		// System.out.println("Successfully Connected to DB...");
 		return conn;   
 	}
+
 
 	public void addToLecturers(String mail, 
 			String password, String firstName,
@@ -61,6 +57,7 @@ public class MysqlFunction {
 			close1(conn,stmt);
 		}
 	}
+	
 
 	//check the e-mail address, has existed return 0，can be registered return 1, sqlException return 2
 	public int checkLecturerExists(String mail) throws SQLException {
@@ -164,9 +161,9 @@ public class MysqlFunction {
 		}
 		return pjId;
 	}
-	
+
 	public boolean updateProjectInfo(String username, String projectName, String subjectCode, String subjectName, String description) throws SQLException {
-                boolean result = false;
+		boolean result = false;
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -177,7 +174,7 @@ public class MysqlFunction {
 			stmt = conn.createStatement();
 			pjId = getProjectId(username,projectName);
 			sql = "UPDATE Project SET primaryMail = '"+ username+ "', name = '"
-			+ projectName+"', subjectCode = '"+username+ "', subjectName = '"
+					+ projectName+"', subjectCode = '"+username+ "', subecjtName = '"
 					+ subjectName +"' "+"WHERE idProject = "+"'"+pjId+"' ";
 			stmt.executeUpdate(sql);
 			System.out.println(sql);
@@ -195,24 +192,26 @@ public class MysqlFunction {
 		}
 		return result;
 	}
-	
+
+
 	public boolean updateTimeInformation(int pjId, int durationMin, int durationSec, int warningMin, int warningSec ) throws SQLException {
-        boolean result = false;
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sql;
+		boolean result = false;
 		try {
-				sql = "UPDATE Project SET durationMin = '"+ durationMin +"',  "+"durationSec = '"+ durationSec +"' "+"WHERE idProject = "+"'"+pjId+"' ";
-				conn=connectToDB(DB_URL,USER,PASS);
-				stmt = conn.createStatement();
-				stmt.executeUpdate(sql);
-				System.out.println(sql);
-				
-				sql = "UPDATE Project SET warningMin = '"+ warningMin +"',  "+"warningSec = '"+ warningSec +"' "+"WHERE idProject = "+"'"+pjId+"' ";
-				stmt.executeUpdate(sql);
-				System.out.println(sql);
-				result = true;
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			sql = "UPDATE Project SET durationMin = '"+ durationMin +"',  "+"durationSec = '"+ durationSec +"' "+"WHERE idProject = "+"'"+pjId+"' ";
+			stmt.executeUpdate(sql);
+			System.out.println(sql);
+
+			sql = "UPDATE Project SET warningMin = '"+ warningMin +"',  "+"warningSec = '"+ warningSec +"' "+"WHERE idProject = "+"'"+pjId+"' ";
+			stmt.executeUpdate(sql);
+			System.out.println(sql);
+			result = true;
+
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
@@ -231,8 +230,7 @@ public class MysqlFunction {
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
-			
-			sql = "DELETE FROM Project WHERE idProject = " + pjId+";"; 
+			sql = "DELETE FROM Project WHERE idProject =" + pjId+ ";"; 
 			stmt.executeUpdate(sql);
 			result =true;
 		}catch(SQLException se){
@@ -253,7 +251,8 @@ public class MysqlFunction {
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
-			sql = "DELETE FROM Criteria WHERE idProject = " + pjId+";"; 
+
+			sql = "DELETE FROM Criteria WHERE idProject = " + pjId+ ";"; 
 			stmt.executeUpdate(sql);
 			result =true;
 		}catch(SQLException se){
@@ -265,7 +264,7 @@ public class MysqlFunction {
 		return result;
 	}
 
-	public int addCriteria(int pjId, Criteria c) throws SQLException {
+	public int addOnlyComment(int pjId, Criteria c) throws SQLException {
 		int critId = 0;
 		Connection conn = null;
 		Statement stmt = null;
@@ -274,11 +273,12 @@ public class MysqlFunction {
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
-			sql = "INSERT INTO Criteria(name, idProject, weighting, maxMark, markIncrement) "
+			sql = "INSERT INTO Criteria(name, idProject, weighting, maxMark, markIncrement, if_only_comment) "
 					+ "values( '" + c.getName() +"','"+pjId
 					+"','"+c.getWeighting()
 					+"','"+c.getMaximunMark()
-					+"','"+c.getMarkIncrement()+"' )";
+					+"','"+c.getMarkIncrement()
+					+"','"+ 1 +"' )";
 			stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
 			System.out.println(sql);
 			rs = stmt.getGeneratedKeys();
@@ -288,7 +288,43 @@ public class MysqlFunction {
 			for(int i=0;i<c.getSubsectionList().size();i++)    {  
 				addSubSection(critId,c.getSubsectionList().get(i));
 			}
-			
+
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+		return critId;
+	}
+	
+	
+	
+	public int addCriteria(int pjId, Criteria c) throws SQLException {
+		int critId = 0;
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			sql = "INSERT INTO Criteria(name, idProject, weighting, maxMark, markIncrement, if_only_comment) "
+					+ "values( '" + c.getName() +"','"+pjId
+					+"','"+c.getWeighting()
+					+"','"+c.getMaximunMark()
+					+"','"+c.getMarkIncrement()
+					+"','"+ 0 +"' )";
+			stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
+			System.out.println(sql);
+			rs = stmt.getGeneratedKeys();
+			if (rs.next()) {  
+				critId = rs.getInt(1);  
+			}
+			for(int i=0;i<c.getSubsectionList().size();i++)    {  
+				addSubSection(critId,c.getSubsectionList().get(i));
+			}
+
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
@@ -314,7 +350,7 @@ public class MysqlFunction {
 			rs = stmt.getGeneratedKeys();
 			if (rs.next()) {  
 				ssId = rs.getInt(1);  
-			}  
+			} 
 			for(int i=0;i<ss.getShortTextList().size();i++)    {  
 				addShortText(ssId,ss.getShortTextList().get(i));
 			}
@@ -380,7 +416,29 @@ public class MysqlFunction {
 			close3(conn,pstmt,rs);
 		}
 	}
-	
+//
+//	public String SqlFilter(String source) {
+//		source = source.replace(";", "；");
+//		source = source.replace("(", "（");
+//		source = source.replace(")", "）");
+//		source = source.replace("Exec", "");
+//		source = source.replace("Execute", "");
+//		source = source.replace("xp_", "x p_");
+//		source = source.replace("sp_", "s p_");
+//		source = source.replace("0x", "0 x");
+//		source = source.replace("'", "''");
+//		source= source.replace("\"", "");
+//		source = source.replace("&", "&amp");
+//		source = source.replace("<", "&lt");
+//		source = source.replace(">", "&gt");
+//		source = source.replace("delete", "remove");
+//		source = source.replace("update", "");
+//		source = source.replace("insert", "");
+//		return source;
+//	}
+
+
+
 
 	public int ifStudentExists(int idProject, String studentNumber) throws SQLException{
 		int result = 0;
@@ -438,6 +496,7 @@ public class MysqlFunction {
 			close2(conn,stmt,rs);
 		}
 		return result;
+
 	}
 
 	public boolean editStudentInfo(int projectId, String studentNumber, String mail, String firstName, String surName, String middleName, int group ) throws SQLException {
@@ -495,6 +554,8 @@ public class MysqlFunction {
 		return result;
 	}
 	
+	
+
 	public boolean deleteStudent(int projectId, String studentNumber) throws SQLException {
 		boolean result = false;
 		Connection conn = null;
@@ -502,7 +563,6 @@ public class MysqlFunction {
 		ResultSet rs = null;
 		String sql;
 		try {
-			double mark = 00.00;
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			sql =	"DELETE FROM Students "
@@ -531,6 +591,7 @@ public class MysqlFunction {
 					+ "values( '" + lecturerId +"','"+projectId+"','"+ 0 +"' )";
 			stmt.executeUpdate(sql);
 			result = true;
+			System.out.println(sql);
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
@@ -547,7 +608,7 @@ public class MysqlFunction {
 		ResultSet rs = null;
 		String sql;
 		try {
-			int idLecturer = getLecturerId(username);
+//			int idLecturer = getLecturerId(username);
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			sql = "SELECT * FROM Project";
@@ -569,6 +630,7 @@ public class MysqlFunction {
 		}
 		return id;	
 	}
+
 
 	public int getLecturerId(String mail) throws SQLException {
 		Connection conn = null;
@@ -601,7 +663,7 @@ public class MysqlFunction {
 	}
 
 
-	public List queryProjects(String mail) throws SQLException {
+	public List<Integer> queryProjects(String mail) throws SQLException {
 		List<Integer> numList = new ArrayList<Integer>();
 		int id = 0;
 		Connection conn = null;
@@ -625,6 +687,7 @@ public class MysqlFunction {
 			}
 			sql = "SELECT * FROM Lecturers_has_Project WHERE idLecturers =" + id;
 			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
 			while(rs.next()){
 				int pjId = rs.getInt(2);  
 				numList.add(pjId);
@@ -663,8 +726,9 @@ public class MysqlFunction {
 					pj.setTimer(rs.getInt("durationMin"),rs.getInt("durationSec"),
 							rs.getInt("warningMin"),rs.getInt("warningSec"));
 					pj.setCriteria(returnCriteria(projectId));
-					pj.setStudentInfo(returnStudents(projectId));
+					pj.setStudentList(returnStudents(projectId));
 					pj.setAssistant(returnAssessors(projectId));
+					pj.setCommentList(returnOnlyComment(projectId));
 
 				}else {
 					continue;
@@ -679,6 +743,41 @@ public class MysqlFunction {
 		return pj;
 	}
 
+	public ArrayList<Criteria> returnOnlyComment(int projectId) throws SQLException {
+		ArrayList<Criteria> criteriaList= new ArrayList<Criteria>();
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement stmt = null;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT * FROM Criteria WHERE if_only_comment = 1";
+			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
+			while(rs.next()){
+				if (rs.getInt("idProject") == projectId) {
+					Criteria cr = new Criteria();
+					cr.setName(rs.getString("name"));
+					cr.setWeighting(rs.getInt("weighting"));
+					cr.setMaximunMark(rs.getInt("maxMark"));
+					cr.setMarkIncrement(rs.getString("markIncrement"));
+					cr.setSubsectionList(returnSubsection(rs.getInt("idCriteria")));
+					criteriaList.add(cr);
+				}else {
+					continue;
+				}
+			}
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+		return criteriaList;
+	}
+	
+	
 	public ArrayList<Criteria> returnCriteria(int projectId) throws SQLException {
 		ArrayList<Criteria> criteriaList= new ArrayList<Criteria>();
 		Connection conn = null;
@@ -688,7 +787,7 @@ public class MysqlFunction {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			String sql;
-			sql = "SELECT * FROM Criteria";
+			sql = "SELECT * FROM Criteria WHERE if_only_comment <> 1";
 			rs = stmt.executeQuery(sql);
 			System.out.println(sql);
 			while(rs.next()){
@@ -839,10 +938,6 @@ public class MysqlFunction {
 		return studentInfoList;
 	}
 
-
-
-
-
 	public ArrayList<String> returnAssessors(int projectId) throws SQLException{
 		ArrayList<String> assessorList = new ArrayList<String>();
 		Connection conn = null;
@@ -900,6 +995,7 @@ public class MysqlFunction {
 		return mail;
 	}
 	
+
 	public int writeIntoMark(int idlecturer, int idStudent, Criteria cr, double mark) throws SQLException {
 		int primaryKey = 0;
 		Connection conn = null;
@@ -934,6 +1030,31 @@ public class MysqlFunction {
 		return primaryKey;
 	}
 	
+	public void addSpecificComments(int primaryKey, SubSection ss) throws SQLException{
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			String sql;
+			sql = "INSERT INTO CriteriaComment(idMark, subsection, shortText, comment) values(?,?,?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, primaryKey);  
+            pstmt.setString(2, ss.getName());
+            pstmt.setString(3, ss.getShortTextList().get(0).getName());
+            pstmt.setString(4, ss.getShortTextList().get(0).getLongtext().get(0));
+			pstmt.executeUpdate();
+			System.out.println(sql);
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close3(conn,pstmt,rs);
+		}
+	}
+	
+	
+	
 	//write lines into table comment
 	public boolean writeIntoComment(int idlecturer, int idStudent, String comment) throws SQLException {
 		boolean result = false;
@@ -960,30 +1081,6 @@ public class MysqlFunction {
 		return result;
 	}
 	
-	public void addSpecificComments(int primaryKey, SubSection ss) throws SQLException{
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try {
-			conn=connectToDB(DB_URL,USER,PASS);
-			String sql;
-			sql = "INSERT INTO CriteriaComment(idMark, subsection, shortText, comment) values(?,?,?,?)";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, primaryKey);  
-            pstmt.setString(2, ss.getName());
-            pstmt.setString(3, ss.getShortTextList().get(0).getName());
-            pstmt.setString(4, ss.getShortTextList().get(0).getLongtext().get(0));
-			pstmt.executeUpdate();
-			System.out.println(sql);
-		}catch(SQLException se){
-			// JDBC faults
-			se.printStackTrace();
-		}finally {
-			close3(conn,pstmt,rs);
-		}
-	}
-
-
 	public void close1(Connection conn, Statement stmt) throws SQLException {
 		try{
 			if(stmt != null){
@@ -1020,6 +1117,7 @@ public class MysqlFunction {
 			}
 		}
 	}
+	
 	public void close3(Connection conn, PreparedStatement stmt,
 			ResultSet rs) throws SQLException {
 		try {
