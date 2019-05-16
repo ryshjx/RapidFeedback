@@ -233,6 +233,7 @@ public class MysqlFunction {
 			sql = "DELETE FROM Project WHERE idProject =" + pjId+ ";"; 
 			stmt.executeUpdate(sql);
 			result =true;
+			System.out.println(sql);
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
@@ -255,6 +256,7 @@ public class MysqlFunction {
 			sql = "DELETE FROM Criteria WHERE idProject = " + pjId+ ";"; 
 			stmt.executeUpdate(sql);
 			result =true;
+			System.out.println(sql);
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
@@ -723,8 +725,10 @@ public class MysqlFunction {
 					pj.setSubjectCode(rs.getString("subjectCode"));
 					pj.setSubjectName(rs.getString("subjectName"));
 					pj.setDescription(rs.getString("description"));
-					pj.setTimer(rs.getInt("durationMin"),rs.getInt("durationSec"),
-							rs.getInt("warningMin"),rs.getInt("warningSec"));
+					pj.setDurationMin(rs.getInt("durationMin"));
+					pj.setDurationSec(rs.getInt("durationSec"));
+					pj.setWarningMin(rs.getInt("warningMin"));
+					pj.setWarningSec(rs.getInt("warningSec"));
 					pj.setCriteria(returnCriteria(projectId));
 					pj.setStudentInfoList(returnStudents(projectId));
 					pj.setAssistant(returnAssessors(projectId));
