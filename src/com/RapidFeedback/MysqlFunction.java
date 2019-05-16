@@ -255,6 +255,7 @@ public class MysqlFunction {
 			sql = "DELETE FROM Criteria WHERE idProject = " + pjId+ ";"; 
 			stmt.executeUpdate(sql);
 			result =true;
+			System.out.println(sql);
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
