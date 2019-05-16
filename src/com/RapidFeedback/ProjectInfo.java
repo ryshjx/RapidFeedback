@@ -3,6 +3,8 @@ package com.RapidFeedback;
 import java.util.ArrayList;
 import java.util.List;
 
+import feedback.Criteria;
+
 public class ProjectInfo {
 
     private String projectName;
@@ -18,8 +20,21 @@ public class ProjectInfo {
 
     private ArrayList<String> assistantList = new ArrayList<String>();
     private ArrayList<Criteria> criteriaList= new ArrayList<Criteria>();
-    //private ArrayList<Criteria> commentList= new ArrayList<Criteria>();
+    private ArrayList<Criteria> commentList= new ArrayList<Criteria>();
+    
     private ArrayList<StudentInfo> studentInfoList = new ArrayList<StudentInfo>();
+    
+    public ArrayList<Criteria> getCommentList() {
+
+        return commentList;
+
+    }
+
+    public void setCommentList(ArrayList<Criteria> commentList) {
+
+        this.commentList = commentList;
+
+    }
 
 
     public void setProjectName(String projectName){
