@@ -3,8 +3,6 @@ package com.RapidFeedback;
 import java.util.ArrayList;
 import java.util.List;
 
-import feedback.Criteria;
-
 public class ProjectInfo {
 
     private String projectName;
@@ -21,9 +19,8 @@ public class ProjectInfo {
     private ArrayList<String> assistantList = new ArrayList<String>();
     private ArrayList<Criteria> criteriaList= new ArrayList<Criteria>();
     private ArrayList<Criteria> commentList= new ArrayList<Criteria>();
-    
     private ArrayList<StudentInfo> studentInfoList = new ArrayList<StudentInfo>();
-    
+
     public ArrayList<Criteria> getCommentList() {
 
         return commentList;
@@ -35,7 +32,6 @@ public class ProjectInfo {
         this.commentList = commentList;
 
     }
-
 
     public void setProjectName(String projectName){
 
@@ -77,18 +73,14 @@ public class ProjectInfo {
         this.criteriaList = criteriaList;
 
     }
-    
+
     public void setStudentInfo(ArrayList<StudentInfo> studentList){
 
         this.studentInfoList = studentList;
 
     }
 
-//    public void setComment(ArrayList<Criteria> commentList){
-//
-//        this.commentList = commentList;
-//
-//    }
+
 
     public void addStudentList(ArrayList<StudentInfo> studentInfoList){
 
@@ -106,19 +98,6 @@ public class ProjectInfo {
         this.criteriaList.add(criteria);
     }
 
-//    public void addSingleComment(Criteria criteria){
-//
-//        commentList.add(criteria);
-//    }
-
-    public void setTimer(int durationMin, int durationSec, int warningMin, int warningSec){
-
-        this.durationMin = durationMin;
-        this.durationSec = durationSec;
-        this.warningMin = warningMin;
-        this.warningSec = warningSec;
-
-    }
 
     public void setDurationMin(int durationMin) {
         this.durationMin = durationMin;
@@ -126,6 +105,26 @@ public class ProjectInfo {
 
     public void setDurationSec(int durationSec) {
         this.durationSec = durationSec;
+    }
+
+    public void setWarningSec(int warningSec) {
+        this.warningSec = warningSec;
+    }
+
+    public void setWarningMin(int warningMin) {
+        this.warningMin = warningMin;
+    }
+
+    public void setStudentInfoList(ArrayList<StudentInfo> studentInfoList) {
+        this.studentInfoList = studentInfoList;
+    }
+
+    public void setCriteriaList(ArrayList<Criteria> criteriaList) {
+        this.criteriaList = criteriaList;
+    }
+
+    public void setAssistantList(ArrayList<String> assistantList) {
+        this.assistantList = assistantList;
     }
 
     public String getProjectName(){

@@ -66,12 +66,17 @@ public class CriteriaListServlet extends HttpServlet {
 		String token = jsonReceive.getString("token");
 		String projectName = jsonReceive.getString("projectName");
 		String criteriaListString = jsonReceive.getString("criteriaList");
-		String criteria
+		String commentOnlyListString = jsonReceive.getString("CommentOnlyList");
 		
 		List<Criteria> criteriaList = JSONObject.parseArray(criteriaListString, Criteria.class);
 		ArrayList<Criteria> arrayList ;
-			arrayList = new ArrayList<Criteria>();
-			arrayList.addAll(criteriaList);
+		arrayList = new ArrayList<Criteria>();
+		arrayList.addAll(criteriaList);
+			
+		List<Criteria> commentOnlyList = JSONObject.parseArray(commentOnlyListString, Criteria.class);
+		ArrayList<Criteria> cOnlyList ;
+		cOnlyList = new ArrayList<Criteria>();
+		cOnlyList.addAll(commentOnlyList);
 		
 		ServletContext servletContext = this.getServletContext();
 				
@@ -80,7 +85,14 @@ public class CriteriaListServlet extends HttpServlet {
 		//call the SQL method to import the student list
 		//return the 'true' or 'false' value to update_ACK
 		update_ACK = false;
-		update_ACK = addCriteriaList(dbFunction, servletContext, token, projectName, arrayList);
+		boolean isCommentOnly = false;
+		update_ACK = addCriteriaList(dbFunction, servletContext, token, projectName, arrayList,isCommentOnly);
+		
+		if(update_ACK) {
+			isCommentOnly = true;
+			update_ACK = addCriteriaList(dbFunction, servletContext, token, projectName, cOnlyList, isCommentOnly);
+		}
+		
 		
 		
 		//construct the JSONObject to send
@@ -92,7 +104,7 @@ public class CriteriaListServlet extends HttpServlet {
 	 	output.print(jsonSend.toJSONString());
 	}
 	
-	private boolean addCriteriaList(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, ArrayList<Criteria> clist) {
+	private boolean addCriteriaList(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, ArrayList<Criteria> clist, boolean isCommentOnly) {
 		boolean result = false;
 		if(clist.size()==0 || clist==null) {
 			result = true;
@@ -106,12 +118,22 @@ public class CriteriaListServlet extends HttpServlet {
 			if(!delete) {
 				return result;
 			}
-			for(Criteria c : clist) {
-				result=dbFunction.addCriteria(pid, c)>0? true:false;
-				if(!result) {
-					break;
+			if(isCommentOnly) {
+				for(Criteria c : clist) {
+					result=dbFunction.addOnlyComment(pid, c)>0? true:false;
+					if(!result) {
+						break;
+					}
+				}
+			}else {
+				for(Criteria c : clist) {
+					result=dbFunction.addCriteria(pid, c)>0? true:false;
+					if(!result) {
+						break;
+					}
 				}
 			}
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

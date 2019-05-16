@@ -1,4 +1,4 @@
-package feedback;
+package com.RapidFeedback;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -726,7 +726,7 @@ public class MysqlFunction {
 					pj.setTimer(rs.getInt("durationMin"),rs.getInt("durationSec"),
 							rs.getInt("warningMin"),rs.getInt("warningSec"));
 					pj.setCriteria(returnCriteria(projectId));
-					pj.setStudentList(returnStudents(projectId));
+					pj.setStudentInfoList(returnStudents(projectId));
 					pj.setAssistant(returnAssessors(projectId));
 					pj.setCommentList(returnOnlyComment(projectId));
 
