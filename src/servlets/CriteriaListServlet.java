@@ -65,21 +65,25 @@ public class CriteriaListServlet extends HttpServlet {
 	    //get values from received JSONObject
 		String token = jsonReceive.getString("token");
 		String projectName = jsonReceive.getString("projectName");
-		String criteriaListString = jsonReceive.getString("criteriaList");
+		String markedCriteriaListString = jsonReceive.getString("markedCriteriaList");
+		String commentCriteriaListString = jsonReceive.getString("commentCriteriaList");
 		
-		List<Criteria> criteriaList = JSONObject.parseArray(criteriaListString, Criteria.class);
-		ArrayList<Criteria> arrayList ;
-			arrayList = new ArrayList<Criteria>();
-			arrayList.addAll(criteriaList);
+		List<Criteria> markedCriteria = JSONObject.parseArray(markedCriteriaListString, Criteria.class);
+		ArrayList<Criteria> markedCriteriaList = new ArrayList<Criteria>();
+		markedCriteriaList.addAll(markedCriteria);
+		
+		List<Criteria> commentCriteria = JSONObject.parseArray(commentCriteriaListString, Criteria.class);
+		ArrayList<Criteria> commentCriteriaList = new ArrayList<Criteria>();
+		commentCriteriaList.addAll(commentCriteria);
 		
 		ServletContext servletContext = this.getServletContext();
 				
 		boolean update_ACK;
 	    //Mention:
-		//call the SQL method to import the student list
+		//call the SQL method to save two criteriaList: markedCriteriaList and commentCriteriaList
 		//return the 'true' or 'false' value to update_ACK
 		update_ACK = false;
-		update_ACK = addCriteriaList(dbFunction, servletContext, token, projectName, arrayList);
+	//	update_ACK = 
 		
 		
 		//construct the JSONObject to send
