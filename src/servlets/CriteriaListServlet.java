@@ -66,6 +66,7 @@ public class CriteriaListServlet extends HttpServlet {
 		String token = jsonReceive.getString("token");
 		String projectName = jsonReceive.getString("projectName");
 		String criteriaListString = jsonReceive.getString("criteriaList");
+		String criteria
 		
 		List<Criteria> criteriaList = JSONObject.parseArray(criteriaListString, Criteria.class);
 		ArrayList<Criteria> arrayList ;
