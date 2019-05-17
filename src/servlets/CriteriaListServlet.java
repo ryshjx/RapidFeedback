@@ -84,15 +84,15 @@ public class CriteriaListServlet extends HttpServlet {
 		//return the 'true' or 'false' value to update_ACK
 		update_ACK = false;
 		boolean isCommentOnly = false;
-		update_ACK = addCriteriaList(dbFunction, servletContext, token, projectName, markedCriteriaList,isCommentOnly);
+		boolean delOldCriteria = true;
+		update_ACK = addCriteriaList(dbFunction, servletContext, token, projectName, markedCriteriaList,isCommentOnly,delOldCriteria);
 		System.out.println("size of markedCriteriaList: "+markedCriteriaList.size());
 		System.out.println("size of commentCriteriaList: "+commentCriteriaList.size());
 		if(update_ACK) {
 			isCommentOnly = true;
-			update_ACK = addCriteriaList(dbFunction, servletContext, token, projectName, commentCriteriaList, isCommentOnly);
+			delOldCriteria = false;
+			update_ACK = addCriteriaList(dbFunction, servletContext, token, projectName, commentCriteriaList, isCommentOnly,delOldCriteria);
 		}
-		
-		
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
@@ -103,7 +103,7 @@ public class CriteriaListServlet extends HttpServlet {
 	 	output.print(jsonSend.toJSONString());
 	}
 	
-	private boolean addCriteriaList(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, ArrayList<Criteria> clist, boolean isCommentOnly) {
+	private boolean addCriteriaList(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, ArrayList<Criteria> clist, boolean isCommentOnly, boolean delOldCriteria) {
 		boolean result = false;
 		if(clist.size()==0 || clist==null) {
 			result = true;
@@ -113,9 +113,11 @@ public class CriteriaListServlet extends HttpServlet {
 		String username = inside.token2user(servletContext, token);
 		try {
 			int pid = dbFunction.getProjectId(username, projectName);
-			boolean delete = dbFunction.deleteCriterias(pid);
-			if(!delete) {
-				return result;
+			if(delOldCriteria) {
+				boolean delete = dbFunction.deleteCriterias(pid);
+				if(!delete) {
+					return result;
+				}
 			}
 			if(isCommentOnly) {
 				for(Criteria c : clist) {

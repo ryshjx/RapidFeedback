@@ -321,6 +321,7 @@ public class MysqlFunction {
 					+"','"+ 0 +"' )";
 			stmt.executeUpdate(sql,Statement.RETURN_GENERATED_KEYS);
 			System.out.println(sql);
+			
 			rs = stmt.getGeneratedKeys();
 			if (rs.next()) {  
 				critId = rs.getInt(1);  
