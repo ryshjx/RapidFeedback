@@ -85,7 +85,8 @@ public class CriteriaListServlet extends HttpServlet {
 		update_ACK = false;
 		boolean isCommentOnly = false;
 		update_ACK = addCriteriaList(dbFunction, servletContext, token, projectName, markedCriteriaList,isCommentOnly);
-		
+		System.out.println("size of markedCriteriaList: "+markedCriteriaList.size());
+		System.out.println("size of commentCriteriaList: "+commentCriteriaList.size());
 		if(update_ACK) {
 			isCommentOnly = true;
 			update_ACK = addCriteriaList(dbFunction, servletContext, token, projectName, commentCriteriaList, isCommentOnly);
