@@ -46,7 +46,7 @@ public class UpdateProject_About_Servlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		//		
+				
 		MysqlFunction dbFunction = new MysqlFunction();
 		
 		//get JSONObject from request

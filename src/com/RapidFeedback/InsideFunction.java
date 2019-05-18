@@ -21,7 +21,7 @@ public class InsideFunction {
 	}
 	
 	public InsideFunction() {
-		super();
+		this.dbFunction = new MysqlFunction();
 	}
 	
 	public String token2user(ServletContext servletContext, String token) {
