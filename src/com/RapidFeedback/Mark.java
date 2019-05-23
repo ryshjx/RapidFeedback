@@ -6,7 +6,20 @@ public class Mark {
 
     private ArrayList<Criteria> criteriaList = new ArrayList<Criteria>();
     private ArrayList<Double> markList = new ArrayList<Double>();
+    private ArrayList<Criteria> commentList= new ArrayList<Criteria>();
     private String comment;
+
+    public ArrayList<Criteria> getCommentList() {
+
+        return commentList;
+
+    }
+
+    public void setCommentList(ArrayList<Criteria> commentList) {
+
+        this.commentList = commentList;
+
+    }
 
     public String getComment() {
 
