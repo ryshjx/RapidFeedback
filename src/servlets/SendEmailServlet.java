@@ -63,8 +63,9 @@ public class SendEmailServlet extends HttpServlet {
 		//other arguments
 		String projectName = jsonReceive.getString("projectName");
 		String studentEmail = jsonReceive.getString("studentEmail");
-		
-		
+		String firstName = jsonReceive.getString("firstName");
+		String middleName = jsonReceive.getString("middleName");
+		String lastName = jsonReceive.getString("lastName");
 		
 		ServletContext servletContext = this.getServletContext();
 		
@@ -90,15 +91,18 @@ public class SendEmailServlet extends HttpServlet {
 		InsideFunction inside = new InsideFunction(dbFunction);
 		SendMail send = new SendMail();
 		String subject = projectName + " Presentation Result for " + studentEmail;
+		//String subject = "";
 		String userEmail = inside.token2user(servletContext, token);
 		String host = "smtp.gmail.com";
 		String user = "feedbackrapid@gmail.com";
 		String pwd = "gkgkbzzbavwowfbh";
-		String affix = "/file/Assignment1.pdf";
-		
+		String affix = this.getServletContext().getRealPath("Assignment1.pdf");
 		send.setAddress(user, studentEmail, subject);
-		send.setAffix(affix, "dgdfdfd");
-		result=send.send(host, user, pwd);
+		System.out.println(affix);
+		//result = true;
+		send.setAffix(affix, subject+".pdf");
+		//result=send.sendSimpleMail(host, user, pwd);
+		result = send.send(host, user, pwd);
 		return result;
 	}
 

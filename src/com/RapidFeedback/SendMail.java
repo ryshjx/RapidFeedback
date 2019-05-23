@@ -1,8 +1,13 @@
 package com.RapidFeedback;
-import java.util.*;  
-import javax.activation.*;  
+import java.io.File;
+import java.util.*;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+//import javax.activation.*;  
 import javax.mail.*;  
-import javax.mail.internet.*;  
+import javax.mail.internet.*;
 
 public class SendMail {
 	private String host = "";  //smtp server  
@@ -67,7 +72,8 @@ public class SendMail {
 		
 		    contentPart.setText("This is a feedback for your COMP9000 Asignment1 Presentation.\r\n"
 		    		+ "If you have any problems, please dont hesitate to contact the lecturers/tutors.");  
-		    multipart.addBodyPart(contentPart);  
+		    multipart.addBodyPart(contentPart); 
+		    
 		    //load the attachment from the local machine 
 		    BodyPart messageBodyPart= new MimeBodyPart();
 		    DataSource source = new FileDataSource(affix);  
@@ -78,7 +84,12 @@ public class SendMail {
 		    multipart.addBodyPart(messageBodyPart);  
 		    
 		    
-		    //put the multipat into the mail content 
+		    /*MimeBodyPart attachmentBodyPart = new MimeBodyPart();
+		    //attachmentBodyPart.attachFile(attachment);
+		    attachmentBodyPart.attachFile(new File(affix));
+		    multipart.addBodyPart(attachmentBodyPart);*/
+		    
+		    //put the multipart into the mail content 
 		    message.setContent(multipart);  
 		    //save the message 
 		    message.saveChanges();  
@@ -93,6 +104,60 @@ public class SendMail {
 		    e.printStackTrace();
 		    result = false;
 		}
+		return result;
+	}
+	
+	public boolean sendSimpleMail(String host,String user,String pwd) {  
+		this.host = host;  
+		this.user = user;  
+		this.pwd  = pwd; 
+		
+		boolean result = true;
+		  
+		Properties props = new Properties();  
+			
+		props.setProperty("mail.transport.protocol", "smtp");     
+        props.setProperty("mail.host", "smtp.gmail.com");  
+        props.put("mail.smtp.auth", "true");  
+        props.put("mail.smtp.port", "465");  
+        props.put("mail.debug", "true");  
+        props.put("mail.smtp.socketFactory.port", "465");  
+        props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");  
+        props.put("mail.smtp.socketFactory.fallback", "false"); 
+		
+		//create a session
+		Session session = Session.getInstance(props, new Authenticator() {
+		    @Override
+		    protected PasswordAuthentication getPasswordAuthentication() {
+		        return new PasswordAuthentication(user, pwd);
+		    }
+		});
+		
+		try {
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(from));
+			message.setRecipients(
+			  Message.RecipientType.TO, InternetAddress.parse(to));
+			message.setSubject(subject);
+			 
+			String msg = "This is a feedback for your COMP9000 Asignment1 Presentation.\r\n"
+		    		+ "If you have any problems, please dont hesitate to contact the lecturers/tutors.";
+			 
+			MimeBodyPart mimeBodyPart = new MimeBodyPart();
+			mimeBodyPart.setText(msg);
+			 
+			Multipart multipart = new MimeMultipart();
+			multipart.addBodyPart(mimeBodyPart);
+			 
+			message.setContent(multipart);
+			 
+			Transport.send(message);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			result = false;
+		}	
+		
 		return result;
 	}    
 }
