@@ -69,17 +69,27 @@ public class InsideFunction {
 			int studentID = dbFunction.ifStudentExists(pid, studentNumber);
 			ArrayList<Criteria> criteriaList = grade.getCriteriaList();
 		    ArrayList<Double> markList = grade.getMarkList();
+		    ArrayList<Criteria> commentList = grade.getCommentList();
 			if(criteriaList.size() != markList.size()) {
 				System.out.println("Error: MarkList and criteriaList does not have the same size");
 				return result;
 			}
 			for(int i=0;i<markList.size();i++) {
-				int ack = dbFunction.writeIntoMark(uid, studentID, criteriaList.get(i), markList.get(i).doubleValue());
+				int ack = dbFunction.writeIntoMark(uid, studentID, criteriaList.get(i), markList.get(i).doubleValue(),0);
 				if(ack<=0) {
 					System.out.println("Error: The "+i+"th mark result cannot be added to the database.");
 					return result;
 				}
 			}
+			
+			for(int i=0;i<commentList.size();i++) {
+				int ack = dbFunction.writeIntoMark(uid, studentID, commentList.get(i), -1.0 , 1);
+				if(ack<=0) {
+					System.out.println("Error: The "+i+"th comment result cannot be added to the database.");
+					return result;
+				}
+			}
+			
 			if(dbFunction.writeIntoComment(uid, studentID, grade.getComment())) {
 				result=true;
 			}
