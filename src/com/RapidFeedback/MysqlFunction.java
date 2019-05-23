@@ -606,6 +606,29 @@ public class MysqlFunction {
 		return result;
 	}
 
+	public boolean deleteAssessor(int lecturerId, int projectId) throws SQLException{
+		boolean result = false;
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			sql =	"DELETE FROM Lecturers_has_Project "
+					+"WHERE idProject= " + "'"+ projectId+ "' AND idLecturers= "+ "'"+ lecturerId+  "';  ";
+			stmt.execute(sql);
+			System.out.println(sql);
+			result = true;
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+		return result;
+	}
+
 	public int getProjectId(String username, String projectName) throws SQLException {
 		int id = 0;
 		Connection conn = null;
