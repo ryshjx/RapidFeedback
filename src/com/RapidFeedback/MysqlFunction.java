@@ -1117,6 +1117,104 @@ public class MysqlFunction {
 		}
 		return result;
 	}
+
+		public Mark returnMark(int projectId, int lecturerId, int studentId) throws SQLException {
+		Mark markObject = new Mark();
+		String str =null;
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement stmt = null;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT * FROM Lecturers_comment_Students";
+			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
+			while(rs.next()){
+				if (rs.getInt("idLecturers") == lecturerId && rs.getInt("idStudents") == studentId) {
+					str = rs.getString("comment");
+					markObject.setComment(str);
+				}else {
+					continue;
+				}
+			}
+			sql = "SELECT * FROM Mark";
+			rs = null;
+			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
+			while(rs.next()){
+				if (rs.getInt("idLecturers") == lecturerId && 
+						rs.getInt("idStudents") == studentId &&
+						rs.getInt("if_only_comment") == 0) {
+					str = rs.getString("CriteriaName");
+					double mk= rs.getDouble("Mark");
+					int maxmk =rs.getInt("MaxMark");
+					int markId = rs.getInt("idMark");
+					Criteria cr = new Criteria();
+					cr.setMaximunMark(maxmk);
+					ArrayList<SubSection> ssList = returnSpecificComment(markId);
+					cr.setSubsectionList(ssList);
+					markObject.getCriteriaList().add(cr);
+					markObject.getMarkList().add(mk);
+					System.out.println("get the mark of "+markObject.getCriteriaList().size()+" marking criteria!");
+				}else if(rs.getInt("idLecturers") == lecturerId && 
+						rs.getInt("idStudents") == studentId &&
+						rs.getInt("if_only_comment") == 1){
+					str = rs.getString("CriteriaName");
+					int markId = rs.getInt("idMark");
+					Criteria cr = new Criteria();
+					ArrayList<SubSection> ssList = returnSpecificComment(markId);
+					cr.setSubsectionList(ssList);
+					markObject.getCommentList().add(cr);
+					System.out.println("get the mark of "+markObject.getCommentList().size()+" marking criteria!");
+				}else {
+					continue;
+				}
+			}
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+		return markObject;
+	}
+	
+	private ArrayList<SubSection> returnSpecificComment(int markId) throws SQLException{
+		ArrayList<SubSection> subsectionList = new ArrayList<SubSection>();
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement stmt = null;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT * FROM CriteriaComment";
+			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
+			while(rs.next()){
+				if (rs.getInt("idMark") == markId) {
+					SubSection ss = new SubSection();
+					ss.setName(rs.getString("subSection"));
+					ShortText st = new ShortText();
+					st.setName(rs.getString("shortText"));
+					st.getLongtext().add(rs.getString("content"));
+					ss.getShortTextList().add(st);
+					subsectionList.add(ss);
+				}else {
+					continue;
+				}
+			}
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+
+		return subsectionList;
+	}
 	
 	public void close1(Connection conn, Statement stmt) throws SQLException {
 		try{
