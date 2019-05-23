@@ -1001,6 +1001,34 @@ public class MysqlFunction {
 		}
 		return mail;
 	}
+
+	public String getLecturerName(int id) throws SQLException {
+		String mail = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement stmt = null;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT * FROM Lecturers";
+			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
+			while(rs.next()){
+				if (rs.getInt("idLecturers") == id) {
+					mail = rs.getString("FirstName");
+				}else {
+					continue;
+				}
+			}
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+		return mail;
+	}
 	
 
 	public int writeIntoMark(int idlecturer, int idStudent, Criteria cr, double mark) throws SQLException {
