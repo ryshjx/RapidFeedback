@@ -1030,8 +1030,7 @@ public class MysqlFunction {
 		return mail;
 	}
 	
-
-	public int writeIntoMark(int idlecturer, int idStudent, Criteria cr, double mark) throws SQLException {
+	public int writeIntoMark(int idlecturer, int idStudent, Criteria cr, double mark, int if_only_comment) throws SQLException {
 		int primaryKey = 0;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -1039,12 +1038,14 @@ public class MysqlFunction {
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
 			String sql;
-			sql = "INSERT INTO Mark(idlecturers, idStudents, CriteriaName, mark) values(?,?,?,?)";
+			sql = "INSERT INTO Mark(idlecturers, idStudents, CriteriaName, Mark, MaxMark, if_only_comment) values(?,?,?,?,?,?)";
 			pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 			pstmt.setInt(1, idlecturer);  
             pstmt.setInt(2, idStudent);
             pstmt.setString(3, cr.getName());
             pstmt.setDouble(4, mark);
+            pstmt.setInt(5, cr.getMaximunMark());
+            pstmt.setInt(6,if_only_comment);
 			pstmt.executeUpdate();
 			System.out.println(sql);
 			rs = pstmt.getGeneratedKeys();
@@ -1064,6 +1065,7 @@ public class MysqlFunction {
 		}
 		return primaryKey;
 	}
+
 	
 	public void addSpecificComments(int primaryKey, SubSection ss) throws SQLException{
 		Connection conn = null;
