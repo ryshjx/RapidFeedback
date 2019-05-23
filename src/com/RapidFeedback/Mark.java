@@ -8,6 +8,15 @@ public class Mark {
     private ArrayList<Double> markList = new ArrayList<Double>();
     private ArrayList<Criteria> commentList= new ArrayList<Criteria>();
     private String comment;
+    private double totalMark;
+
+    public double getTotalMark(){
+        return totalMark;
+    }
+
+    public void setTotalMark(double totalMark){
+        this.totalMark = totalMark;
+    }
 
     public ArrayList<Criteria> getCommentList() {
 
