@@ -73,7 +73,7 @@ public class SendEmailServlet extends HttpServlet {
 		/*
 		 * add operation to send mail and get ACK.
 		 */
-		sendMail_ACK = SendEmailServlet();
+		sendMail_ACK = sendEmail(token, servletContext, projectName, studentEmail);
 		
 		JSONObject jsonSend = new JSONObject();
 		jsonSend.put("sendMail_ACK", sendMail_ACK);
@@ -89,11 +89,17 @@ public class SendEmailServlet extends HttpServlet {
 		MysqlFunction dbFunction = new MysqlFunction();
 		InsideFunction inside = new InsideFunction(dbFunction);
 		SendMail send = new SendMail();
-		String subject = projectName + " Presentation Result";
+		String subject = projectName + " Presentation Result for " + studentEmail;
 		String userEmail = inside.token2user(servletContext, token);
+		String host = "smtp.gmail.com";
+		String user = "feedbackrapid@gmail.com";
+		String pwd = "gkgkbzzbavwowfbh";
+		String affix = "/file/Assignment1.pdf";
+		
 		send.setAddress(userEmail, studentEmail, subject);
-		send.setAffix(affix, affixName);
-		send.send(host, user, pwd);
+		send.setAffix(affix, subject);
+		result=send.send(host, user, pwd);
+		return result;
 	}
 
 }

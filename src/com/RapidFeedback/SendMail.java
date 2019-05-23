@@ -25,14 +25,16 @@ public class SendMail {
 		this.affixName = affixName;  
 	}  
 		   
-	public void send(String host,String user,String pwd) {  
+	public boolean send(String host,String user,String pwd) {  
 		this.host = host;  
 		this.user = user;  
-		this.pwd  = pwd;  
+		this.pwd  = pwd; 
+		
+		boolean result = true;
 		  
 		Properties props = new Properties();  
 			
-		//set the mail smpt host）  
+		//set the mail smpt host 
 		props.put("mail.smtp.host", host);  
 		//the authority
 		props.put("mail.smtp.auth", "true");  
@@ -63,7 +65,7 @@ public class SendMail {
 		    		+ "If you have any problems, please dont hesitate to contact the lecturers/tutors.");  
 		    multipart.addBodyPart(contentPart);  
 		    //load the attachment from the local machine 
-		    BodyPart messageBodyPart= new MimeBodyPart();  
+		    BodyPart messageBodyPart= new MimeBodyPart();
 		    DataSource source = new FileDataSource(affix);  
 		    //add the content of the attachment
 		    messageBodyPart.setDataHandler(new DataHandler(source));  
@@ -84,7 +86,9 @@ public class SendMail {
 		    transport.sendMessage(message, message.getAllRecipients());  
 		    transport.close();  
 		}catch(Exception e){  
-		    e.printStackTrace();  
-		}  
+		    e.printStackTrace();
+		    result = false;
+		}
+		return result;
 	}    
 }
