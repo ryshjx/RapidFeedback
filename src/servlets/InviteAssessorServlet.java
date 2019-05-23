@@ -3,6 +3,7 @@ package servlets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.RapidFeedback.InsideFunction;
 import com.RapidFeedback.MysqlFunction;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -42,8 +44,8 @@ public class InviteAssessorServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		MysqlFunction dbFunction = new MysqlFunction();
-
 		JSONObject jsonReceive;
 		BufferedReader reader = request.getReader();
 		String str, wholeString = "";
@@ -64,15 +66,19 @@ public class InviteAssessorServlet extends HttpServlet {
 		
 		boolean invite_ACK = false;
 		String emailWithName = "";
-		//如果确认有此人邀请成功，返回他的邮箱+名字，格式为："emailAdress::firstName middleName lastName"
+		HashMap<String, Integer> ids = getIDs(servletContext, token, assessorEmail, projectName, dbFunction);
 		
-		/*
-		 * 
-		 */
-		
+		if(ids.size()==2) {
+			try {
+				invite_ACK = dbFunction.addOtherAssessor(ids.get("assessorID"), ids.get("projectID"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		JSONObject jsonSend = new JSONObject();
 		jsonSend.put("invite_ACK", invite_ACK);
-		jsonSend.put("emailWithName", emailWithName);//两种处理方法：用if判断invite_ACK，true则发送false则不发送；或无论true/false都发送emailWithName，默认为空字符串。
+		jsonSend.put("assessorEmail", assessorEmail);
 		
 		//send
 		PrintWriter output = response.getWriter();
@@ -88,7 +94,6 @@ public class InviteAssessorServlet extends HttpServlet {
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		MysqlFunction dbFunction = new MysqlFunction();
-
 		JSONObject jsonReceive;
 		BufferedReader reader = request.getReader();
 		String str, wholeString = "";
@@ -109,11 +114,16 @@ public class InviteAssessorServlet extends HttpServlet {
 		
 		boolean delete_ACK = false;
 		
-		/*
-		 * 
-		 */
-	
+		HashMap<String, Integer> ids = getIDs(servletContext, token, assessorEmail, projectName, dbFunction);
 		
+		if(ids.size()==2) {
+			try {
+				delete_ACK = dbFunction.deleteAssessor(ids.get("assessorID"), ids.get("projectID"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	
 		JSONObject jsonSend = new JSONObject();
 		jsonSend.put("delete_ACK", delete_ACK);
 		
@@ -121,6 +131,29 @@ public class InviteAssessorServlet extends HttpServlet {
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
 	 	System.out.println("Send: "+jsonSend.toJSONString());
+	}
+	
+	private HashMap<String, Integer> getIDs(ServletContext servletContext, String token, String assessorEmail, String projectName, MysqlFunction dbFunction) {
+		InsideFunction inside = new InsideFunction(dbFunction);
+		String inviter=inside.token2user(servletContext, token);
+		HashMap<String, Integer> ids = new HashMap<String, Integer>();
+		
+		try {
+			int assessorID = dbFunction.getLecturerId(assessorEmail);
+			if(assessorID<=0) {
+				return ids;
+			}
+			int projectID = dbFunction.getProjectId(inviter, projectName);
+			if(projectID<=0) {
+				return ids;
+			}
+			ids.put("assessorID", assessorID);
+			ids.put("projectID", projectID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+				
+		return ids;
 	}
 
 }
