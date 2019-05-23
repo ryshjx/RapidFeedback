@@ -77,7 +77,10 @@ public class LoginServlet extends HttpServlet {
 			 		servletContext.setAttribute(token, username);
 			 		ProjectInfo[] projectList = getProjectList(dbFunction, username);
 			 		String projectListString = JSON.toJSONString(projectList);
+			 		int id = dbFunction.getLecturerId(username);
+			 		String firstName = dbFunction.getLecturerName(id);
 			 		jsonSend.put("projectList", projectListString);
+			 		jsonSend.put("firstName", firstName);
 			 		jsonSend.put("login_ACK", login_ACK);
 			 		jsonSend.put("token", token);
 			 	}
