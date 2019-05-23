@@ -57,19 +57,22 @@ public class InviteAssessorServlet extends HttpServlet {
 	  //get values from received JSONObject
 		String token = jsonReceive.getString("token");
 		//other arguments
-		String projectName = jsonReceive.getString("assessorEmail");
+		String projectName = jsonReceive.getString("projectName");
+		String assessorEmail = jsonReceive.getString("assessorEmail");
 		
 		ServletContext servletContext = this.getServletContext();
 		
-		boolean sendMail_ACK = false;
+		boolean invite_ACK = false;
+		String emailWithName = "";
+		//如果确认有此人邀请成功，返回他的邮箱+名字，格式为："emailAdress::firstName middleName lastName"
 		
 		/*
 		 * 
 		 */
-		//sendMail_ACK = ;
 		
 		JSONObject jsonSend = new JSONObject();
-		jsonSend.put("sendMail_ACK", sendMail_ACK);
+		jsonSend.put("invite_ACK", invite_ACK);
+		jsonSend.put("emailWithName", emailWithName);//两种处理方法：用if判断invite_ACK，true则发送false则不发送；或无论true/false都发送emailWithName，默认为空字符串。
 		
 		//send
 		PrintWriter output = response.getWriter();
@@ -84,6 +87,40 @@ public class InviteAssessorServlet extends HttpServlet {
 	 */
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		MysqlFunction dbFunction = new MysqlFunction();
+
+		JSONObject jsonReceive;
+		BufferedReader reader = request.getReader();
+		String str, wholeString = "";
+	    while((str = reader.readLine()) != null)
+	    {
+	        wholeString += str;  
+	    }
+	    System.out.println("Receive: " + wholeString);
+	    jsonReceive = JSON.parseObject(wholeString);
+	    
+	  //get values from received JSONObject
+		String token = jsonReceive.getString("token");
+		//other arguments
+		String projectName = jsonReceive.getString("projectName");
+		String assessorEmail = jsonReceive.getString("assessorEmail");
+		
+		ServletContext servletContext = this.getServletContext();
+		
+		boolean delete_ACK = false;
+		
+		/*
+		 * 
+		 */
+	
+		
+		JSONObject jsonSend = new JSONObject();
+		jsonSend.put("delete_ACK", delete_ACK);
+		
+		//send
+		PrintWriter output = response.getWriter();
+	 	output.print(jsonSend.toJSONString());
+	 	System.out.println("Send: "+jsonSend.toJSONString());
 	}
 
 }
