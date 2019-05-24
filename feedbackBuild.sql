@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Students` (
   `surName` VARCHAR(100) NULL,
   `middleName` VARCHAR(100) NULL,
   `groupNumber` INT NULL,
-  `mark` DECIMAL(4,2) NULL,
+  `finalMark` DECIMAL(4,2) NULL,
   PRIMARY KEY (`idStudents`),
   INDEX `fk_Students_Project1_idx` (`idProject` ASC) VISIBLE,
   CONSTRAINT `fk_Students_Project1`
@@ -105,6 +105,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Criteria` (
   `weighting` INT NULL,
   `maxMark` INT NULL,
   `markIncrement` VARCHAR(45) NULL,
+  `if_only_comment` TINYINT(1) NULL,
   INDEX `fk_Criteria_Project1_idx` (`idProject` ASC) VISIBLE,
   PRIMARY KEY (`idCriteria`),
   CONSTRAINT `fk_Criteria_Project1`
@@ -176,6 +177,8 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Mark` (
   `idLecturers` INT NOT NULL,
   `CriteriaName` VARCHAR(100) NULL,
   `Mark` DECIMAL(4,2) NULL,
+  `MaxMark` INT NULL,
+  `if_only_comment` TINYINT(1) NULL,
   INDEX `fk_FeedBack_Students1_idx` (`idStudents` ASC) VISIBLE,
   INDEX `fk_FeedBack_Lecturers1_idx` (`idLecturers` ASC) VISIBLE,
   PRIMARY KEY (`idMark`),
@@ -199,6 +202,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Lecturers_comment_Students` (
   `idLecturers` INT NOT NULL,
   `idStudents` INT NOT NULL,
   `comment` VARCHAR(5000) NULL,
+  `totalMark` DECIMAL(4,2) NULL,  
   PRIMARY KEY (`idLecturers`, `idStudents`),
   INDEX `fk_Lecturers_has_Students_Students1_idx` (`idStudents` ASC) VISIBLE,
   INDEX `fk_Lecturers_has_Students_Lecturers1_idx` (`idLecturers` ASC) VISIBLE,
