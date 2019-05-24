@@ -74,9 +74,11 @@ public class InsideFunction {
 				System.out.println("Error: MarkList and criteriaList does not have the same size");
 				return result;
 			}
+			
+			String studentName = dbFunction.returnOneStudentInfo(studentID).getFirstName();
+			
 			for(int i=0;i<markList.size();i++) {
 				
-				int i = (int)"123";
 				int ack = dbFunction.writeIntoMark(uid, studentID, criteriaList.get(i), markList.get(i).doubleValue(),0,studentName);
 				
 				if(ack<=0) {
@@ -86,7 +88,7 @@ public class InsideFunction {
 			}
 			
 			for(int i=0;i<commentList.size();i++) {
-				int ack = dbFunction.writeIntoMark(uid, studentID, commentList.get(i), -1.0 , 1);
+				int ack = dbFunction.writeIntoMark(uid, studentID, commentList.get(i), -1.0, 1, studentName);
 				if(ack<=0) {
 					System.out.println("Error: The "+i+"th comment result cannot be added to the database.");
 					return result;
