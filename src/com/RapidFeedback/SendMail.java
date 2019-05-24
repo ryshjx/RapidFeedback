@@ -30,7 +30,7 @@ public class SendMail {
 		this.affixName = affixName;  
 	}  
 		   
-	public boolean send(String host,String user,String pwd) {  
+	public boolean send(String host,String user,String pwd,String msg) {
 		this.host = host;  
 		this.user = user;  
 		this.pwd  = pwd; 
@@ -70,8 +70,9 @@ public class SendMail {
 		    //set the body part
 		    BodyPart contentPart = new MimeBodyPart();  
 		
-		    contentPart.setText("This is a feedback for your COMP9000 Asignment1 Presentation.\r\n"
-		    		+ "If you have any problems, please dont hesitate to contact the lecturers/tutors.");  
+		    //contentPart.setText("This is a feedback for your COMP9000 Asignment1 Presentation.\r\n"
+		    //		+ "If you have any problems, please dont hesitate to contact the lecturers/tutors.");
+		    contentPart.setText(msg);
 		    multipart.addBodyPart(contentPart); 
 		    
 		    //load the attachment from the local machine 
@@ -82,12 +83,6 @@ public class SendMail {
 		    //add the title of the attachment, ONLY ENGLISH!!
 		    messageBodyPart.setFileName(affixName);  
 		    multipart.addBodyPart(messageBodyPart);  
-		    
-		    
-		    /*MimeBodyPart attachmentBodyPart = new MimeBodyPart();
-		    //attachmentBodyPart.attachFile(attachment);
-		    attachmentBodyPart.attachFile(new File(affix));
-		    multipart.addBodyPart(attachmentBodyPart);*/
 		    
 		    //put the multipart into the mail content 
 		    message.setContent(multipart);  
@@ -107,10 +102,7 @@ public class SendMail {
 		return result;
 	}
 	
-	public boolean sendSimpleMail(String host,String user,String pwd) {  
-		this.host = host;  
-		this.user = user;  
-		this.pwd  = pwd; 
+	public boolean sendSimpleMail(String host,String user,String pwd,String msg) {  
 		
 		boolean result = true;
 		  
@@ -140,8 +132,8 @@ public class SendMail {
 			  Message.RecipientType.TO, InternetAddress.parse(to));
 			message.setSubject(subject);
 			 
-			String msg = "This is a feedback for your COMP9000 Asignment1 Presentation.\r\n"
-		    		+ "If you have any problems, please dont hesitate to contact the lecturers/tutors.";
+			//String msg = "This is a feedback for your COMP9000 Asignment1 Presentation.\r\n"
+		    //		+ "If you have any problems, please dont hesitate to contact the lecturers/tutors.";
 			 
 			MimeBodyPart mimeBodyPart = new MimeBodyPart();
 			mimeBodyPart.setText(msg);

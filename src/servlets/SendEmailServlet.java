@@ -63,9 +63,9 @@ public class SendEmailServlet extends HttpServlet {
 		//other arguments
 		String projectName = jsonReceive.getString("projectName");
 		String studentEmail = jsonReceive.getString("studentEmail");
+		//get student's name and ID
 		String firstName = jsonReceive.getString("firstName");
-		String middleName = jsonReceive.getString("middleName");
-		String lastName = jsonReceive.getString("lastName");
+		String studentID = jsonReceive.getString("studentID");
 		
 		ServletContext servletContext = this.getServletContext();
 		
@@ -74,7 +74,7 @@ public class SendEmailServlet extends HttpServlet {
 		/*
 		 * add operation to send mail and get ACK.
 		 */
-		sendMail_ACK = sendEmail(token, servletContext, projectName, studentEmail);
+		sendMail_ACK = sendEmail(token, servletContext, projectName, studentEmail, firstName, studentID);
 		
 		JSONObject jsonSend = new JSONObject();
 		jsonSend.put("sendMail_ACK", sendMail_ACK);
@@ -85,24 +85,27 @@ public class SendEmailServlet extends HttpServlet {
 	 	System.out.println("Send: "+jsonSend.toJSONString());
 	}
 	
-	public boolean sendEmail(String token, ServletContext servletContext, String projectName, String studentEmail) {
+	public boolean sendEmail(String token, ServletContext servletContext, String projectName, String studentEmail, String firstName, String studentID) {
 		boolean result = false;
 		MysqlFunction dbFunction = new MysqlFunction();
 		InsideFunction inside = new InsideFunction(dbFunction);
 		SendMail send = new SendMail();
-		String subject = projectName + " Presentation Result for " + studentEmail;
-		//String subject = "";
 		String userEmail = inside.token2user(servletContext, token);
+		String subject = projectName + " Presentation Result for " + studentID;
+		String msg = "Hi " + firstName + ",\n\n" 
+				+ "This is a feedback for your " + projectName
+				+ "Presentation.\n\n"
+				+ "If you have any problems, please don\'t hesitate to contact the lecturers/tutors: "
+				+ userEmail + "\n\n" + "Regards,\n" + "RapidFeedback Team";
+		// String subject = "";
 		String host = "smtp.gmail.com";
 		String user = "feedbackrapid@gmail.com";
 		String pwd = "gkgkbzzbavwowfbh";
 		String affix = this.getServletContext().getRealPath("Assignment1.pdf");
 		send.setAddress(user, studentEmail, subject);
 		System.out.println(affix);
-		//result = true;
 		send.setAffix(affix, subject+".pdf");
-		//result=send.sendSimpleMail(host, user, pwd);
-		result = send.send(host, user, pwd);
+		result = send.send(host, user, pwd, msg);
 		return result;
 	}
 

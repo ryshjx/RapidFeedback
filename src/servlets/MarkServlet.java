@@ -65,6 +65,7 @@ public class MarkServlet extends HttpServlet {
 		String projectName = jsonReceive.getString("projectName");
 		String studentID = jsonReceive.getString("studentID");
 		String markString = jsonReceive.getString("mark");
+		
 		Mark mark = JSON.parseObject(markString, Mark.class);
 		
 		ServletContext servletContext = this.getServletContext();
