@@ -62,27 +62,35 @@ public class GetMarkServlet extends HttpServlet {
 	    //get values from received JSONObject
 		String token = jsonReceive.getString("token");
 		String projectName = jsonReceive.getString("projectName");
-		String studentID = jsonReceive.getString("studentID");
+		String studentNumber = jsonReceive.getString("studentNumber");
 		
 		ServletContext servletContext = this.getServletContext();
 		
 		boolean mark_ACK=false;
-		//Mark mark = ;
+		String markString="";
+		String username = inside.token2user(servletContext, token);
+		try {
+			int projectId=dbFunction.getProjectId(username, projectName);
+			int lecturerId=dbFunction.getLecturerId(username);
+			int studentID = dbFunction.ifStudentExists(projectId, studentNumber);
+			
+			Mark mark = dbFunction.returnMark(projectId, lecturerId, studentID);
+			
+			mark_ACK = true;
+			//change mark to json string
+			markString = JSON.toJSONString(mark);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
 		
-		/*
-		 * implementation
-		 */
 		
-		
-		//change mark to json string
-		String markString = ;
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
 		jsonSend.put("mark_ACK", mark_ACK);
 		jsonSend.put("mark", markString);
 		jsonSend.put("projectName", projectName);
-		jsonSend.put("studentID", studentID);
+		jsonSend.put("studentNumber", studentNumber);
 		//send
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
