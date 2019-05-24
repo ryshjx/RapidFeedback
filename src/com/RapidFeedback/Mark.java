@@ -9,6 +9,17 @@ public class Mark {
     private ArrayList<Criteria> commentList= new ArrayList<Criteria>();
     private String comment;
     private double totalMark;
+    private String lecturerName;
+    
+    
+    public String getLecturerName() {
+    	return lecturerName;
+    }
+    
+    public void setLecturerName(String lecturerName) {
+    	this.lecturerName= lecturerName;
+    }
+
 
     public double getTotalMark(){
         return totalMark;
