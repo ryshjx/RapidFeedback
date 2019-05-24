@@ -1193,6 +1193,9 @@ public class MysqlFunction {
 					continue;
 				}
 			}
+			//set the lecturer name who gave this mark
+			markObject.setLecturerName(getLecturerName(lecturerId));
+			
 			sql = "SELECT * FROM Mark";
 			rs = null;
 			rs = stmt.executeQuery(sql);
