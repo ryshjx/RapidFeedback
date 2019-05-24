@@ -1124,11 +1124,12 @@ public class MysqlFunction {
 		String sql;
 		try {
 			conn=connectToDB(DB_URL,USER,PASS);
-			sql = "INSERT INTO Lecturers_comment_Students(idlecturers, idStudents, comment) values(?,?,?)";
+			sql = "INSERT INTO Lecturers_comment_Students(idlecturers, idStudents, comment, totalMark) values(?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, idlecturer);  
             pstmt.setInt(2, idStudent);
-            pstmt.setString(3, comment);
+			pstmt.setString(3, comment);
+			pstmt.setDouble(4, totalmark);
 			pstmt.executeUpdate();
 			System.out.println(sql);
 			result = true;
@@ -1189,6 +1190,8 @@ public class MysqlFunction {
 				if (rs.getInt("idLecturers") == lecturerId && rs.getInt("idStudents") == studentId) {
 					str = rs.getString("comment");
 					markObject.setComment(str);
+					markObject.setTotalMark(rs.getDouble("totalMark"));
+
 				}else {
 					continue;
 				}
