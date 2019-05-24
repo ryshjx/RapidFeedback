@@ -1116,7 +1116,7 @@ public class MysqlFunction {
 	
 	
 	//write lines into table comment
-	public boolean writeIntoComment(int idlecturer, int idStudent, String comment) throws SQLException {
+	public boolean writeIntoComment(int idlecturer, int idStudent, String comment,double totalmark) throws SQLException {
 		boolean result = false;
 		Connection conn = null;
 		PreparedStatement pstmt = null;

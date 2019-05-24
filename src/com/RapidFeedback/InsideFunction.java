@@ -95,7 +95,7 @@ public class InsideFunction {
 				}
 			}
 			
-			if(dbFunction.writeIntoComment(uid, studentID, grade.getComment())) {
+			if(dbFunction.writeIntoComment(uid, studentID, grade.getComment(),grade.getTotalMark())) {
 				result=true;
 			}
 			else {
