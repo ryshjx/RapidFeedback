@@ -1053,7 +1053,7 @@ public class MysqlFunction {
 		return mail;
 	}
 	
-	public int writeIntoMark(int idlecturer, int idStudent, Criteria cr, double mark, int if_only_comment) throws SQLException {
+	public int writeIntoMark(int idlecturer, int idStudent, Criteria cr, double mark, int if_only_comment, String studentName) throws SQLException {
 		int primaryKey = 0;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -1077,7 +1077,7 @@ public class MysqlFunction {
 			}
 			int i = cr.getSubsectionList().size();
 			for (int j=0;j<i;j++) {
-				addSpecificComments(primaryKey, cr.getSubsectionList().get(j));
+				addSpecificComments(primaryKey, cr.getSubsectionList().get(j), studentName);
 			}
 			System.out.println("add successfully ! Grader: "+ idlecturer+ " student: "+ idStudent) ;
 		}catch(SQLException se){
@@ -1090,7 +1090,7 @@ public class MysqlFunction {
 	}
 
 	
-	public void addSpecificComments(int primaryKey, SubSection ss) throws SQLException{
+	public void addSpecificComments(int primaryKey, SubSection ss, String studentName) throws SQLException{
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -1102,7 +1102,7 @@ public class MysqlFunction {
 			pstmt.setInt(1, primaryKey);  
             pstmt.setString(2, ss.getName());
             pstmt.setString(3, ss.getShortTextList().get(0).getName());
-            pstmt.setString(4, ss.getShortTextList().get(0).getLongtext().get(0));
+            pstmt.setString(4, ss.getShortTextList().get(0).getLongtext().get(0).replaceAll("$name$",studentName));
 			pstmt.executeUpdate();
 			System.out.println(sql);
 		}catch(SQLException se){
@@ -1141,6 +1141,37 @@ public class MysqlFunction {
 		return result;
 	}
 
+	public StudentInfo returnOneStudentInfo(int studentId) throws SQLException{
+		StudentInfo studentInfo =null;
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement stmt = null;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT * FROM Students";
+			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
+			while(rs.next()){
+				if (rs.getInt("idStudents") == studentId) {
+					studentInfo =new StudentInfo(rs.getString("studentNumber"),rs.getString("firstName"),rs.getString("middleName"),
+							rs.getString("surName"), rs.getString("emailAddress"));
+					studentInfo.setTotalMark(rs.getDouble("mark"));
+					studentInfo.setGroup(rs.getInt("groupNumber"));
+				}else {
+					continue;
+				}
+			}
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+		return studentInfo;
+	}
+
 		public Mark returnMark(int projectId, int lecturerId, int studentId) throws SQLException {
 		Mark markObject = new Mark();
 		String str =null;
@@ -1175,6 +1206,7 @@ public class MysqlFunction {
 					int maxmk =rs.getInt("MaxMark");
 					int markId = rs.getInt("idMark");
 					Criteria cr = new Criteria();
+					cr.setName(str);
 					cr.setMaximunMark(maxmk);
 					ArrayList<SubSection> ssList = returnSpecificComment(markId);
 					cr.setSubsectionList(ssList);
@@ -1222,7 +1254,7 @@ public class MysqlFunction {
 					ss.setName(rs.getString("subSection"));
 					ShortText st = new ShortText();
 					st.setName(rs.getString("shortText"));
-					st.getLongtext().add(rs.getString("content"));
+					st.getLongtext().add(rs.getString("comment"));
 					ss.getShortTextList().add(st);
 					subsectionList.add(ss);
 				}else {
