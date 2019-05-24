@@ -3,6 +3,7 @@ package servlets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -67,18 +68,25 @@ public class GetMarkServlet extends HttpServlet {
 		ServletContext servletContext = this.getServletContext();
 		
 		boolean mark_ACK=false;
-		String markString="";
+		String markListString="";
 		String username = inside.token2user(servletContext, token);
 		try {
 			int projectId=dbFunction.getProjectId(username, projectName);
-			int lecturerId=dbFunction.getLecturerId(username);
-			int studentID = dbFunction.ifStudentExists(projectId, studentNumber);
+			ArrayList<String> assessors = dbFunction.returnAssessors(projectId);
+			ArrayList<Mark> markList = new ArrayList<Mark>();
+			for(String lecturer:assessors) {
+				int lecturerId=dbFunction.getLecturerId(lecturer);
+				int studentID = dbFunction.ifStudentExists(projectId, studentNumber);
+				
+				Mark mark = dbFunction.returnMark(projectId, lecturerId, studentID);
+				markList.add(mark);
+			}
 			
-			Mark mark = dbFunction.returnMark(projectId, lecturerId, studentID);
+			markListString=JSON.toJSONString(markList);
 			
 			mark_ACK = true;
 			//change mark to json string
-			markString = JSON.toJSONString(mark);
+			//markString = JSON.toJSONString(mark);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -88,7 +96,7 @@ public class GetMarkServlet extends HttpServlet {
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
 		jsonSend.put("mark_ACK", mark_ACK);
-		jsonSend.put("mark", markString);
+		jsonSend.put("markList", markListString);
 		jsonSend.put("projectName", projectName);
 		jsonSend.put("studentNumber", studentNumber);
 		//send
