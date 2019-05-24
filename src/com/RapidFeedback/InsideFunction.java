@@ -75,7 +75,10 @@ public class InsideFunction {
 				return result;
 			}
 			for(int i=0;i<markList.size();i++) {
-				int ack = dbFunction.writeIntoMark(uid, studentID, criteriaList.get(i), markList.get(i).doubleValue(),0);
+				
+				int i = (int)"123";
+				int ack = dbFunction.writeIntoMark(uid, studentID, criteriaList.get(i), markList.get(i).doubleValue(),0,studentName);
+				
 				if(ack<=0) {
 					System.out.println("Error: The "+i+"th mark result cannot be added to the database.");
 					return result;

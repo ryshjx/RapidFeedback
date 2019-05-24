@@ -87,14 +87,14 @@ public class InviteAssessorServlet extends HttpServlet {
 		boolean sendMail_ACK = false;
 		if (invite_ACK) {
 			try {
-				String subject = "Invitation from the project " + projectName;
+				String subject = "Invitation from the project <" + projectName + ">";
 				String inviterName = dbFunction
 						.getLecturerName(dbFunction.getLecturerId(inviter));
 				String assessorName = dbFunction
 						.getLecturerName(ids.get("assessorID"));
 				String msg = "Hi " + assessorName + ",\r\n\r\n"
 						+ "We’re just writing to let you know that you’ve been joined the assessment of"
-						+ " the project " + projectName+" on RapidFeedback, which was invited by your"
+						+ " the project <" + projectName+"> on RapidFeedback, which was invited by your"
 						+ " friend " + inviterName + "\r\n\r\n" + "Regards,\r\n" + "RapidFeedback Team";
 				sendMail_ACK = sendInvitation(inside,
 						servletContext, projectName, assessorEmail, dbFunction,
@@ -163,12 +163,12 @@ public class InviteAssessorServlet extends HttpServlet {
 		boolean sendMail_ACK = false;
 		if (delete_ACK) {
 			try {
-				String subject = "Notification from the project " + projectName;
+				String subject = "Notification from the project <" + projectName + ">";
 				String assessorName = dbFunction
 						.getLecturerName(ids.get("assessorID"));
 				String msg = "Hi " + assessorName + ",\r\n\r\n"
 						+ "We’re just writing to let you know that you’ve been left the assessment of"
-						+ " the project " + projectName+" on RapidFeedback\r\n\r\n" + "Regards,\r\n" 
+						+ " the project <" + projectName + "> on RapidFeedback\r\n\r\n" + "Regards,\r\n" 
 						+ "RapidFeedback Team";
 				sendMail_ACK = sendInvitation(inside, servletContext,
 						projectName, assessorEmail, dbFunction, subject, msg);
