@@ -793,7 +793,6 @@ public class MysqlFunction {
 					pj.setSubjectCode(rs.getString("subjectCode"));
 					pj.setSubjectName(rs.getString("subjectName"));
 					pj.setDescription(rs.getString("description"));
-					pj.setAssistant(returnAssessors(projectId));
 				}else {
 					continue;
 				}
