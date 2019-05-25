@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Students` (
   `surName` VARCHAR(100) NULL,
   `middleName` VARCHAR(100) NULL,
   `groupNumber` INT NULL,
-  `finalMark` DECIMAL(4,2) NULL,
+  `mark` DECIMAL(4,2) NULL,
   PRIMARY KEY (`idStudents`),
   INDEX `fk_Students_Project1_idx` (`idProject` ASC) VISIBLE,
   CONSTRAINT `fk_Students_Project1`
