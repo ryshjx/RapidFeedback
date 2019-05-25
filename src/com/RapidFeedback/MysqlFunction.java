@@ -479,7 +479,7 @@ public class MysqlFunction {
 		ResultSet rs = null;
 		String sql;
 		try {
-			double mark = 00.00;
+			double mark = -999.00;
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			sql ="INSERT INTO Students(studentNumber, emailAddress, idProject, firstName, "
@@ -502,7 +502,6 @@ public class MysqlFunction {
 			close2(conn,stmt,rs);
 		}
 		return result;
-
 	}
 
 	public boolean editStudentInfo(int projectId, String studentNumber, String mail, String firstName, String surName, String middleName, int group ) throws SQLException {
@@ -512,7 +511,7 @@ public class MysqlFunction {
 		ResultSet rs = null;
 		String sql;
 		try {
-			double mark = 00.00;
+			double mark = -999.00;
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			sql =	"UPDATE Students SET "
