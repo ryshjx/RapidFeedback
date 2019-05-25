@@ -1176,6 +1176,30 @@ public class MysqlFunction {
 		return result;
 	}
 
+	public boolean editStudentMark(int idStudent, double mark) throws SQLException {
+		boolean result = false;
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			sql =	"UPDATE Students SET "
+					+"mark = '" +mark+ "' " 
+					+"WHERE idStudents= " + "'"+ idStudent+  "';  ";
+			stmt.execute(sql);
+			System.out.println(sql);
+			result = true;
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+		return result;
+	}
+
 	public StudentInfo returnOneStudentInfo(int studentId) throws SQLException{
 		StudentInfo studentInfo =null;
 		Connection conn = null;
