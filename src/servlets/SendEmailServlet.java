@@ -3,6 +3,8 @@ package servlets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -11,9 +13,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.RapidFeedback.Criteria;
 import com.RapidFeedback.InsideFunction;
+import com.RapidFeedback.Mark;
 import com.RapidFeedback.MysqlFunction;
+import com.RapidFeedback.PDFUtil;
+import com.RapidFeedback.ProjectInfo;
 import com.RapidFeedback.SendMail;
+import com.RapidFeedback.StudentInfo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
@@ -44,7 +51,8 @@ public class SendEmailServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		//System.out.println("根目录所对应的绝对路径"+request.getServletPath());
 		//System.out.println("resource package所对应的绝对路径"+this.getServletContext().getRealPath("resource"));
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		response.getWriter().append("Files are at: ").append(this.getServletContext().getRealPath(""));
 	}
 
 	/**
@@ -52,7 +60,8 @@ public class SendEmailServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//MysqlFunction dbFunction = new MysqlFunction();
+		MysqlFunction dbFunction = new MysqlFunction();
+		InsideFunction inside = new InsideFunction(dbFunction);
 		
 		//get JSONObject from request
 		JSONObject jsonReceive;
@@ -67,12 +76,16 @@ public class SendEmailServlet extends HttpServlet {
 	    
 	    //get values from received JSONObject
 		String token = jsonReceive.getString("token");
-		//other arguments
 		String projectName = jsonReceive.getString("projectName");
-		String studentEmail = jsonReceive.getString("studentEmail");
+		String studentNumber = jsonReceive.getString("studentNumber");
+		String markListString = jsonReceive.getString("markList");
+		//String studentEmail = jsonReceive.getString("studentEmail");
 		//get student's name and ID
-		String firstName = jsonReceive.getString("firstName");
-		String studentID = jsonReceive.getString("studentID");
+		//String firstName = jsonReceive.getString("firstName");
+		
+		List<Mark> marks = JSONObject.parseArray(markListString, Mark.class);
+		ArrayList<Mark> markList = new ArrayList<Mark>();
+		markList.addAll(marks);
 		
 		ServletContext servletContext = this.getServletContext();
 		
@@ -81,9 +94,25 @@ public class SendEmailServlet extends HttpServlet {
 		/*
 		 * add operation to send mail and get ACK.
 		 */
-		boolean generatePdf_ACK = generatePdf(servletContext);
+		PDFUtil pdf = new PDFUtil();
+		String userEmail = inside.token2user(servletContext, token);
+		String filePath = servletContext.getRealPath("");
+		String fileName = projectName+"_"+studentNumber+".pdf";
 		
-		sendMail_ACK = sendEmail(token, servletContext, projectName, studentEmail, firstName, studentID);
+		try {
+			int projectId=dbFunction.getProjectId(userEmail, projectName);
+			ProjectInfo pj = dbFunction.returnProjectDetails(projectId);
+			int studentId = dbFunction.ifStudentExists(projectId, studentNumber);
+			StudentInfo studentInfo= dbFunction.returnOneStudentInfo(studentId);
+			
+			pdf.create(markList, pj, studentInfo, filePath, fileName);
+			
+			sendMail_ACK = sendEmail(userEmail, servletContext, projectName, studentInfo.getEmail(), studentInfo.getFirstName(), studentNumber, filePath, fileName);
+			
+			//delete files
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		JSONObject jsonSend = new JSONObject();
 		jsonSend.put("sendMail_ACK", sendMail_ACK);
@@ -94,19 +123,10 @@ public class SendEmailServlet extends HttpServlet {
 	 	System.out.println("Send: "+jsonSend.toJSONString());
 	}
 	
-	public boolean generatePdf(ServletContext servletContext, MysqlFunction dbFunction,) {
+	public boolean sendEmail(String userEmail, ServletContext servletContext, String projectName, String studentEmail, String firstName, String studentNumber, String filePath, String fileName) {
 		boolean result = false;
-		dbFunction.returnProjectDetails(projectId)
-		return result;
-	}
-	
-	public boolean sendEmail(String token, ServletContext servletContext, String projectName, String studentEmail, String firstName, String studentID) {
-		boolean result = false;
-		MysqlFunction dbFunction = new MysqlFunction();
-		InsideFunction inside = new InsideFunction(dbFunction);
 		SendMail send = new SendMail();
-		String userEmail = inside.token2user(servletContext, token);
-		String subject = projectName + " Presentation Result for " + studentID;
+		String subject = projectName + " Presentation Result for " + studentNumber; 
 		String msg = "Hi " + firstName + ",\n\n" 
 				+ "This is a feedback for your " + projectName
 				+ "Presentation.\n\n"
@@ -116,10 +136,10 @@ public class SendEmailServlet extends HttpServlet {
 		String host = "smtp.gmail.com";
 		String user = "feedbackrapid@gmail.com";
 		String pwd = "gkgkbzzbavwowfbh";
-		String affix = this.getServletContext().getRealPath("Assignment1.pdf");
+		//String affix = this.getServletContext().getRealPath("Assignment1.pdf");
 		send.setAddress(user, studentEmail, subject);
-		System.out.println(affix);
-		send.setAffix(affix, subject+".pdf");
+		//System.out.println(affix);
+		send.setAffix(filePath+fileName, fileName);
 		result = send.send(host, user, pwd, msg);
 		return result;
 	}

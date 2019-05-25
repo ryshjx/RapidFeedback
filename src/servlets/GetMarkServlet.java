@@ -102,6 +102,7 @@ public class GetMarkServlet extends HttpServlet {
 		//send
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
+	 	System.out.println("Send: "+jsonSend.toJSONString());
 	}
 
 }
