@@ -10,6 +10,7 @@ public class MysqlFunction {
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";  
 	//static final String DB_URL = "jdbc:mysql://localhost:3306/mydb?serverTimezone=UTC&useSSL=false";
 	static final String DB_URL = "jdbc:mysql://localhost:3306/mydb?serverTimezone=UTC&useSSL=false";
+	//static final String DB_URL = "jdbc:mysql://localhost:3333/mydb?serverTimezone=UTC&useSSL=false";
 
 	static final String USER = "root";
 	//static final String PASS = "88213882ydh";
@@ -792,7 +793,6 @@ public class MysqlFunction {
 					pj.setSubjectCode(rs.getString("subjectCode"));
 					pj.setSubjectName(rs.getString("subjectName"));
 					pj.setDescription(rs.getString("description"));
-					pj.setAssistant(returnAssessors(projectId));
 				}else {
 					continue;
 				}

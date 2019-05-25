@@ -88,13 +88,16 @@ public class LoginServlet extends HttpServlet {
 			 		jsonSend.put("login_ACK", login_ACK);
 			 	}
 			 				 	
-			 	PrintWriter output = response.getWriter();
-			 	output.print(jsonSend.toJSONString());
-			 	System.out.println("Send: "+jsonSend.toJSONString());
+			 	
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+			login_ACK=-2;
+		}
+		
+		PrintWriter output = response.getWriter();
+	 	output.print(jsonSend.toJSONString());
+	 	System.out.println("Send: "+jsonSend.toJSONString());
 	   
 	}
 	

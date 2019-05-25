@@ -75,7 +75,9 @@ public class InsideFunction {
 				return result;
 			}
 			
+			
 			String studentName = dbFunction.returnOneStudentInfo(studentID).getFirstName();
+			
 			
 			for(int i=0;i<markList.size();i++) {
 				
