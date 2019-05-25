@@ -773,6 +773,39 @@ public class MysqlFunction {
 		return pj;
 	}
 
+	public ProjectInfo returnProjectDetails(int projectId) throws SQLException {
+		ProjectInfo pj = new ProjectInfo();
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement stmt = null;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT * FROM Project";
+			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
+			while(rs.next()){
+				if (rs.getInt("idProject") == projectId) {
+					pj.setUsername(rs.getString("primaryMail"));
+					pj.setProjectName(rs.getString("name"));
+					pj.setSubjectCode(rs.getString("subjectCode"));
+					pj.setSubjectName(rs.getString("subjectName"));
+					pj.setDescription(rs.getString("description"));
+					pj.setAssistant(returnAssessors(projectId));
+				}else {
+					continue;
+				}
+			}
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+		return pj;	
+	}
+
 	public ArrayList<Criteria> returnOnlyComment(int projectId) throws SQLException {
 		ArrayList<Criteria> criteriaList= new ArrayList<Criteria>();
 		Connection conn = null;
