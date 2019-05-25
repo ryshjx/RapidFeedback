@@ -67,6 +67,7 @@ public class InsideFunction {
 			int uid = dbFunction.getLecturerId(username);
 			int pid = dbFunction.getProjectId(username, projectName);
 			int studentID = dbFunction.ifStudentExists(pid, studentNumber);
+			//System.out.println("studentID:"+studentID);
 			ArrayList<Criteria> criteriaList = grade.getCriteriaList();
 		    ArrayList<Double> markList = grade.getMarkList();
 		    ArrayList<Criteria> commentList = grade.getCommentList();
@@ -75,6 +76,7 @@ public class InsideFunction {
 				return result;
 			}
 			
+			//System.out.println("studentInfo:"+dbFunction.returnOneStudentInfo(studentID));
 			
 			String studentName = dbFunction.returnOneStudentInfo(studentID).getFirstName();
 			

@@ -17,6 +17,11 @@ import com.RapidFeedback.SendMail;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import java.io.IOException; 
+import org.apache.pdfbox.pdmodel.PDDocument;
+
+
+
 /**
  * Servlet implementation class SendEmailServlet
  */
@@ -37,6 +42,8 @@ public class SendEmailServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		//System.out.println("根目录所对应的绝对路径"+request.getServletPath());
+		//System.out.println("resource package所对应的绝对路径"+this.getServletContext().getRealPath("resource"));
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
@@ -74,6 +81,8 @@ public class SendEmailServlet extends HttpServlet {
 		/*
 		 * add operation to send mail and get ACK.
 		 */
+		boolean generatePdf_ACK = generatePdf(servletContext);
+		
 		sendMail_ACK = sendEmail(token, servletContext, projectName, studentEmail, firstName, studentID);
 		
 		JSONObject jsonSend = new JSONObject();
@@ -83,6 +92,12 @@ public class SendEmailServlet extends HttpServlet {
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
 	 	System.out.println("Send: "+jsonSend.toJSONString());
+	}
+	
+	public boolean generatePdf(ServletContext servletContext, MysqlFunction dbFunction,) {
+		boolean result = false;
+		dbFunction.returnProjectDetails(projectId)
+		return result;
 	}
 	
 	public boolean sendEmail(String token, ServletContext servletContext, String projectName, String studentEmail, String firstName, String studentID) {
@@ -108,5 +123,7 @@ public class SendEmailServlet extends HttpServlet {
 		result = send.send(host, user, pwd, msg);
 		return result;
 	}
+	
+	
 
 }
