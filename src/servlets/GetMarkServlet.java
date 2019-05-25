@@ -96,9 +96,9 @@ public class GetMarkServlet extends HttpServlet {
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
 		jsonSend.put("mark_ACK", mark_ACK);
-		jsonSend.put("markList", markListString);
-		jsonSend.put("projectName", projectName);
-		jsonSend.put("studentNumber", studentNumber);
+		if(mark_ACK == true)
+			jsonSend.put("markList", markListString);
+		
 		//send
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
