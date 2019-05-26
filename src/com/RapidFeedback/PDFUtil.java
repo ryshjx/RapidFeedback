@@ -168,6 +168,22 @@ public class PDFUtil {
     	
     }
 
+        /**
+     * delete pdf file 
+     */
+    public void deletePdf(String filepath) {
+    	try{
+            File file = new File(filepath);
+            if(file.delete()){
+                System.out.println(file.getName() + " Delete the pdf file successfully！");
+            }else{
+                System.out.println("Wrong file name !! Fail to delete the pdf file !!");
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * read pdf, with the use of pdfBox open source
