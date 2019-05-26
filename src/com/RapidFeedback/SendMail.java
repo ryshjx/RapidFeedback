@@ -30,7 +30,7 @@ public class SendMail {
 		this.affixName = affixName;  
 	}  
 		   
-	public boolean send(String host,String user,String pwd,String msg) {
+	public boolean send(String host,String user,String pwd,String msg/*, DataSource source*/) {
 		this.host = host;  
 		this.user = user;  
 		this.pwd  = pwd; 

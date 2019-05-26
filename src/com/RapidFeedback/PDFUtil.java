@@ -1,4 +1,4 @@
-package feedback;
+package com.RapidFeedback;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -214,7 +214,8 @@ public class PDFUtil {
      * @param studentNumber
      * 
      */
-    public void create(ArrayList<Mark> marksList, ProjectInfo pj, StudentInfo studentInfo) {
+    //returnonestudentinfo returnprojectdetails
+    public void create(ArrayList<Mark> marksList, ProjectInfo pj, StudentInfo studentInfo, String filePath, String fileName) throws Exception {
 
     	String studentName = studentInfo.getFirstName()+" "+studentInfo.getMiddleName()+" "+studentInfo.getSurname();
     	String studentNumber = studentInfo.getNumber();
@@ -239,7 +240,7 @@ public class PDFUtil {
     	//marks from the fisrt assessor as the basic criteria
     	ArrayList<Criteria> criteriaList = marksList.get(0).getCriteriaList();
 
-        String fileName = "./"+studentName+".pdf";  //the file path。
+        //String fileName = "./"+projectName+"_"+studentNumber+".pdf";  //the file name
         PDFUtil pdfUtil = new PDFUtil();
         
         // the fonts
@@ -250,7 +251,7 @@ public class PDFUtil {
         Font markFont = PDFUtil.createFont("font", 14, Font.NORMAL, new BaseColor(0,0,0));//the font of the lecturer name in feedabcks
 
         //create
-        pdfUtil.createDocument(fileName);
+        pdfUtil.createDocument(filePath+fileName);
         
         //create the fisrt page
         Chapter chapter = PDFUtil.createChapter("Presentation Feedback Report - "+ subjectCode, 1, 1, 0, chapterFont);
