@@ -541,7 +541,6 @@ public class MysqlFunction {
 		ResultSet rs = null;
 		String sql;
 		try {
-			double mark = 00.00;
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			sql =	"UPDATE Students SET "
