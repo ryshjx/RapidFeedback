@@ -111,6 +111,10 @@ public class MarkServlet extends HttpServlet {
 			
 			String studentName = dbFunction.returnOneStudentInfo(studentID).getFirstName();
 			
+			if(!dbFunction.deleteMark(uid, studentID)) {
+				System.out.println("Error: Cannot delete old mark before adding new mark!");
+				throw new Exception("Exception: Cannot delete old mark before adding new mark!");
+			}
 			
 			for(int i=0;i<markList.size();i++) {
 				

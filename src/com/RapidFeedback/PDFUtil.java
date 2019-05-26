@@ -163,22 +163,22 @@ public class PDFUtil {
             document.close();
         }
     }
-    
-    public void deletePdf() {
-    	
-    }
 
-        /**
+    /**
      * delete pdf file 
      */
     public void deletePdf(String filepath) {
     	try{
             File file = new File(filepath);
-            if(file.delete()){
-                System.out.println(file.getName() + " Delete the pdf file successfully！");
-            }else{
-                System.out.println("Wrong file name !! Fail to delete the pdf file !!");
-            }
+            if(file.isFile()) {
+            	if(file.delete()){
+                    System.out.println(file.getName() + " Delete the pdf file successfully！");
+                }else{
+                    System.out.println("Wrong file name !! Fail to delete the pdf file !!");
+                }
+            }else {
+            	System.out.println("Wrong file path !! Fail to delete the pdf file !!");
+			}
         }catch(Exception e){
             e.printStackTrace();
         }
