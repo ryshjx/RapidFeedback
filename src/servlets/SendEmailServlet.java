@@ -51,8 +51,8 @@ public class SendEmailServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		//System.out.println("根目录所对应的绝对路径"+request.getServletPath());
 		//System.out.println("resource package所对应的绝对路径"+this.getServletContext().getRealPath("resource"));
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		response.getWriter().append("Files are at: ").append(this.getServletContext().getRealPath(""));
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+		//response.getWriter().append("Files are at: ").append(this.getServletContext().getRealPath(""));
 	}
 
 	/**
@@ -110,6 +110,8 @@ public class SendEmailServlet extends HttpServlet {
 			sendMail_ACK = sendEmail(userEmail, servletContext, projectName, studentInfo.getEmail(), studentInfo.getFirstName(), studentNumber, filePath, fileName);
 			
 			//delete files
+			pdf.deletePdf(filePath+fileName);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
