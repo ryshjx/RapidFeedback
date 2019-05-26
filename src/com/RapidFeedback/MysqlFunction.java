@@ -1334,6 +1334,34 @@ public class MysqlFunction {
 
 		return subsectionList;
 	}
+
+	public boolean deleteMark(int lecturerId, int studentId) throws SQLException {
+		boolean result = false;
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			sql =	"DELETE FROM Mark "
+					+"WHERE idStudents= " + "'"+ studentId+ "' AND idLecturers= "+ "'"+ lecturerId+  "';  ";
+			stmt.execute(sql);
+			System.out.println(sql);
+			sql =null;
+			sql = "DELETE FROM Lecturers_comment_Students "
+					+"WHERE idStudents= " + "'"+ studentId+ "' AND idLecturers= "+ "'"+ lecturerId+  "'; "; 
+			stmt.execute(sql);
+			System.out.println(sql);
+			result = true;
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+		return result;
+	}
 	
 	public void close1(Connection conn, Statement stmt) throws SQLException {
 		try{
