@@ -93,7 +93,7 @@ public class UpdateProject_Time_Servlet extends HttpServlet {
 	}
 	
 	private boolean projectP2(MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, int durationMin, int durationSec, int warningMin, int warningSec) throws SQLException{
-		InsideFunction in = new InsideFunction();
+		InsideFunction in = new InsideFunction(dbFunction);
 		String username = in.token2user(servletContext, token);
 		if(username == null || username.isEmpty()) {
 			return false;

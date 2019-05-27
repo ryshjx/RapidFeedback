@@ -78,32 +78,39 @@ public class SendEmailServlet extends HttpServlet {
 		String token = jsonReceive.getString("token");
 		String projectName = jsonReceive.getString("projectName");
 		String studentNumber = jsonReceive.getString("studentNumber");
-		String markListString = jsonReceive.getString("markList");
-		//String studentEmail = jsonReceive.getString("studentEmail");
-		//get student's name and ID
-		//String firstName = jsonReceive.getString("firstName");
-		
-		List<Mark> marks = JSONObject.parseArray(markListString, Mark.class);
-		ArrayList<Mark> markList = new ArrayList<Mark>();
-		markList.addAll(marks);
 		
 		ServletContext servletContext = this.getServletContext();
 		
 		boolean sendMail_ACK = false;
 		
 		/*
-		 * add operation to send mail and get ACK.
+		 * add operation to get marklist, generate pdf and send mail.
 		 */
+		
+		
 		PDFUtil pdf = new PDFUtil();
 		String userEmail = inside.token2user(servletContext, token);
 		String filePath = servletContext.getRealPath("");
 		String fileName = projectName+"_"+studentNumber+".pdf";
+		
+		
 		
 		try {
 			int projectId=dbFunction.getProjectId(userEmail, projectName);
 			ProjectInfo pj = dbFunction.returnProjectDetails(projectId);
 			int studentId = dbFunction.ifStudentExists(projectId, studentNumber);
 			StudentInfo studentInfo= dbFunction.returnOneStudentInfo(studentId);
+			
+			//get marklist
+			ArrayList<String> assessors = dbFunction.returnAssessors(projectId);
+			ArrayList<Mark> markList = new ArrayList<Mark>();
+			for(String lecturer:assessors) {
+				int lecturerId=dbFunction.getLecturerId(lecturer);
+				
+				Mark mark = dbFunction.returnMark(projectId, lecturerId, studentId);
+				markList.add(mark);
+			}
+			//get marklist end
 			
 			pdf.create(markList, pj, studentInfo, filePath, fileName);
 			
@@ -145,7 +152,4 @@ public class SendEmailServlet extends HttpServlet {
 		result = send.send(host, user, pwd, msg);
 		return result;
 	}
-	
-	
-
 }
