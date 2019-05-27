@@ -10,6 +10,7 @@ public class StudentInfo {
     private Double totalMark;
     private Mark mark;
     private int group;
+    private boolean sendEmail;
 
 
     public StudentInfo(){}
@@ -130,4 +131,17 @@ public class StudentInfo {
         return group;
 
     }
+
+     public boolean getSendEmail() {
+
+        return sendEmail;
+
+    }
+
+    public void setSendEmail(boolean sendEmail) {
+
+        this.sendEmail = sendEmail;
+
+    }
+
 }
