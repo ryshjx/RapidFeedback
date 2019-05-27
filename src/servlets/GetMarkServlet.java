@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -48,7 +49,7 @@ public class GetMarkServlet extends HttpServlet {
 
 		MysqlFunction dbFunction = new MysqlFunction();
 		InsideFunction inside = new InsideFunction(dbFunction);
-		
+		//HashMap<String, HashMap<String,String>> otherComments = new HashMap<String, HashMap<String,String>>();
 		//get JSONObject from request
 		JSONObject jsonReceive;
 		BufferedReader reader = request.getReader();
