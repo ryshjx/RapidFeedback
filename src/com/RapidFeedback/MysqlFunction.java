@@ -15,6 +15,14 @@ public class MysqlFunction {
 	static final String USER = "root";
 	static final String PASS = "Feedback123456";
 	
+    /**
+     * function: connect to the database
+     *
+     * @param url   url address of the databse
+     * @param userName    the db root username 
+     * @param password    the db root password
+     * @return the Connection to the db
+     */
 	public Connection connectToDB(String url, String userName, String password) {
 		Connection conn = null;
 		try{
@@ -36,7 +44,16 @@ public class MysqlFunction {
 		return conn;   
 	}
 
-
+	/**
+     * function: add lecturer information when a client registers
+     *
+     * @param mail	mail for register, works as the identifier 
+     * @param password	user's password 
+     * @param firstName 	user's first name
+	 * @param middleName	user's middle name
+	 * @param familyName	user's family name
+	 * @throws SQLException
+     */
 	public void addToLecturers(String mail, 
 			String password, String firstName,
 			String middleName,String familyName ) throws SQLException
@@ -60,8 +77,13 @@ public class MysqlFunction {
 		}
 	}
 	
-
-	//check the e-mail address, has existed return 0，can be registered return 1, sqlException return 2
+	/**
+	 * function: check whether the e-mail has been registered
+	 * 
+	 * @param mail an e-mail address
+	 * @return if the e-mail exists, return 0; if does not exist, return 1
+	 * @throws SQLException
+	 */
 	public int checkLecturerExists(String mail) throws SQLException {
 		Connection conn = null;
 		ResultSet rs = null;
@@ -90,8 +112,14 @@ public class MysqlFunction {
 		return tag;
 	}
 
-	// Login: wrong e-mail address reutrn -1，wrong password return 0，
-	//  successful login return lecturer's id, sqlexception return -2
+	/**
+	 * Login
+	 * 
+	 * @param mail	e-mail address the user used for login
+	 * @param password	password used for login
+	 * @return successful login return lecturer's id, wrong e-mail address reutrn -1, wrong password return 0
+	 * @throws SQLException
+	 */
 	public int logIn(String mail, String password) throws SQLException {
 		int num = -1;
 		Connection conn = null;
@@ -124,6 +152,17 @@ public class MysqlFunction {
 		return num;
 	}
 
+	/**
+	 * create a project in the server database
+	 * 
+	 * @param username	user's e-mail address 
+	 * @param projectName	the project name
+	 * @param subjectCode	the subject code
+	 * @param subjectName	the subject name
+	 * @param description the description of the project
+	 * @return	the generated primary key in the sql databse
+	 * @throws SQLException
+	 */
 	public int createProject(String username, String projectName, String subjectCode, String subjectName, String description) throws SQLException {
 		Connection conn = null;
 		Statement stmt = null;
@@ -164,6 +203,17 @@ public class MysqlFunction {
 		return pjId;
 	}
 
+	/**
+	 * update the project information in the server database
+	 * 
+	 * @param username	the user's e-mail
+	 * @param projectName	the updated project name
+	 * @param subjectCode	the updated subject code
+	 * @param subjectName	the updated subject name
+	 * @param description	the updated project description
+	 * @return True = update successfully; False = fail to update
+	 * @throws SQLException
+	 */
 	public boolean updateProjectInfo(String username, String projectName, String subjectCode, String subjectName, String description) throws SQLException {
 		boolean result = false;
 		Connection conn = null;
@@ -195,7 +245,17 @@ public class MysqlFunction {
 		return result;
 	}
 
-
+	/**
+	 * update the time information of a project in the db
+	 * 
+	 * @param pjId	the primary key in the Table project 
+	 * @param durationMin	
+	 * @param durationSec
+	 * @param warningMin
+	 * @param warningSec
+	 * @return	True = update successfully; False = fail to update
+	 * @throws SQLException
+	 */
 	public boolean updateTimeInformation(int pjId, int durationMin, int durationSec, int warningMin, int warningSec ) throws SQLException {
 		Connection conn = null;
 		Statement stmt = null;
@@ -222,7 +282,14 @@ public class MysqlFunction {
 		}
 		return result;
 	}
-
+	
+	/**
+	 * delete a project from the db
+	 * 
+	 * @param pjId	the primary key in the Table projec
+	 * @return	True = delete successfully; False = faile to delete
+	 * @throws SQLException
+	 */
 	public boolean deleteProject(int pjId) throws SQLException{
 		boolean result = false;
 		Connection conn = null;
@@ -245,6 +312,13 @@ public class MysqlFunction {
 		return result;
 	}
 
+	/**
+	 * delete the existing criterias of a project
+	 * 
+	 * @param pjId	the primary key in the Table project
+	 * @return	True = delete successfully; False = faile to delete
+	 * @throws SQLException
+	 */
 	public boolean deleteCriterias(int pjId) throws SQLException {
 		boolean result = false;
 		Connection conn = null;
@@ -268,6 +342,14 @@ public class MysqlFunction {
 		return result;
 	}
 
+	/**
+	 * add the criteria that wont contribute to the final mark
+	 * 
+	 * @param pjId	the primary key in the Table project
+	 * @param c	the Criteria object imported
+	 * @return	the primary key of the Criteria table generated by the system
+	 * @throws SQLException
+	 */
 	public int addOnlyComment(int pjId, Criteria c) throws SQLException {
 		int critId = 0;
 		Connection conn = null;
@@ -302,8 +384,14 @@ public class MysqlFunction {
 		return critId;
 	}
 	
-	
-	
+	/**
+	 * add a Criteria to a project
+	 * 
+	 * @param pjId	the primary key in the Table project
+	 * @param c	the Criteria object imported
+	 * @return	the primary key of the Criteria table generated by the system
+	 * @throws SQLException
+	 */
 	public int addCriteria(int pjId, Criteria c) throws SQLException {
 		int critId = 0;
 		Connection conn = null;
@@ -339,6 +427,14 @@ public class MysqlFunction {
 		return critId;
 	}
 
+	/**
+	 * add a subsection to a criteria
+	 * 
+	 * @param critId	a primary key in the Criteria Table
+	 * @param ss a Subsection object
+	 * @return 	the primary key of the Subsection table generated by the system
+	 * @throws SQLException
+	 */
 	public int addSubSection(int critId, SubSection ss) throws SQLException {
 		int ssId = 0;
 		Connection conn = null;
