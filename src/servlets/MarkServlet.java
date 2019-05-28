@@ -68,6 +68,7 @@ public class MarkServlet extends HttpServlet {
 		String projectName = jsonReceive.getString("projectName");
 		String studentID = jsonReceive.getString("studentID");
 		String markString = jsonReceive.getString("mark");
+		String primaryEmail = jsonReceive.getString("primaryEmail");
 		
 		Mark mark = JSON.parseObject(markString, Mark.class);
 		
@@ -78,7 +79,7 @@ public class MarkServlet extends HttpServlet {
 		//call the SQL method to save mark and comments of this student.
 		//return the 'true' or 'false' value to mark_ACK
 		
-		mark_ACK = addResult(inside, dbFunction, servletContext, token, projectName, studentID, mark);
+		mark_ACK = addResult(inside, dbFunction, servletContext, token, projectName, studentID, mark,primaryEmail);
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
@@ -90,13 +91,13 @@ public class MarkServlet extends HttpServlet {
 	 	System.out.println("Send: "+jsonSend.toJSONString());
 	}
 	
-	private boolean addResult(InsideFunction inside, MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, String studentNumber, Mark grade) {
+	private boolean addResult(InsideFunction inside, MysqlFunction dbFunction, ServletContext servletContext, String token, String projectName, String studentNumber, Mark grade, String primaryEmail) {
 		boolean result=false;
 		
 		try {
 			String username=inside.token2user(servletContext, token);
 			int uid = dbFunction.getLecturerId(username);
-			int pid = dbFunction.getProjectId(username, projectName);
+			int pid = dbFunction.getProjectId(primaryEmail, projectName);
 			int studentID = dbFunction.ifStudentExists(pid, studentNumber);
 			//System.out.println("studentID:"+studentID);
 			ArrayList<Criteria> criteriaList = grade.getCriteriaList();
@@ -135,8 +136,8 @@ public class MarkServlet extends HttpServlet {
 			}
 			
 			if(dbFunction.writeIntoComment(uid, studentID, grade.getComment(),grade.getTotalMark())) {
-				ProjectInfo pInfo = dbFunction.returnProjectDetails(pid);
-				String primaryEmail = pInfo.getUsername();
+				//ProjectInfo pInfo = dbFunction.returnProjectDetails(pid);
+				//String primaryEmail = pInfo.getUsername();
 				if(username.equals(primaryEmail)) {
 					result = dbFunction.editStudentMark(studentID, grade.getTotalMark());
 					if(!result) {

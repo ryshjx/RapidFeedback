@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.RapidFeedback.InsideFunction;
 import com.RapidFeedback.Mark;
 import com.RapidFeedback.MysqlFunction;
+import com.RapidFeedback.ProjectInfo;
+import com.RapidFeedback.StudentInfo;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
@@ -49,7 +52,7 @@ public class GetMarkServlet extends HttpServlet {
 
 		MysqlFunction dbFunction = new MysqlFunction();
 		InsideFunction inside = new InsideFunction(dbFunction);
-		//HashMap<String, HashMap<String,String>> otherComments = new HashMap<String, HashMap<String,String>>();
+
 		//get JSONObject from request
 		JSONObject jsonReceive;
 		BufferedReader reader = request.getReader();
@@ -64,26 +67,50 @@ public class GetMarkServlet extends HttpServlet {
 	    //get values from received JSONObject
 		String token = jsonReceive.getString("token");
 		String projectName = jsonReceive.getString("projectName");
-		String studentNumber = jsonReceive.getString("studentNumber");
+		String studentNumberListString = jsonReceive.getString("studentNumberList");
+		String primaryEmail = jsonReceive.getString("primaryEmail");
+		
+		List<String> list = JSONObject.parseArray(studentNumberListString, String.class);
+		ArrayList<String> studentNumberList = new ArrayList<String>();
+		studentNumberList.addAll(list);
 		
 		ServletContext servletContext = this.getServletContext();
 		
 		boolean mark_ACK=false;
 		String markListString="";
+		String otherCommentsString="";
 		String username = inside.token2user(servletContext, token);
+		
+		//HashMap<String, HashMap<String,String>> otherComments = new HashMap<String, HashMap<String,String>>();
+		HashMap<String, String> otherComments = new HashMap<String,String>();
 		try {
-			int projectId=dbFunction.getProjectId(username, projectName);
+			if(username==null) {
+				throw new Exception("Exception: Authentication error, please log in again.");
+			}
+			if(studentNumberList.size()<1) {
+				throw new Exception("Exception: StudentNumberList length less than 1");
+			}
+			
+			int projectId=dbFunction.getProjectId(primaryEmail, projectName);
 			ArrayList<String> assessors = dbFunction.returnAssessors(projectId);
 			ArrayList<Mark> markList = new ArrayList<Mark>();
+			String studentNumber_0 = studentNumberList.get(0);
+			int studentId_0 = dbFunction.ifStudentExists(projectId, studentNumber_0);
 			for(String lecturer:assessors) {
 				int lecturerId=dbFunction.getLecturerId(lecturer);
-				int studentID = dbFunction.ifStudentExists(projectId, studentNumber);
-				
-				Mark mark = dbFunction.returnMark(projectId, lecturerId, studentID);
+				Mark mark = dbFunction.returnMark(projectId, lecturerId, studentId_0);
 				markList.add(mark);
+				if(studentNumberList.size()>1) {
+					for(String studentNumber:studentNumberList) {
+						int studentId = dbFunction.ifStudentExists(projectId, studentNumber);
+						String comment = dbFunction.returnOtherComment(lecturerId, studentId);
+						otherComments.put(studentNumber+"::"+lecturer, comment);
+					}
+				}
 			}
 			
 			markListString=JSON.toJSONString(markList);
+			otherCommentsString = JSON.toJSONString(otherComments);
 			
 			mark_ACK = true;
 			//change mark to json string
@@ -97,8 +124,13 @@ public class GetMarkServlet extends HttpServlet {
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
 		jsonSend.put("mark_ACK", mark_ACK);
-		if(mark_ACK == true)
+		if(mark_ACK == true) {
 			jsonSend.put("markList", markListString);
+			if(studentNumberList.size()>1) {
+				jsonSend.put("otherComments", otherCommentsString);
+			}
+		}
+			
 		
 		//send
 		PrintWriter output = response.getWriter();

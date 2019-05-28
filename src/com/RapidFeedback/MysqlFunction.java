@@ -651,9 +651,7 @@ public class MysqlFunction {
 			close2(conn,stmt,rs);
 		}
 		return result;
-	}
-	
-	
+	}	
 
 	public boolean deleteStudent(int projectId, String studentNumber) throws SQLException {
 		boolean result = false;
@@ -783,6 +781,36 @@ public class MysqlFunction {
 		}
 		return id;
 	}
+	
+//	public boolean ifPrimary(int lecturerId, int projectId) {
+//		Connection conn = null;
+//		Statement stmt = null;
+//		ResultSet rs = null;
+//		String sql;
+//		int id = 0;
+//		try {
+//			conn=connectToDB(DB_URL,USER,PASS);
+//			stmt = conn.createStatement();
+//			sql = "SELECT If_Primary FROM lecturers_has_project WHERE idLecturers="+1 and idProject=1;";
+//			rs = stmt.executeQuery(sql);
+//			System.out.println(sql);
+//			while(rs.next()){
+//				//				id = rs.getInt("idLecturers");
+//				//				System.out.println("kkkkk"+id); 
+//				if (rs.getString("email").equals(mail)) {
+//					id = rs.getInt("idLecturers");
+//				}else {
+//					continue;
+//				}
+//			}
+//		}catch(SQLException se){
+//			// JDBC faults
+//			se.printStackTrace();
+//		}finally {
+//			close2(conn,stmt,rs);
+//		}
+//		return id;
+//	}
 
 
 	public List<Integer> queryProjects(String mail) throws SQLException {
@@ -1391,6 +1419,34 @@ public class MysqlFunction {
 			close2(conn,stmt,rs);
 		}
 		return markObject;
+	}
+		
+	public String returnOtherComment(int lecturerId, int studentId) throws SQLException {
+		String comment = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		Statement stmt = null;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			String sql;
+			sql = "SELECT * FROM Lecturers_comment_Students";
+			rs = stmt.executeQuery(sql);
+			System.out.println(sql);
+			while(rs.next()){
+				if (rs.getInt("idLecturers") == lecturerId && rs.getInt("idStudents") == studentId) {
+					comment = rs.getString("comment");
+				}else {
+					continue;
+				}
+			}
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+		return comment;
 	}
 	
 	private ArrayList<SubSection> returnSpecificComment(int markId) throws SQLException{

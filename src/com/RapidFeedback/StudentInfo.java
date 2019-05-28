@@ -10,7 +10,7 @@ public class StudentInfo {
     private Double totalMark;
     private Mark mark;
     private int group;
-    private boolean sendEmail;
+    private boolean sendEmail;//if already send email to this student=true.
 
 
     public StudentInfo(){}
