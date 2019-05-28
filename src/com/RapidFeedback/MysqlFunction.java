@@ -1422,7 +1422,7 @@ public class MysqlFunction {
 	}
 		
 	public String returnOtherComment(int lecturerId, int studentId) throws SQLException {
-		String comment = null;
+		String comment = "";
 		Connection conn = null;
 		ResultSet rs = null;
 		Statement stmt = null;

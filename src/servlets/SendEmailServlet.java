@@ -116,6 +116,8 @@ public class SendEmailServlet extends HttpServlet {
 			
 			sendMail_ACK = sendEmail(userEmail, servletContext, projectName, studentInfo.getEmail(), studentInfo.getFirstName(), studentNumber, filePath, fileName);
 			
+			//change sendEmail_flag
+			
 			//delete files
 			pdf.deletePdf(filePath+fileName);
 			

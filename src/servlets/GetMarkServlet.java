@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -105,6 +106,7 @@ public class GetMarkServlet extends HttpServlet {
 						int studentId = dbFunction.ifStudentExists(projectId, studentNumber);
 						String comment = dbFunction.returnOtherComment(lecturerId, studentId);
 						otherComments.put(studentNumber+"::"+lecturer, comment);
+						System.out.println(otherComments.get(studentNumber+"::"+lecturer));
 					}
 				}
 			}
@@ -131,11 +133,34 @@ public class GetMarkServlet extends HttpServlet {
 			}
 		}
 			
-		
 		//send
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
 	 	System.out.println("Send: "+jsonSend.toJSONString());
 	}
+
+	/*//a test function for convert to hashmap
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		JSONObject jsonReceive;
+		BufferedReader reader = request.getReader();
+		String str, wholeString = "";
+	    while((str = reader.readLine()) != null)
+	    {
+	        wholeString += str;  
+	    }
+	    System.out.println("Receive: " + wholeString);
+	    jsonReceive = JSON.parseObject(wholeString);
+	    String otherComments = jsonReceive.getString("otherComments");
+	    MysqlFunction dbFunction = new MysqlFunction();
+	    InsideFunction inside = new InsideFunction(dbFunction);
+	    HashMap<String, String> comments=inside.string2HashMap(otherComments);
+	    //print hashmap
+	    Set<String> keys = comments.keySet();
+	    for(String key: keys) {
+	    	System.out.println(key+"--"+comments.get(key));
+	    }
+	    //print hashmap end
+		response.getWriter().append("HashMap print. ");
+	}*/
 
 }
