@@ -105,6 +105,9 @@ public class GetMarkServlet extends HttpServlet {
 					for(String studentNumber:studentNumberList) {
 						int studentId = dbFunction.ifStudentExists(projectId, studentNumber);
 						String comment = dbFunction.returnOtherComment(lecturerId, studentId);
+						if(comment==null) {
+							comment="";
+						}
 						otherComments.put(studentNumber+"::"+lecturer, comment);
 						System.out.println(otherComments.get(studentNumber+"::"+lecturer));
 					}

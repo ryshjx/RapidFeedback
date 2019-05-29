@@ -78,7 +78,7 @@ public class SendEmailServlet extends HttpServlet {
 		String token = jsonReceive.getString("token");
 		String projectName = jsonReceive.getString("projectName");
 		String studentNumber = jsonReceive.getString("studentNumber");
-		String primaryEmail = jsonReceive.getString("primaryEmail");
+		//String primaryEmail = jsonReceive.getString("primaryEmail");
 		
 		ServletContext servletContext = this.getServletContext();
 		
@@ -96,7 +96,7 @@ public class SendEmailServlet extends HttpServlet {
 		String fileName = projectName+"_"+studentNumber+".pdf";
 		
 		try {
-			int projectId=dbFunction.getProjectId(primaryEmail, projectName);
+			int projectId=dbFunction.getProjectId(userEmail, projectName);
 			ProjectInfo pj = dbFunction.returnProjectDetails(projectId);
 			int studentId = dbFunction.ifStudentExists(projectId, studentNumber);
 			StudentInfo studentInfo= dbFunction.returnOneStudentInfo(studentId);
