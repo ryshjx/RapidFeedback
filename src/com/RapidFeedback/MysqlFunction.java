@@ -1262,7 +1262,7 @@ public class MysqlFunction {
 			pstmt.setInt(1, primaryKey);  
             pstmt.setString(2, ss.getName());
             pstmt.setString(3, ss.getShortTextList().get(0).getName());
-            pstmt.setString(4, ss.getShortTextList().get(0).getLongtext().get(0).replaceAll("$name$",studentName));
+            pstmt.setString(4, ss.getShortTextList().get(0).getLongtext().get(0));
 			pstmt.executeUpdate();
 			System.out.println(sql);
 		}catch(SQLException se){

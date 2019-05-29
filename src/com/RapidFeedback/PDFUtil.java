@@ -322,7 +322,7 @@ public class PDFUtil {
 	        	for (int m=0; m< subsectionList.size(); m++) {
 	        		String str = "";
 	        		str = str + "<"+ subsectionList.get(m).getName()+ "> :  "+
-	        				subsectionList.get(m).getShortTextList().get(0).getLongtext().get(0);
+	        				subsectionList.get(m).getShortTextList().get(0).getLongtext().get(0).replaceAll("$name$",studentName);
 		        	ListItem listItemSecondLine = PDFUtil.createListItem(str, textFont);
 		        	list.add(listItemSecondLine);
 	        	}
