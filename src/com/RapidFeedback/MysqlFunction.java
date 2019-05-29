@@ -1521,6 +1521,27 @@ public class MysqlFunction {
 		}
 		return result;
 	}
+
+	public void editsentMail(int projectId, String studentNumber) throws SQLException {
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			sql =	"UPDATE Students SET "
+					+"if_send_mail = '" +1+ "' " 
+					+"WHERE idProject= " + "'"+ projectId+ "' AND studentNumber= "+ "'"+ studentNumber+  "';  ";
+			stmt.execute(sql);
+			System.out.println(sql);
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
+	}
 	
 	public void close1(Connection conn, Statement stmt) throws SQLException {
 		try{
