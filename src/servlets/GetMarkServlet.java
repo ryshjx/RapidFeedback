@@ -139,29 +139,7 @@ public class GetMarkServlet extends HttpServlet {
 	 	output.print(jsonSend.toJSONString());
 	 	System.out.println("Send: "+jsonSend.toJSONString());
 	}
-
-	/*//a test function for convert to hashmap
-	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		JSONObject jsonReceive;
-		BufferedReader reader = request.getReader();
-		String str, wholeString = "";
-	    while((str = reader.readLine()) != null)
-	    {
-	        wholeString += str;  
-	    }
-	    System.out.println("Receive: " + wholeString);
-	    jsonReceive = JSON.parseObject(wholeString);
-	    String otherComments = jsonReceive.getString("otherComments");
-	    MysqlFunction dbFunction = new MysqlFunction();
-	    InsideFunction inside = new InsideFunction(dbFunction);
-	    HashMap<String, String> comments=inside.string2HashMap(otherComments);
-	    //print hashmap
-	    Set<String> keys = comments.keySet();
-	    for(String key: keys) {
-	    	System.out.println(key+"--"+comments.get(key));
-	    }
-	    //print hashmap end
-		response.getWriter().append("HashMap print. ");
-	}*/
+	
+	//TODO:judge if all the marks are written in the database.
 
 }

@@ -46,10 +46,4 @@ public class InsideFunction {
 			return result;
 		}
 	}
-
-	/*
-	public HashMap<String, String> string2HashMap(String otherComments){
-		HashMap<String,String> comments = JSON.parseObject(otherComments,HashMap.class);
-		return comments;
-	}*/
 }
