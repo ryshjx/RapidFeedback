@@ -1522,7 +1522,8 @@ public class MysqlFunction {
 		return result;
 	}
 
-	public void editsentMail(int projectId, String studentNumber) throws SQLException {
+	public boolean editsentMail(int projectId, String studentNumber) throws SQLException {
+		boolean result = false;
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -1535,12 +1536,14 @@ public class MysqlFunction {
 					+"WHERE idProject= " + "'"+ projectId+ "' AND studentNumber= "+ "'"+ studentNumber+  "';  ";
 			stmt.execute(sql);
 			System.out.println(sql);
+			result=true;
 		}catch(SQLException se){
 			// JDBC faults
 			se.printStackTrace();
 		}finally {
 			close2(conn,stmt,rs);
 		}
+		return result;
 	}
 	
 	public void close1(Connection conn, Statement stmt) throws SQLException {

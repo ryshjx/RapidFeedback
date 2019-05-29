@@ -167,12 +167,14 @@ public class PDFUtil {
     /**
      * delete pdf file 
      */
-    public void deletePdf(String filepath) {
+    public boolean deletePdf(String filepath) {
+    	boolean result=false;
     	try{
             File file = new File(filepath);
             if(file.isFile()) {
             	if(file.delete()){
                     System.out.println(file.getName() + " Delete the pdf file successfully！");
+                    result=true;
                 }else{
                     System.out.println("Wrong file name !! Fail to delete the pdf file !!");
                 }
@@ -182,6 +184,7 @@ public class PDFUtil {
         }catch(Exception e){
             e.printStackTrace();
         }
+    	return result;
     }
 
 

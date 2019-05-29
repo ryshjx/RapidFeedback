@@ -84,17 +84,16 @@ public class SendEmailServlet extends HttpServlet {
 		
 		boolean sendMail_ACK = false;
 		
+		boolean deletefile_ACK = false;
+		boolean recordSentEmail_ACK = false;
+		
 		/*
 		 * add operation to get marklist, generate pdf and send mail.
 		 */
-		
-		
 		PDFUtil pdf = new PDFUtil();
 		String userEmail = inside.token2user(servletContext, token);
 		String filePath = servletContext.getRealPath("");
 		String fileName = projectName+"_"+studentNumber+".pdf";
-		
-		
 		
 		try {
 			int projectId=dbFunction.getProjectId(primaryEmail, projectName);
@@ -117,10 +116,11 @@ public class SendEmailServlet extends HttpServlet {
 			
 			sendMail_ACK = sendEmail(userEmail, servletContext, projectName, studentInfo.getEmail(), studentInfo.getFirstName(), studentNumber, filePath, fileName);
 			
-			//TODO:change sendEmail_flag
+			//change sendEmail_flag
+			recordSentEmail_ACK=dbFunction.editsentMail(projectId, studentNumber);
 			
 			//delete files
-			pdf.deletePdf(filePath+fileName);
+			deletefile_ACK=pdf.deletePdf(filePath+fileName);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -129,9 +129,12 @@ public class SendEmailServlet extends HttpServlet {
 		JSONObject jsonSend = new JSONObject();
 		jsonSend.put("sendMail_ACK", sendMail_ACK);
 		
+		
 		//send
 		PrintWriter output = response.getWriter();
 	 	output.print(jsonSend.toJSONString());
+	 	System.out.println("recordSentEmail_ACK: "+recordSentEmail_ACK);
+	 	System.out.println("deletefile_ACK: "+deletefile_ACK);
 	 	System.out.println("Send: "+jsonSend.toJSONString());
 	}
 	
