@@ -30,14 +30,12 @@ public class UpdateProject_Time_Servlet extends HttpServlet {
      */
     public UpdateProject_Time_Servlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
@@ -78,7 +76,6 @@ public class UpdateProject_Time_Servlet extends HttpServlet {
 		try {
 			updateProject_ACK = projectP2(dbFunction, servletContext, token, projectName, durationMin, durationSec, warningMin, warningSec);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

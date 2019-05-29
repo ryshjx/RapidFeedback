@@ -41,14 +41,14 @@ public class SendEmailServlet extends HttpServlet {
      */
     public SendEmailServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		//System.out.println("根目录所对应的绝对路径"+request.getServletPath());
 		//System.out.println("resource package所对应的绝对路径"+this.getServletContext().getRealPath("resource"));
 		response.getWriter().append("Served at: ").append(request.getContextPath());
@@ -59,7 +59,7 @@ public class SendEmailServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		MysqlFunction dbFunction = new MysqlFunction();
 		InsideFunction inside = new InsideFunction(dbFunction);
 		
@@ -78,6 +78,7 @@ public class SendEmailServlet extends HttpServlet {
 		String token = jsonReceive.getString("token");
 		String projectName = jsonReceive.getString("projectName");
 		String studentNumber = jsonReceive.getString("studentNumber");
+		String primaryEmail = jsonReceive.getString("primaryEmail");
 		
 		ServletContext servletContext = this.getServletContext();
 		
@@ -96,7 +97,7 @@ public class SendEmailServlet extends HttpServlet {
 		
 		
 		try {
-			int projectId=dbFunction.getProjectId(userEmail, projectName);
+			int projectId=dbFunction.getProjectId(primaryEmail, projectName);
 			ProjectInfo pj = dbFunction.returnProjectDetails(projectId);
 			int studentId = dbFunction.ifStudentExists(projectId, studentNumber);
 			StudentInfo studentInfo= dbFunction.returnOneStudentInfo(studentId);
@@ -116,7 +117,7 @@ public class SendEmailServlet extends HttpServlet {
 			
 			sendMail_ACK = sendEmail(userEmail, servletContext, projectName, studentInfo.getEmail(), studentInfo.getFirstName(), studentNumber, filePath, fileName);
 			
-			//change sendEmail_flag
+			//TODO:change sendEmail_flag
 			
 			//delete files
 			pdf.deletePdf(filePath+fileName);
