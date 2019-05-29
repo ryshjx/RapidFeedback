@@ -10,9 +10,18 @@ public class Mark {
     private String comment;
     private double totalMark;
     private String lecturerName;
+    private String lecturerEmail;
     
     
-    public String getLecturerName() {
+    public String getLecturerEmail() {
+		return lecturerEmail;
+	}
+
+	public void setLecturerEmail(String lecturerEmail) {
+		this.lecturerEmail = lecturerEmail;
+	}
+
+	public String getLecturerName() {
     	return lecturerName;
     }
     
