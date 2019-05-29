@@ -1109,6 +1109,11 @@ public class MysqlFunction {
 							rs.getString("surName"), rs.getString("emailAddress"));
 					studentInfo.setTotalMark(rs.getDouble("mark"));
 					studentInfo.setGroup(rs.getInt("groupNumber"));
+					if (rs.getInt("if_send_mail")==1) {
+						studentInfo.setSendEmail(true);
+					}else {
+						studentInfo.setSendEmail(false);
+					}
 					studentInfoList.add(studentInfo);
 				}else {
 					continue;
@@ -1339,6 +1344,11 @@ public class MysqlFunction {
 							rs.getString("surName"), rs.getString("emailAddress"));
 					studentInfo.setTotalMark(rs.getDouble("mark"));
 					studentInfo.setGroup(rs.getInt("groupNumber"));
+					if (rs.getInt("if_send_mail")==1) {
+						studentInfo.setSendEmail(true);
+					}else {
+						studentInfo.setSendEmail(false);
+					}
 				}else {
 					continue;
 				}
@@ -1510,6 +1520,27 @@ public class MysqlFunction {
 			close2(conn,stmt,rs);
 		}
 		return result;
+	}
+
+	public void editsentMail(int projectId, String studentNumber) throws SQLException {
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			conn=connectToDB(DB_URL,USER,PASS);
+			stmt = conn.createStatement();
+			sql =	"UPDATE Students SET "
+					+"if_send_mail = '" +1+ "' " 
+					+"WHERE idProject= " + "'"+ projectId+ "' AND studentNumber= "+ "'"+ studentNumber+  "';  ";
+			stmt.execute(sql);
+			System.out.println(sql);
+		}catch(SQLException se){
+			// JDBC faults
+			se.printStackTrace();
+		}finally {
+			close2(conn,stmt,rs);
+		}
 	}
 	
 	public void close1(Connection conn, Statement stmt) throws SQLException {
