@@ -1199,7 +1199,7 @@ public class MysqlFunction {
 			System.out.println(sql);
 			while(rs.next()){
 				if (rs.getInt("idLecturers") == id) {
-					mail = rs.getString("FirstName");
+					mail = rs.getString("FirstName")+" "+rs.getString("MiddleName")+" "+rs.getString("FamilyName");
 				}else {
 					continue;
 				}
