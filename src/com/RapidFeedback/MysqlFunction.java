@@ -1385,8 +1385,10 @@ public class MysqlFunction {
 					continue;
 				}
 			}
-			//set the lecturer name who gave this mark
+			//set the lecturer name and e-mail of whom gave this mark
 			markObject.setLecturerName(getLecturerName(lecturerId));
+			markObject.setLecturerEmail(getLecturerMail(lecturerId));
+
 			
 			sql = "SELECT * FROM Mark";
 			rs = null;
