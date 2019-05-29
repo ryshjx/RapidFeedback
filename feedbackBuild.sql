@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Students` (
   `middleName` VARCHAR(100) NULL,
   `groupNumber` INT NULL,
   `mark` DECIMAL(5,2) NULL,
+  `if_send_mail` TINYINT(1) DEFAULT 0, 
   PRIMARY KEY (`idStudents`),
   INDEX `fk_Students_Project1_idx` (`idProject` ASC) VISIBLE,
   CONSTRAINT `fk_Students_Project1`

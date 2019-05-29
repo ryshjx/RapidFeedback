@@ -1109,6 +1109,11 @@ public class MysqlFunction {
 							rs.getString("surName"), rs.getString("emailAddress"));
 					studentInfo.setTotalMark(rs.getDouble("mark"));
 					studentInfo.setGroup(rs.getInt("groupNumber"));
+					if (rs.getInt("if_send_mail")==1) {
+						studentInfo.setSendEmail(true);
+					}else {
+						studentInfo.setSendEmail(false);
+					}
 					studentInfoList.add(studentInfo);
 				}else {
 					continue;
@@ -1339,6 +1344,11 @@ public class MysqlFunction {
 							rs.getString("surName"), rs.getString("emailAddress"));
 					studentInfo.setTotalMark(rs.getDouble("mark"));
 					studentInfo.setGroup(rs.getInt("groupNumber"));
+					if (rs.getInt("if_send_mail")==1) {
+						studentInfo.setSendEmail(true);
+					}else {
+						studentInfo.setSendEmail(false);
+					}
 				}else {
 					continue;
 				}
