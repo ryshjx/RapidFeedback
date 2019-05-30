@@ -75,7 +75,7 @@ public class GetMarkServlet extends HttpServlet {
 		
 		ServletContext servletContext = this.getServletContext();
 		
-		boolean mark_ACK=false;
+		boolean getMark_ACK=false;
 		String markListString="";
 		String otherCommentsString="";
 		String username = inside.token2user(servletContext, token);
@@ -115,7 +115,7 @@ public class GetMarkServlet extends HttpServlet {
 			markListString=JSON.toJSONString(markList);
 			otherCommentsString = JSON.toJSONString(otherComments);
 			
-			mark_ACK = true;
+			getMark_ACK = true;
 			//change mark to json string
 			//markString = JSON.toJSONString(mark);
 		} catch (Exception e) {
@@ -126,8 +126,8 @@ public class GetMarkServlet extends HttpServlet {
 		
 		//construct the JSONObject to send
 		JSONObject jsonSend = new JSONObject();
-		jsonSend.put("mark_ACK", mark_ACK);
-		if(mark_ACK == true) {
+		jsonSend.put("getMark_ACK",getMark_ACK);
+		if(getMark_ACK == true) {
 			jsonSend.put("markList", markListString);
 			if(studentNumberList.size()>1) {
 				jsonSend.put("otherComments", otherCommentsString);
