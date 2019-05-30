@@ -1416,6 +1416,7 @@ public class MysqlFunction {
 					str = rs.getString("CriteriaName");
 					int markId = rs.getInt("idMark");
 					Criteria cr = new Criteria();
+					cr.setName(str);
 					ArrayList<SubSection> ssList = returnSpecificComment(markId);
 					cr.setSubsectionList(ssList);
 					markObject.getCommentList().add(cr);
