@@ -7,9 +7,9 @@ public class StudentInfo {
     private String middleName;
     private String surname;
     private String email;
-    private Double totalMark;
+    private Double totalMark = -999.0;
     private Mark mark;
-    private int group;
+    private int group = -999;
     private boolean sendEmail;//if already send email to this student=true.
 
 
