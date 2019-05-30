@@ -257,7 +257,8 @@ public class PDFUtil {
         }
     	    	
     	//marks from the fisrt assessor as the basic criteria
-    	ArrayList<Criteria> criteriaList = marksList.get(0).getCriteriaList();
+        ArrayList<Criteria> criteriaList = marksList.get(0).getCriteriaList();
+        ArrayList<Criteria> commentList = marksList.get(0).getCommentList();
 
         //String fileName = "./"+projectName+"_"+studentNumber+".pdf";  //the file name
         PDFUtil pdfUtil = new PDFUtil();
@@ -329,8 +330,27 @@ public class PDFUtil {
 	        	section6.add(textName);
 	        	section6.add(list);
 	        }
-		}
-		
+        }
+
+		for (int j=0; j< commentList.size(); j++) {
+			String criteriaName = marksList.get(0).getCommentList().get(j).getName();
+			Section section7 = PDFUtil.createSection(chapter2, criteriaName, sectionFont, 0);
+			for (int i =0; i<numOfAssessors; i++) {
+				Phrase textName = PDFUtil.createPhrase("Assessor "+(i+1),nameFont);
+				List list = PDFUtil.createList(true, false, 20); 
+	        	ArrayList<SubSection> subsectionList = marksList.get(i).getCommentList().get(j).getSubsectionList();
+	        	for (int m=0; m< subsectionList.size(); m++) {
+	        		String str = "";
+	        		str = str + "<"+ subsectionList.get(m).getName()+ "> :  "+
+	        				subsectionList.get(m).getShortTextList().get(0).getLongtext().get(0).replaceAll("$name$",studentName);
+		        	ListItem listItemSecondLine = PDFUtil.createListItem(str, textFont);
+		        	list.add(listItemSecondLine);
+	        	}
+	        	section7.add(textName);
+	        	section7.add(list);
+	        }
+        }
+
         pdfUtil.writeChapterToDoc(chapter2);
         pdfUtil.closeDocument();
         System.out.println("Create successfully: the report for"+ studentName);
