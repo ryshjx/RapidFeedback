@@ -1137,7 +1137,7 @@ public class MysqlFunction {
 			conn=connectToDB(DB_URL,USER,PASS);
 			stmt = conn.createStatement();
 			String sql;
-			sql = "SELECT * FROM Lecturers_has_Project";
+			sql = "SELECT * FROM Lecturers_has_Project ORDER BY If_Primary DESC";
 			rs = stmt.executeQuery(sql);
 			System.out.println(sql);
 			while(rs.next()){
