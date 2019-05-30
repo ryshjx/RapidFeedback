@@ -93,9 +93,10 @@ public class InviteAssessorServlet extends HttpServlet {
 				String assessorName = dbFunction
 						.getLecturerName(ids.get("assessorID"));
 				String msg = "Hi " + assessorName + ",\r\n\r\n"
-						+ "We’re just writing to let you know that you’ve been joined the assessment of"
-						+ " the project <" + projectName+"> on RapidFeedback, which was invited by your"
-						+ " friend " + inviterName + "\r\n\r\n" + "Regards,\r\n" + "RapidFeedback Team";
+						+ "We’re just writing to let you know that you’ve joined the assessment of"
+						+ " the project <" + projectName+"> on RapidFeedback, which was invited by the "
+						+ "project's primary assessor " + inviterName + "\r\n\r\n" + "Regards,\r\n" 
+						+ "RapidFeedback Team";
 				sendMail_ACK = sendInvitation(inside,
 						servletContext, projectName, assessorEmail, dbFunction,
 						subject, msg);
@@ -167,7 +168,7 @@ public class InviteAssessorServlet extends HttpServlet {
 				String assessorName = dbFunction
 						.getLecturerName(ids.get("assessorID"));
 				String msg = "Hi " + assessorName + ",\r\n\r\n"
-						+ "We’re just writing to let you know that you’ve been left the assessment of"
+						+ "We’re just writing to let you know that you’ve left the assessment of"
 						+ " the project <" + projectName + "> on RapidFeedback\r\n\r\n" + "Regards,\r\n" 
 						+ "RapidFeedback Team";
 				sendMail_ACK = sendInvitation(inside, servletContext,
@@ -207,7 +208,7 @@ public class InviteAssessorServlet extends HttpServlet {
 			System.out.println(projectID);
 			if (projectID <= 0) {
 				System.out.println("project not exists");
-				return ids;
+				throw new Exception("Exception: Cannot find the project, or the user is not the primary assessor of the project.");
 			}
 			ids.put("assessorID", assessorID);
 			ids.put("projectID", projectID);

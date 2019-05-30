@@ -74,6 +74,9 @@ public class DeleteProjectServlet extends HttpServlet {
 		String username=inside.token2user(servletContext, token);
 		try {
 			int pjId=dbFunction.getProjectId(username, projectName);
+			if(pjId<=0) {
+				throw new Exception("Exception: Cannot find the project, or the user is not the primary assessor of the project.");
+			}
 			updateProject_ACK=dbFunction.deleteProject(pjId);
 		} catch (Exception e) {
 			// TODO: handle exception

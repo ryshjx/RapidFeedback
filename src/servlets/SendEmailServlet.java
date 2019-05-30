@@ -77,7 +77,7 @@ public class SendEmailServlet extends HttpServlet {
 	    //get values from received JSONObject
 		String token = jsonReceive.getString("token");
 		String projectName = jsonReceive.getString("projectName");
-		String studentNumber = jsonReceive.getString("studentNumber");
+		String studentNumber = jsonReceive.getString("studentID");
 		//String primaryEmail = jsonReceive.getString("primaryEmail");
 		//1:send to student, 2: send to student and assessor.
 		int ifSendBoth = jsonReceive.getIntValue("sendBoth");
@@ -102,9 +102,11 @@ public class SendEmailServlet extends HttpServlet {
 			if(projectId<=0) {
 				throw new Exception("Exception: Cannot find the project, or the user is not the primary assessor of the project.");
 			}
+			System.out.println("projectId: "+projectId);
 			ProjectInfo pj = dbFunction.returnProjectDetails(projectId);
 			int studentId = dbFunction.ifStudentExists(projectId, studentNumber);
 			StudentInfo studentInfo= dbFunction.returnOneStudentInfo(studentId);
+			System.out.println("studentEmail: "+studentInfo.getEmail());
 			
 			//get marklist
 			ArrayList<String> assessors = dbFunction.returnAssessors(projectId);

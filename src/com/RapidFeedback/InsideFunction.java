@@ -31,8 +31,11 @@ public class InsideFunction {
 		String username=this.token2user(servletContext, token);
 		boolean result=false;
 		try {
-			int pid = dbFunction.getProjectId(username, projectName);
 			if(username!=null && projectName!=null) {
+				int pid = dbFunction.getProjectId(username, projectName);
+				if(pid<=0) {
+					throw new Exception("Exception: Cannot find the project, or the user is not the primary assessor of the project.");
+				}
 				if(dbFunction.ifStudentExists(pid, student.getNumber())>0) {
 					return result; 
 				}else {
@@ -43,7 +46,8 @@ public class InsideFunction {
 				return result;
 			}
 		} catch (Exception e) {
-			return result;
+			e.printStackTrace();
 		}
+		return result;
 	}
 }

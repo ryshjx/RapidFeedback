@@ -100,10 +100,14 @@ public class EditStudentServlet extends HttpServlet {
 		InsideFunction inside = new InsideFunction(dbFunction);
 		String username=inside.token2user(servletContext, token);
 		try {
-			int pid = dbFunction.getProjectId(username, projectName);
+			
 			//System.out.println(username);
 			//System.out.println(projectName);
 			if(username!=null && projectName!=null) {
+				int pid = dbFunction.getProjectId(username, projectName);
+				if(pid<=0) {
+					throw new Exception("Exception: Cannot find the project, or the user is not the primary assessor of the project.");
+				}
 				if(dbFunction.ifStudentExists(pid, student.getNumber())>0) {
 					//System.out.println("before result");
 					result=dbFunction.editStudentInfo(pid, student.getNumber(), student.getEmail(), student.getFirstName(), student.getSurname(), student.getMiddleName(), student.getGroup());

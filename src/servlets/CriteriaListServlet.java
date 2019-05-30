@@ -113,6 +113,9 @@ public class CriteriaListServlet extends HttpServlet {
 		String username = inside.token2user(servletContext, token);
 		try {
 			int pid = dbFunction.getProjectId(username, projectName);
+			if(pid<=0) {
+				throw new Exception("Exception: Cannot find the project, or the user is not the primary assessor of the project.");
+			}
 			if(delOldCriteria) {
 				boolean delete = dbFunction.deleteCriterias(pid);
 				if(!delete) {
