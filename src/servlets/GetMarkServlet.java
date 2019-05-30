@@ -97,6 +97,7 @@ public class GetMarkServlet extends HttpServlet {
 			int studentId_0 = dbFunction.ifStudentExists(projectId, studentNumber_0);
 			for(String lecturer:assessors) {
 				int lecturerId=dbFunction.getLecturerId(lecturer);
+				//TODO:judge if this lecturer's marks are written in the database. (check totalMark has value)
 				Mark mark = dbFunction.returnMark(projectId, lecturerId, studentId_0);
 				markList.add(mark);
 				if(studentNumberList.size()>1) {
@@ -140,6 +141,5 @@ public class GetMarkServlet extends HttpServlet {
 	 	System.out.println("Send: "+jsonSend.toJSONString());
 	}
 	
-	//TODO:judge if all the marks are written in the database.
 
 }

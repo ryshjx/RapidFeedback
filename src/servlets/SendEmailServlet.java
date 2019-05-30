@@ -79,6 +79,8 @@ public class SendEmailServlet extends HttpServlet {
 		String projectName = jsonReceive.getString("projectName");
 		String studentNumber = jsonReceive.getString("studentNumber");
 		//String primaryEmail = jsonReceive.getString("primaryEmail");
+		//1:send to student, 2: send to student and assessor.
+		int ifSendBoth = jsonReceive.getIntValue("sendBoth");
 		
 		ServletContext servletContext = this.getServletContext();
 		
@@ -97,6 +99,9 @@ public class SendEmailServlet extends HttpServlet {
 		
 		try {
 			int projectId=dbFunction.getProjectId(userEmail, projectName);
+			if(projectId<=0) {
+				throw new Exception("Exception: Cannot find the project, or the user is not the primary assessor of the project.");
+			}
 			ProjectInfo pj = dbFunction.returnProjectDetails(projectId);
 			int studentId = dbFunction.ifStudentExists(projectId, studentNumber);
 			StudentInfo studentInfo= dbFunction.returnOneStudentInfo(studentId);
@@ -114,7 +119,13 @@ public class SendEmailServlet extends HttpServlet {
 			
 			pdf.create(markList, pj, studentInfo, filePath, fileName);
 			
-			sendMail_ACK = sendEmail(userEmail, servletContext, projectName, studentInfo.getEmail(), studentInfo.getFirstName(), studentNumber, filePath, fileName);
+			boolean sendStudent = sendEmail(userEmail, servletContext, projectName, studentInfo.getEmail(), studentInfo.getFirstName(), studentNumber, filePath, fileName);
+			
+			if(ifSendBoth==1) {
+				sendMail_ACK=sendStudent;
+			}else if(sendStudent&&ifSendBoth==2) {
+				sendMail_ACK=sendEmail(userEmail, servletContext, projectName, userEmail, studentInfo.getFirstName(), studentNumber, filePath, fileName);
+			}
 			
 			//change sendEmail_flag
 			recordSentEmail_ACK=dbFunction.editsentMail(projectId, studentNumber);
@@ -138,7 +149,7 @@ public class SendEmailServlet extends HttpServlet {
 	 	System.out.println("Send: "+jsonSend.toJSONString());
 	}
 	
-	public boolean sendEmail(String userEmail, ServletContext servletContext, String projectName, String studentEmail, String firstName, String studentNumber, String filePath, String fileName) {
+	public boolean sendEmail(String userEmail, ServletContext servletContext, String projectName, String targetEmail, String firstName, String studentNumber, String filePath, String fileName) {
 		boolean result = false;
 		SendMail send = new SendMail();
 		String subject = projectName + " Presentation Result for " + studentNumber; 
@@ -152,7 +163,7 @@ public class SendEmailServlet extends HttpServlet {
 		String user = "feedbackrapid@gmail.com";
 		String pwd = "gkgkbzzbavwowfbh";
 		//String affix = this.getServletContext().getRealPath("Assignment1.pdf");
-		send.setAddress(user, studentEmail, subject);
+		send.setAddress(user, targetEmail, subject);
 		//System.out.println(affix);
 		send.setAffix(filePath+fileName, fileName);
 		result = send.send(host, user, pwd, msg);
