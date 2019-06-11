@@ -2,18 +2,28 @@ package com.RapidFeedback;
 
 import java.util.ArrayList;
 
+/**
+ * @ClassName Mark
+ * @Description Mark class stores all the information of a presentation result.
+*/
 public class Mark {
 
-    private ArrayList<Criteria> criteriaList = new ArrayList<Criteria>();
-    private ArrayList<Double> markList = new ArrayList<Double>();
-    private ArrayList<Criteria> commentList= new ArrayList<Criteria>();
-    private String comment;
-    private double totalMark;
-    private String lecturerName;
-    private String lecturerEmail;
-    
-    
-    public String getLecturerEmail() {
+	/** @Field @criteriaList : The list of criteria with grades and comments. */
+	private ArrayList<Criteria> criteriaList = new ArrayList<Criteria>();
+	
+	/** @Field @markList : The list of marks for criteriaList */
+	private ArrayList<Double> markList = new ArrayList<Double>();
+	
+	/** @Field @commentList : The list of criteria with only comments. */
+	private ArrayList<Criteria> commentList = new ArrayList<Criteria>();
+	
+	/** @Field @comment : Additional comment. */
+	private String comment;
+	private double totalMark = -999.00;
+	private String lecturerName;
+	private String lecturerEmail;
+
+	public String getLecturerEmail() {
 		return lecturerEmail;
 	}
 
@@ -22,67 +32,66 @@ public class Mark {
 	}
 
 	public String getLecturerName() {
-    	return lecturerName;
-    }
-    
-    public void setLecturerName(String lecturerName) {
-    	this.lecturerName= lecturerName;
-    }
+		return lecturerName;
+	}
 
+	public void setLecturerName(String lecturerName) {
+		this.lecturerName = lecturerName;
+	}
 
-    public double getTotalMark(){
-        return totalMark;
-    }
+	public double getTotalMark() {
+		return totalMark;
+	}
 
-    public void setTotalMark(double totalMark){
-        this.totalMark = totalMark;
-    }
+	public void setTotalMark(double totalMark) {
+		this.totalMark = totalMark;
+	}
 
-    public ArrayList<Criteria> getCommentList() {
+	public ArrayList<Criteria> getCommentList() {
 
-        return commentList;
+		return commentList;
 
-    }
+	}
 
-    public void setCommentList(ArrayList<Criteria> commentList) {
+	public void setCommentList(ArrayList<Criteria> commentList) {
 
-        this.commentList = commentList;
+		this.commentList = commentList;
 
-    }
+	}
 
-    public String getComment() {
+	public String getComment() {
 
-        return comment;
-    
-    }
+		return comment;
 
-    public void setComment(String comment) {
+	}
 
-        this.comment = comment;
+	public void setComment(String comment) {
 
-    }
+		this.comment = comment;
 
-    public void setCriteriaList(ArrayList<Criteria> criteriaList) {
+	}
 
-        this.criteriaList = criteriaList;
+	public void setCriteriaList(ArrayList<Criteria> criteriaList) {
 
-    }
+		this.criteriaList = criteriaList;
 
-    public void setMarkList(ArrayList<Double> markList) {
+	}
 
-        this.markList = markList;
+	public void setMarkList(ArrayList<Double> markList) {
 
-    }
+		this.markList = markList;
 
-    public ArrayList<Criteria> getCriteriaList() {
+	}
 
-        return criteriaList;
-    
-    }
+	public ArrayList<Criteria> getCriteriaList() {
 
-    public ArrayList<Double> getMarkList() {
+		return criteriaList;
 
-        return markList;
+	}
 
-    }
+	public ArrayList<Double> getMarkList() {
+
+		return markList;
+
+	}
 }

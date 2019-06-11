@@ -3,200 +3,201 @@ package com.RapidFeedback;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @ClassName ProjectInfo
+ * @Description This class stores all the information of a project.
+ */
 public class ProjectInfo {
 
-    private String projectName;
-    private String username;
-    private String subjectName;
-    private String subjectCode;
-    private String description;
+	private String projectName;
+	private String username;
+	private String subjectName;
+	private String subjectCode;
+	private String description;
 
-    private int durationMin;
-    private int durationSec;
-    private int warningMin;
-    private int warningSec;
+	private int durationMin;
+	private int durationSec;
+	private int warningMin;
+	private int warningSec;
 
-    private ArrayList<String> assistantList = new ArrayList<String>();
-    private ArrayList<Criteria> criteriaList= new ArrayList<Criteria>();
-    private ArrayList<Criteria> commentList= new ArrayList<Criteria>();
-    private ArrayList<StudentInfo> studentInfoList = new ArrayList<StudentInfo>();
+	private ArrayList<String> assistantList = new ArrayList<String>();
+	private ArrayList<Criteria> criteriaList = new ArrayList<Criteria>();
+	private ArrayList<Criteria> commentList = new ArrayList<Criteria>();
+	private ArrayList<StudentInfo> studentInfoList = new ArrayList<StudentInfo>();
 
-    public ArrayList<Criteria> getCommentList() {
+	public ArrayList<Criteria> getCommentList() {
 
-        return commentList;
+		return commentList;
 
-    }
+	}
 
-    public void setCommentList(ArrayList<Criteria> commentList) {
+	public void setCommentList(ArrayList<Criteria> commentList) {
 
-        this.commentList = commentList;
+		this.commentList = commentList;
 
-    }
+	}
 
-    public void setProjectName(String projectName){
+	public void setProjectName(String projectName) {
 
-        this.projectName = projectName;
+		this.projectName = projectName;
 
-    }
+	}
 
-    public void setUsername(String username){
+	public void setUsername(String username) {
 
-        this.username = username;
+		this.username = username;
 
-    }
+	}
 
-    public void setSubjectName(String subjectName){
+	public void setSubjectName(String subjectName) {
 
-        this.subjectName = subjectName;
+		this.subjectName = subjectName;
 
-    }
+	}
 
-    public void setSubjectCode(String subjectCode){
+	public void setSubjectCode(String subjectCode) {
 
-        this.subjectCode = subjectCode;
+		this.subjectCode = subjectCode;
 
-    }
+	}
 
-    public void setDescription(String description){
+	public void setDescription(String description) {
 
-        this.description = description;
+		this.description = description;
 
-    }
+	}
 
-    public void setAssistant(ArrayList<String> assistantList){
+	public void setAssistant(ArrayList<String> assistantList) {
 
-        this.assistantList = assistantList;
-    }
+		this.assistantList = assistantList;
+	}
 
-    public void setCriteria(ArrayList<Criteria> criteriaList){
+	public void setCriteria(ArrayList<Criteria> criteriaList) {
 
-        this.criteriaList = criteriaList;
+		this.criteriaList = criteriaList;
 
-    }
+	}
 
-    public void setStudentInfo(ArrayList<StudentInfo> studentList){
+	public void setStudentInfo(ArrayList<StudentInfo> studentList) {
 
-        this.studentInfoList = studentList;
+		this.studentInfoList = studentList;
 
-    }
+	}
 
+	public void addStudentList(ArrayList<StudentInfo> studentInfoList) {
 
+		this.studentInfoList.addAll(studentInfoList);
+	}
 
-    public void addStudentList(ArrayList<StudentInfo> studentInfoList){
+	public void addSingleStudent(StudentInfo studentInfo) {
 
-        this.studentInfoList.addAll(studentInfoList);
-    }
+		this.studentInfoList.add(studentInfo);
 
-    public void addSingleStudent(StudentInfo studentInfo){
+	}
 
-        this.studentInfoList.add(studentInfo);
+	public void addSingleCriteria(Criteria criteria) {
 
-    }
+		this.criteriaList.add(criteria);
+	}
 
-    public void addSingleCriteria(Criteria criteria){
+	public void setDurationMin(int durationMin) {
+		this.durationMin = durationMin;
+	}
 
-        this.criteriaList.add(criteria);
-    }
+	public void setDurationSec(int durationSec) {
+		this.durationSec = durationSec;
+	}
 
+	public void setWarningSec(int warningSec) {
+		this.warningSec = warningSec;
+	}
 
-    public void setDurationMin(int durationMin) {
-        this.durationMin = durationMin;
-    }
+	public void setWarningMin(int warningMin) {
+		this.warningMin = warningMin;
+	}
 
-    public void setDurationSec(int durationSec) {
-        this.durationSec = durationSec;
-    }
+	public void setStudentInfoList(ArrayList<StudentInfo> studentInfoList) {
+		this.studentInfoList = studentInfoList;
+	}
 
-    public void setWarningSec(int warningSec) {
-        this.warningSec = warningSec;
-    }
+	public void setCriteriaList(ArrayList<Criteria> criteriaList) {
+		this.criteriaList = criteriaList;
+	}
 
-    public void setWarningMin(int warningMin) {
-        this.warningMin = warningMin;
-    }
+	public void setAssistantList(ArrayList<String> assistantList) {
+		this.assistantList = assistantList;
+	}
 
-    public void setStudentInfoList(ArrayList<StudentInfo> studentInfoList) {
-        this.studentInfoList = studentInfoList;
-    }
+	public String getProjectName() {
 
-    public void setCriteriaList(ArrayList<Criteria> criteriaList) {
-        this.criteriaList = criteriaList;
-    }
+		return projectName;
 
-    public void setAssistantList(ArrayList<String> assistantList) {
-        this.assistantList = assistantList;
-    }
+	}
 
-    public String getProjectName(){
+	public String getUsername() {
 
-        return projectName;
+		return username;
 
-    }
+	}
 
-    public String getUsername(){
+	public String getSubjectName() {
 
-        return username;
+		return subjectName;
 
-    }
+	}
 
-    public String getSubjectName(){
+	public String getSubjectCode() {
 
-        return subjectName;
+		return subjectCode;
 
-    }
+	}
 
-    public String getSubjectCode(){
+	public String getDescription() {
 
-        return subjectCode;
+		return description;
 
-    }
+	}
 
-    public String getDescription(){
+	public ArrayList<String> getAssistant() {
 
-        return description;
+		return assistantList;
 
-    }
+	}
 
-    public ArrayList<String> getAssistant(){
+	public ArrayList<Criteria> getCriteria() {
 
-        return assistantList;
+		return criteriaList;
 
-    }
+	}
 
-    public ArrayList<Criteria> getCriteria(){
+	public ArrayList<StudentInfo> getStudentInfo() {
 
-        return criteriaList;
+		return studentInfoList;
 
-    }
+	}
 
-    public ArrayList<StudentInfo> getStudentInfo(){
+	public int getDurationMin() {
 
-        return studentInfoList;
+		return durationMin;
 
-    }
+	}
 
-    public int getDurationMin(){
+	public int getDurationSec() {
 
-        return durationMin;
+		return durationSec;
 
-    }
+	}
 
-    public int getDurationSec(){
+	public int getWarningMin() {
 
-        return durationSec;
+		return warningMin;
 
-    }
+	}
 
-    public int getWarningMin(){
+	public int getWarningSec() {
 
-        return warningMin;
+		return warningSec;
 
-    }
-
-    public int getWarningSec(){
-
-        return warningSec;
-
-    }
+	}
 
 }

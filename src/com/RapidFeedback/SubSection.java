@@ -2,12 +2,16 @@ package com.RapidFeedback;
 
 import java.util.ArrayList;
 
-public class SubSection{
+/**
+ * @ClassName SubSection
+ * @Description Stores all the info of one subsection of a criteria.
+*/
+public class SubSection {
 
 	private String name;
 	private ArrayList<ShortText> shortTextList = new ArrayList<ShortText>();
-	
-	public String getName(){
+
+	public String getName() {
 
 		return name;
 

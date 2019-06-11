@@ -2,15 +2,20 @@ package com.RapidFeedback;
 
 import java.util.ArrayList;
 
-public class Criteria{
+/**
+ * @ClassName: Criteria
+ * @Description: This class stores all the information of a marking criteria.
+*/
+public class Criteria {
 
 	private String name;
 	private int weighting;
 	private int maximunMark;
-	private String markIncrement; //"full" means 1; "half" means 1/2; "quarter" means 1/4; 
+	private String markIncrement; // "full" means 1; "half" means 1/2; "quarter"
+									// means 1/4;
 	private ArrayList<SubSection> subsectionList = new ArrayList<SubSection>();
-	
-	public String getName(){
+
+	public String getName() {
 
 		return name;
 

@@ -1,7 +1,5 @@
 package servlets;
 
-
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,73 +17,92 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * Servlet implementation class RegisterServlet
+ * @ClassName RegisterServlet
+ * @Description servlet for the registration.
+ *
+ * @author Jingxian Hu, Zhongke Tan
  */
 @WebServlet("/RegisterServlet")
 public class RegisterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public RegisterServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+	public RegisterServlet() {
+		super();
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
-	{
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		response.getWriter().append("Served at: ")
+				.append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 		MysqlFunction dbFunction = new MysqlFunction();
 
 		JSONObject jsonReceive;
 		BufferedReader reader = request.getReader();
 		String str, wholeString = "";
-	    while((str = reader.readLine()) != null)
-	    {
-	        wholeString += str;  
-	    }
-	    System.out.println("Receive: " + wholeString);
-	    jsonReceive = JSON.parseObject(wholeString);
+		while ((str = reader.readLine()) != null) {
+			wholeString += str;
+		}
+		System.out.println("Receive: " + wholeString);
+		jsonReceive = JSON.parseObject(wholeString);
 		String email = jsonReceive.getString("email");
 		String password = jsonReceive.getString("password");
 		String firstName = jsonReceive.getString("firstName");
 		String middleName = jsonReceive.getString("middleName");
 		String lastName = jsonReceive.getString("lastName");
-	    boolean register_ACK;
+		boolean register_ACK;
 		try {
-			 	register_ACK = register(dbFunction, email, password, firstName, middleName, lastName);
-		
-			 	JSONObject jsonSend = new JSONObject();
-			 	jsonSend.put("register_ACK", register_ACK);
-			 	PrintWriter output = response.getWriter();
-			 	output.print(jsonSend.toJSONString());
-			 	System.out.println("Send: "+jsonSend.toJSONString());
-			 	
+			register_ACK = register(dbFunction, email, password, firstName,
+					middleName, lastName);
+
+			JSONObject jsonSend = new JSONObject();
+			jsonSend.put("register_ACK", register_ACK);
+			PrintWriter output = response.getWriter();
+			output.print(jsonSend.toJSONString());
+			System.out.println("Send: " + jsonSend.toJSONString());
+
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-	   
+		}
+
 	}
-	
-	private boolean register(MysqlFunction db, String email, String password, String firstName, String middleName, String lastName) throws SQLException {
+
+	/**
+	 * @Function register
+	 * @Description call SQL method to complete registration.
+	 *
+	 * @param db
+	 * @param email
+	 * @param password
+	 * @param firstName
+	 * @param middleName
+	 * @param lastName
+	 * @return registration result
+	 * @throws SQLException
+	 */
+	private boolean register(MysqlFunction db, String email, String password,
+			String firstName, String middleName, String lastName)
+			throws SQLException {
 		int checkResult = db.checkLecturerExists(email);
-		if(checkResult == 1) {
+		// if there is already a user with same email, the registration failed.
+		if (checkResult == 1) {
 			db.addToLecturers(email, password, firstName, middleName, lastName);
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}

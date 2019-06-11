@@ -19,7 +19,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * Servlet implementation class InviteAssessorServlet
+ * @ClassName InviteAssessorServlet
+ * @Description This servlet is to invite (POST) or delete (DELETE) the assessor
+ *              in a project assessment. After the invitation or the deletion,
+ *              the assessor will receive a email notification.
+ *
+ * @author Jingxian Hu, Zhongke Tan
  */
 @WebServlet("/InviteAssessorServlet")
 public class InviteAssessorServlet extends HttpServlet {
@@ -30,7 +35,6 @@ public class InviteAssessorServlet extends HttpServlet {
 	 */
 	public InviteAssessorServlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -39,7 +43,6 @@ public class InviteAssessorServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ")
 				.append(request.getContextPath());
 	}
@@ -47,6 +50,8 @@ public class InviteAssessorServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
+	 * 
+	 *      description: invite the assessor.
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -73,6 +78,7 @@ public class InviteAssessorServlet extends HttpServlet {
 
 		boolean invite_ACK = false;
 		String inviter = inside.token2user(servletContext, token);
+		// the ids hash map stores the assessorID and projectID.
 		HashMap<String, Integer> ids = getIDs(inside, servletContext, inviter,
 				assessorEmail, projectName, dbFunction);
 		if (ids.size() == 2) {
@@ -85,24 +91,26 @@ public class InviteAssessorServlet extends HttpServlet {
 		}
 
 		boolean sendMail_ACK = false;
+		// if the assessor is added into the project assessment in the DB
+		// successfully, then send the email notification to the assessor.
 		if (invite_ACK) {
 			try {
-				String subject = "Invitation from the project <" + projectName + ">";
+				String subject = "Invitation from the project <" + projectName
+						+ ">";
 				String inviterName = dbFunction
 						.getLecturerName(dbFunction.getLecturerId(inviter));
 				String assessorName = dbFunction
 						.getLecturerName(ids.get("assessorID"));
 				String msg = "Hi " + assessorName + ",\r\n\r\n"
 						+ "We’re just writing to let you know that you’ve joined the assessment of"
-						+ " the project <" + projectName+"> on RapidFeedback, which was invited by the "
-						+ "project's primary assessor " + inviterName + "\r\n\r\n" + "Regards,\r\n" 
-						+ "RapidFeedback Team";
-				sendMail_ACK = sendInvitation(inside,
-						servletContext, projectName, assessorEmail, dbFunction,
-						subject, msg);
+						+ " the project <" + projectName
+						+ "> on RapidFeedback, which was invited by the "
+						+ "project's primary assessor " + inviterName
+						+ "\r\n\r\n" + "Regards,\r\n" + "RapidFeedback Team";
+				sendMail_ACK = sendInvitation(inside, servletContext,
+						projectName, assessorEmail, dbFunction, subject, msg);
 				sendMail_ACK = true;
 			} catch (Exception e) {
-				// TODO: handle exception
 				e.printStackTrace();
 			}
 		}
@@ -121,6 +129,8 @@ public class InviteAssessorServlet extends HttpServlet {
 
 	/**
 	 * @see HttpServlet#doDelete(HttpServletRequest, HttpServletResponse)
+	 * 
+	 *      description: delete the assessor.
 	 */
 	protected void doDelete(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -160,16 +170,20 @@ public class InviteAssessorServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-		
+
 		boolean sendMail_ACK = false;
+		// if the assessor is deleted from the project assessment in the DB
+		// successfully, then send the email notification to the assessor.
 		if (delete_ACK) {
 			try {
-				String subject = "Notification from the project <" + projectName + ">";
+				String subject = "Notification from the project <" + projectName
+						+ ">";
 				String assessorName = dbFunction
 						.getLecturerName(ids.get("assessorID"));
 				String msg = "Hi " + assessorName + ",\r\n\r\n"
 						+ "We’re just writing to let you know that you’ve left the assessment of"
-						+ " the project <" + projectName + "> on RapidFeedback\r\n\r\n" + "Regards,\r\n" 
+						+ " the project <" + projectName
+						+ "> on RapidFeedback\r\n\r\n" + "Regards,\r\n"
 						+ "RapidFeedback Team";
 				sendMail_ACK = sendInvitation(inside, servletContext,
 						projectName, assessorEmail, dbFunction, subject, msg);
@@ -190,10 +204,21 @@ public class InviteAssessorServlet extends HttpServlet {
 		System.out.println("Send: " + jsonSend.toJSONString());
 	}
 
+	/**
+	 * @Function getIDs
+	 * @Description return the assessorID and projectID in a hash map.
+	 *
+	 * @param inside
+	 * @param servletContext
+	 * @param inviter
+	 * @param assessorEmail
+	 * @param projectName
+	 * @param dbFunction
+	 * @return a hash map which includes the assessorID and projectID
+	 */
 	private HashMap<String, Integer> getIDs(InsideFunction inside,
 			ServletContext servletContext, String inviter, String assessorEmail,
 			String projectName, MysqlFunction dbFunction) {
-		// String inviter=inside.token2user(servletContext, token);
 		HashMap<String, Integer> ids = new HashMap<String, Integer>();
 
 		try {
@@ -208,7 +233,8 @@ public class InviteAssessorServlet extends HttpServlet {
 			System.out.println(projectID);
 			if (projectID <= 0) {
 				System.out.println("project not exists");
-				throw new Exception("Exception: Cannot find the project, or the user is not the primary assessor of the project.");
+				throw new Exception(
+						"Exception: Cannot find the project, or the user is not the primary assessor of the project.");
 			}
 			ids.put("assessorID", assessorID);
 			ids.put("projectID", projectID);
@@ -219,6 +245,19 @@ public class InviteAssessorServlet extends HttpServlet {
 		return ids;
 	}
 
+	/**
+	 * @Function sendInvitation
+	 * @Description send email notification to the assessor.
+	 *
+	 * @param inside
+	 * @param servletContext
+	 * @param projectName
+	 * @param assessorEmail
+	 * @param dbFunction
+	 * @param subject
+	 * @param msg
+	 * @return result of sending email.
+	 */
 	public boolean sendInvitation(InsideFunction inside,
 			ServletContext servletContext, String projectName,
 			String assessorEmail, MysqlFunction dbFunction, String subject,
