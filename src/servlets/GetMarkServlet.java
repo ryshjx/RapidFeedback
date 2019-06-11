@@ -124,16 +124,7 @@ public class GetMarkServlet extends HttpServlet {
 				int lecturerId = dbFunction.getLecturerId(lecturer);
 				Mark mark = dbFunction.returnMark(projectId, lecturerId,
 						studentId_0);
-				// Judge if this lecturer's marks are written in the
-				// database. (check totalMark has value), otherwise the servlet
-				// won't return the mark.
-				if (mark.getTotalMark() >= 0.00) {
-					markList.add(mark);
-				} else {
-					throw new Exception("Exception: assessor-" + lecturer
-							+ " have not completed the assessment yet. Cannot get mark.");
-				}
-
+				markList.add(mark);
 				if (studentNumberList.size() > 1) {
 					for (String studentNumber : studentNumberList) {
 						int studentId = dbFunction.ifStudentExists(projectId,
