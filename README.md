@@ -15,6 +15,10 @@ Yu CHAO 962031 yccha@student.unimelb.edu
 
 Aneesh Sawant 876769 sawanta@student.unimelb.edu.au
 
+**AWS related:**
+
 The java web application is deployed on an AWS EC2 instance, whose public IP address is 54.206.24.105. The SSH key of the instance is 'feedback.pem' file.
+
+**Runnable file:**
 
 The runnable war file of the java appliaction is 'RapidFeedback.war'.
