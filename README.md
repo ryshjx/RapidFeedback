@@ -3,21 +3,19 @@ This is a server end code for RapidFeedback project which is a java web applicat
  
 **Team Members:**
 
-Dinghao YONG 868878 dinghaoy@student.unimelb.edu.au
+Dinghao YONG 
 
-Jingxian HU 727560 jingxianh@student.unimelb.edu.au
+Jingxian HU 
 
-Zhongke TAN 799439 zhongket@student.unimelb.edu.au
+Zhongke TAN 
 
-Ziling HE 987328 zilingh1@student.unimelb.edu.au
+Ziling HE 
 
-Yu CHAO 962031 yccha@student.unimelb.edu
+Yu CHAO 
 
-Aneesh Sawant 876769 sawanta@student.unimelb.edu.au
+Aneesh Sawant 
 
 **AWS related:**
-
-The java web application is deployed on an AWS EC2 instance, whose public IP address is 54.206.24.105. The SSH key of the instance is 'feedback.pem' file.
 
 **Runnable file:**
 
