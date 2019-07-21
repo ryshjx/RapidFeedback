@@ -17,6 +17,12 @@ Aneesh Sawant
 
 **AWS related:**
 
+The related EC2 instance is stopped, you need to create a new instance by yourself.
+
 **Runnable file:**
 
 The runnable war file of the java appliaction is 'RapidFeedback.war'.
+
+**Database build file**
+
+'feedbackBuild.sql' is the file to build the structure of the MySQL database.
